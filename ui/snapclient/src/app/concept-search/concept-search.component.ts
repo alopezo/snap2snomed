@@ -17,6 +17,7 @@
 import {R4} from '@ahryman40k/ts-fhir-types';
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {LanguageDialects} from '../_utils/language-dialects';
+import {MIN_SEARCH_LENGTH} from '../_services/fhir.service';
 import {UntypedFormControl} from '@angular/forms';
 import {Store} from '@ngrx/store';
 import {TranslateService} from '@ngx-translate/core';
@@ -47,7 +48,9 @@ export class ConceptSearchComponent implements OnInit, OnDestroy {
   }
 
   private subscription = new Subscription();
-  private debounce = 20;
+  readonly minSearchLength = MIN_SEARCH_LENGTH;
+  // Wait for the user to stop typing: every search is a call to the terminology server
+  private debounce = 300;
   activeOnly = true;
 
   size = 10;
@@ -104,7 +107,7 @@ export class ConceptSearchComponent implements OnInit, OnDestroy {
     const self = this;
     if (self.version) {
       this.selectionService.select(null);
-      if (value) {
+      if ((value?.trim() ?? '').length >= MIN_SEARCH_LENGTH) {
         self.store.dispatch(new FindConcepts({
           text: value,
           version: self.version,

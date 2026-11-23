@@ -484,6 +484,7 @@
     "SUGGESTED": "{{total}} match suggestions",
     "NO_SEARCH": "No search text provided",
     "NO_MATCHES": "No search results",
+    "TOO_SHORT": "Type at least {{min}} characters",
     "INPUT_LABEL": "Text search"
   },
   "PROPERTIES": {

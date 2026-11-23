@@ -46,8 +46,9 @@
 
           @if (!total) {
             <div class="search-footer">
-              &nbsp;<div class="pull-right">{{(searchControl.value.trim() ? 'SEARCH.NO_MATCHES'
-            : 'SEARCH.NO_SEARCH') | translate }}</div>
+              &nbsp;<div class="pull-right">{{(!searchControl.value.trim() ? 'SEARCH.NO_SEARCH'
+            : searchControl.value.trim().length < minSearchLength ? 'SEARCH.TOO_SHORT' : 'SEARCH.NO_MATCHES')
+            | translate: {min: minSearchLength} }}</div>
           </div>
         }
         <div id="searchResults" class="search-results">

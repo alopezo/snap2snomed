@@ -30,6 +30,12 @@ export const SEQUENCE = 'http://ontoserver.csiro.au/fhir/ConceptMap/automapstrat
 export const DEFAULT = 'http://ontoserver.csiro.au/fhir/ConceptMap/automapstrategy-default';
 export const MML = 'http://ontoserver.csiro.au/fhir/ConceptMap/automapstrategy-MML';
 
+/**
+ * Shortest search text sent to the terminology server. Snowstorm rejects shorter filters with an
+ * HTTP 500 that carries no CORS headers, which the browser reports as a network error.
+ */
+export const MIN_SEARCH_LENGTH = 3;
+
 export interface Release {
   edition: string; // edition is often a country
   version: string; // version is often a date
@@ -277,6 +283,9 @@ export class FhirService {
    * language (see acceptLanguageForMap); otherwise the browser's language applies.
    */
   autoSuggest(text: string, version: string, scope: string, strategy: string, activeOnly: boolean = true, count: number = 5, acceptLanguage?: string): Observable<Match[]> {
+    if ((text?.trim() ?? '').length < MIN_SEARCH_LENGTH) {
+      return of([]);
+    }
     if (this.isOntoserver) {
       const isMatch = (match: Match | null): match is Match => !!match;
       const ecl = activeOnly ? `(${scope}){{C active=true}}` : scope;
@@ -329,6 +338,9 @@ export class FhirService {
    */
   findConcepts(text: string, version: string, scope: string, activeOnly: boolean = true, count: number = 100, acceptLanguage?: string): Observable<R4.IValueSet> {
     const trimmed = text?.trim() ?? '';
+    if (trimmed.length < MIN_SEARCH_LENGTH) {
+      return of({resourceType: 'ValueSet', expansion: {total: 0, contains: []}} as unknown as R4.IValueSet);
+    }
     if (!this.isLite || trimmed.length === 0 || trimmed.endsWith('~')) {
       return this.expandWithFilter(text, version, scope, activeOnly, count, acceptLanguage);
     }
