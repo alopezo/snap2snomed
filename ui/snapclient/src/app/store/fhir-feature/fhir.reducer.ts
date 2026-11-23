@@ -46,6 +46,8 @@ export interface IFhirState {
   properties?: Properties;
   resolvedDisplayProperties? : Properties;
   errorMessage: any | null;
+  // Error of the last target version (CodeSystem) load only; errorMessage is shared by every FHIR call
+  releasesError: any | null;
   replacementSuggestions: {
     sameAs: R4.IParameters,
     replacedBy: R4.IParameters, 
@@ -58,24 +60,33 @@ export const initialFhirState: IFhirState = {
   editionToVersionsMap: new Map(),
   nodes: [],
   errorMessage: null,
+  releasesError: null,
   replacementSuggestions: null
 };
 
 export function fhirReducer(state = initialFhirState, action: FhirActions): IFhirState {
   switch (action.type) {
 
+    case FhirActionTypes.LOAD_RELEASES:
+      return {
+        ...state,
+        releasesError: null
+      };
+
     case FhirActionTypes.LOAD_RELEASES_SUCCESS:
       return {
         ...state,
         editionToVersionsMap: action.payload,
-        errorMessage: null
+        errorMessage: null,
+        releasesError: null
       };
 
     case FhirActionTypes.LOAD_RELEASES_FAILED:
       return {
         ...state,
         editionToVersionsMap: undefined,
-        errorMessage: action.payload.error
+        errorMessage: action.payload.error,
+        releasesError: action.payload.error
       };
 
     case FhirActionTypes.FIND_CONCEPTS_SUCCESS:

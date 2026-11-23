@@ -54,3 +54,9 @@ export const selectFhirError = createSelector(
     selectModules,
     (state: IFhirState) => state.errorMessage
 );
+
+/** Error of the last target version list load (not of searches or lookups). */
+export const selectReleasesError = createSelector(
+    selectModules,
+    (state: IFhirState) => state.releasesError
+);

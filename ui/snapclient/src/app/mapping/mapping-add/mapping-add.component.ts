@@ -39,7 +39,7 @@ import { ImportMappingFileParams, InitSelectedSource, LoadSources } from 'src/ap
 import { Source } from 'src/app/_models/source';
 import { FhirService, Release } from 'src/app/_services/fhir.service';
 import { LoadReleases } from 'src/app/store/fhir-feature/fhir.actions';
-import { selectFhirError, selectReleaseList } from 'src/app/store/fhir-feature/fhir.selectors';
+import { selectReleaseList, selectReleasesError } from 'src/app/store/fhir-feature/fhir.selectors';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { cloneDeep } from 'lodash';
 import { ErrorInfo } from 'src/app/errormessage/errormessage.component';
@@ -299,7 +299,9 @@ export class MappingAddComponent implements OnInit {
       },
       error => this.translate.get('ERROR.LOAD_VERSIONS').subscribe((res) => self.createOrAppendError(res))
     );
-    self.store.select(selectFhirError).subscribe((error) => {
+    // Only a failed target version load is relevant here (the message suggests reloading the list);
+    // search or lookup errors from other screens are shared in the FHIR state and must not show up
+    self.store.select(selectReleasesError).subscribe((error) => {
       if (error != null) {
         self.translate.get('ERROR.BACKEND_ISSUES', { url: error.url }).subscribe((res: string) => self.createOrAppendError(res));
         self.error.detail = error;

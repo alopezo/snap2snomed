@@ -15,7 +15,7 @@
  */
 
 import {initialFhirState, fhirReducer} from './fhir.reducer';
-import { LoadReleasesFailure, LoadReleasesSuccess } from './fhir.actions';
+import { FindConceptsFailure, LoadReleases, LoadReleasesFailure, LoadReleasesSuccess } from './fhir.actions';
 import { Release } from 'src/app/_services/fhir.service';
 
 describe('Fhir Reducer', () => {
@@ -49,7 +49,21 @@ describe('Fhir Reducer', () => {
       const action = new LoadReleasesFailure({error: 'Load failed'});
       const result = fhirReducer(initialFhirState, action);
       expect(result.errorMessage).toBeTruthy();
+      expect(result.releasesError).toBe('Load failed');
       expect(result.editionToVersionsMap).toBeUndefined();
+    });
+
+    it('clears the releases error when the versions are loaded again', () => {
+      const failed = fhirReducer(initialFhirState, new LoadReleasesFailure({error: 'Load failed'}));
+      expect(fhirReducer(failed, new LoadReleases()).releasesError).toBeNull();
+    });
+  });
+
+  describe('a failed search', () => {
+    it('sets the shared FHIR error but not the releases error', () => {
+      const result = fhirReducer(initialFhirState, new FindConceptsFailure({error: 'Search failed'}));
+      expect(result.errorMessage).toBe('Search failed');
+      expect(result.releasesError).toBeNull();
     });
   });
 });
