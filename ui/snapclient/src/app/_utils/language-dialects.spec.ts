@@ -54,6 +54,17 @@ describe('LanguageDialects', () => {
     expect(LanguageDialects.primaryLanguage(null)).toBeNull();
   });
 
+  it('accepts well formed sequences', () => {
+    [null, '', 'es', 'es,en', 'es-AR', ' es-X-450828004 , en-X-900000000000509007 ',
+      'sv-X-63451000052100,sv-X-46011000052107,en-X-900000000000509007', 'en-x-sctlang-90000000-00005090-07']
+      .forEach(value => expect(LanguageDialects.isValid(value)).toBe(true));
+  });
+
+  it('rejects malformed sequences', () => {
+    ['not a lang!!', 'es;q=0.9', 'es,,en', ',es', 'e', 'es_AR', 'español', 'es-']
+      .forEach(value => expect(LanguageDialects.isValid(value)).toBe(false));
+  });
+
   it('detects the server kind from the software name', () => {
     expect(LanguageDialects.serverKindFromSoftwareName('Ontoserver®')).toBe('ontoserver');
     expect(LanguageDialects.serverKindFromSoftwareName('Snowstorm Lite FHIR Terminology Server')).toBe('snowstorm-lite');

@@ -143,18 +143,9 @@ export class MappingAddComponent implements OnInit {
     public dialog: MatDialog) {
   }
 
-  /**
-   * Loads the display language options of the target version's edition. A stored language that is
-   * not among them (e.g. after changing edition) is kept as an extra option so it is not lost silently.
-   */
+  /** Loads the named contexts of the target version's edition (for the read-only label). */
   loadLanguageContexts(versionUri: string | null): void {
-    this.languageMetadataService.contextsForVersion(versionUri).subscribe(contexts => {
-      const current = LanguageDialects.normalize(this.formGroup.controls.displayLanguage.value);
-      if (current && !contexts.some(context => context.languageDialects === current)) {
-        contexts = [...contexts, {name: current, languageDialects: current}];
-      }
-      this.languageContexts = contexts;
-    });
+    this.languageMetadataService.contextsForVersion(versionUri).subscribe(contexts => this.languageContexts = contexts);
   }
 
   /** Name of the map's display language context (or its raw sequence); null for the English FSN. */
@@ -185,7 +176,7 @@ export class MappingAddComponent implements OnInit {
     self.formGroup.controls.toVersion.setValue(this.mappingModel.toVersion);
     self.formGroup.controls.toScopeSelect.setValue(this.mappingModel.toScope);
     self.formGroup.controls.toScope.setValue(this.mappingModel.toScope);
-    self.formGroup.controls.displayLanguage.setValue(this.mappingModel.displayLanguage ?? '');
+    self.formGroup.controls.displayLanguage.setValue(this.mappingModel.displayLanguage ?? null);
     self.loadLanguageContexts(this.mappingModel.toVersion);
     self.formGroup.controls.dualMapMode.setValue(this.mappingModel.project.dualMapMode);
 

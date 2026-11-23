@@ -41,6 +41,8 @@ import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MappingAddComponent} from './mapping/mapping-add/mapping-add.component';
+import {DisplayLanguagePickerComponent} from './display-language/display-language-picker/display-language-picker.component';
+import {DisplayLanguageTestDialogComponent} from './display-language/display-language-test-dialog/display-language-test-dialog.component';
 import {MappingViewComponent} from './mapping/mapping-view/mapping-view.component';
 import {MappingListComponent} from './mapping/mapping-list/mapping-list.component';
 import {MatCardModule} from '@angular/material/card';
@@ -142,6 +144,8 @@ export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
         AppComponent,
         HomeComponent,
         MappingAddComponent,
+        DisplayLanguagePickerComponent,
+        DisplayLanguageTestDialogComponent,
         MappingViewComponent,
         MappingListComponent,
         InitialsPipe,

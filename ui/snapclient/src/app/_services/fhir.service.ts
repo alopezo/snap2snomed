@@ -37,6 +37,13 @@ export interface Release {
   countryCode: string;
 }
 
+/** What a display language returns for one concept (see FhirService.previewDisplayLanguage). */
+export interface DisplayLanguagePreview {
+  display: string;
+  englishDisplay: string;
+  designations: {language: string, use: string, value: string}[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -199,6 +206,55 @@ export class FhirService {
     }
     return this.getServerKind().pipe(
       map(kind => LanguageDialects.toServerFormat(displayLanguage, kind) ?? undefined)
+    );
+  }
+
+  /**
+   * Language reference sets available in a SNOMED CT version, to help build a custom display
+   * language. Empty if the server cannot list them.
+   */
+  languageRefsets(version: string): Observable<{code: string, display: string}[]> {
+    const url = `${this.config.fhirBaseUrl}/ValueSet/$expand`;
+    const options = ServiceUtils.getHTTPHeaders();
+    // 'en' (any English term): national refsets may have no term in the default dialect, and Snowstorm
+    // then returns no display at all
+    options.headers = options.headers.set('Accept', ['application/fhir+json', 'application/json'])
+      .set('Accept-Language', 'en');
+    options.params = {'url': FhirService.toValueSet(version, '<900000000000506000'), 'count': 200};
+    return this.http.get<R4.IValueSet>(url, options).pipe(
+      map(valueSet => (valueSet.expansion?.contains ?? [])
+        .filter(concept => concept.code)
+        .map(concept => ({code: concept.code as string, display: concept.display ?? concept.code as string}))
+        .sort((a, b) => a.display.localeCompare(b.display))),
+      catchError(() => of([]))
+    );
+  }
+
+  /**
+   * Looks a concept up as a map with the given display language would see it: the term that would
+   * be stored, the English term a map without display language would store, and every designation.
+   */
+  previewDisplayLanguage(code: string, version: string, displayLanguage: string | null): Observable<DisplayLanguagePreview> {
+    const system = 'http://snomed.info/sct';
+    return forkJoin({
+      withLanguage: this.acceptLanguageForMap(displayLanguage).pipe(
+        mergeMap(acceptLanguage => this.lookupConcept(code, system, version, [], acceptLanguage))),
+      english: this.lookupConcept(code, system, version, [], 'en-US'),
+    }).pipe(
+      map(({withLanguage, english}) => {
+        const display = (parameters: R4.IParameters) =>
+          parameters.parameter?.find(parameter => parameter.name === 'display')?.valueString ?? '';
+        const designations = (withLanguage.parameter ?? [])
+          .filter(parameter => parameter.name === 'designation')
+          .map(parameter => ({
+            language: parameter.part?.find(part => part.name === 'language')?.valueCode ?? '',
+            use: parameter.part?.find(part => part.name === 'use')?.valueCoding?.display
+              ?? parameter.part?.find(part => part.name === 'use')?.valueCoding?.code ?? '',
+            value: parameter.part?.find(part => part.name === 'value')?.valueString ?? '',
+          }))
+          .sort((a, b) => a.language.localeCompare(b.language) || a.use.localeCompare(b.use) || a.value.localeCompare(b.value));
+        return {display: display(withLanguage), englishDisplay: display(english), designations};
+      })
     );
   }
 

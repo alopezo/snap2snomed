@@ -1,0 +1,61 @@
+<div class="picker">
+  <div class="row">
+    <mat-form-field class="grow" subscriptSizing="dynamic">
+      @if (label) {
+        <mat-label>{{ label }}</mat-label>
+      }
+      <mat-select [value]="selection" (selectionChange)="onSelect($event.value)" [disabled]="disabled">
+        <mat-option value="">{{ 'MAP.DISPLAY_LANGUAGE_ENGLISH_FSN' | translate }}</mat-option>
+        @for (context of contexts; track context.languageDialects) {
+          <mat-option [value]="context.languageDialects" [title]="context.languageDialects">{{ context.name }}</mat-option>
+        }
+        <mat-option [value]="CUSTOM">{{ 'MAP.DISPLAY_LANGUAGE_CUSTOM' | translate }}</mat-option>
+      </mat-select>
+      @if (hint) {
+        <mat-hint>{{ hint }}</mat-hint>
+      }
+    </mat-form-field>
+    <button mat-stroked-button type="button" class="test-button" (click)="openTest()" [disabled]="!canTest"
+      matTooltip="{{ 'MAP.DISPLAY_LANGUAGE_TEST_TOOLTIP' | translate }}">
+      {{ 'MAP.DISPLAY_LANGUAGE_TEST' | translate }}
+    </button>
+  </div>
+
+  @if (selection === CUSTOM) {
+    <div class="custom">
+      <mat-form-field class="field-full-width" subscriptSizing="dynamic">
+        <mat-label>{{ 'MAP.DISPLAY_LANGUAGE_SEQUENCE' | translate }}</mat-label>
+        <input matInput id="displayLanguageSequence" [formControl]="customControl"
+          [placeholder]="'MAP.DISPLAY_LANGUAGE_SEQUENCE_PLACEHOLDER' | translate" autocomplete="off">
+        <mat-hint>{{ 'MAP.DISPLAY_LANGUAGE_SEQUENCE_HINT' | translate }}</mat-hint>
+      </mat-form-field>
+      @if (customEmpty) {
+        <div class="error-text">{{ 'MAP.DISPLAY_LANGUAGE_SEQUENCE_REQUIRED' | translate }}</div>
+      } @else if (customInvalid) {
+        <div class="error-text">{{ 'MAP.DISPLAY_LANGUAGE_SEQUENCE_ERROR' | translate }}</div>
+      }
+
+      <div class="row builder">
+        <mat-form-field class="language" subscriptSizing="dynamic">
+          <mat-label>{{ 'MAP.DISPLAY_LANGUAGE_CODE' | translate }}</mat-label>
+          <input matInput [formControl]="builderLanguage" placeholder="es" maxlength="3" autocomplete="off">
+        </mat-form-field>
+        <mat-form-field class="grow" subscriptSizing="dynamic">
+          <mat-label>{{ 'MAP.DISPLAY_LANGUAGE_REFSET' | translate }}</mat-label>
+          <mat-select [formControl]="builderRefset">
+            <mat-option value="">{{ 'MAP.DISPLAY_LANGUAGE_NO_REFSET' | translate }}</mat-option>
+            @for (refset of refsets; track refset.code) {
+              <mat-option [value]="refset.code">{{ refset.display }} ({{ refset.code }})</mat-option>
+            }
+          </mat-select>
+          @if (refsetsLoading) {
+            <mat-hint>{{ 'MAP.DISPLAY_LANGUAGE_REFSETS_LOADING' | translate }}</mat-hint>
+          }
+        </mat-form-field>
+        <button mat-stroked-button type="button" (click)="addEntry()" [disabled]="!canAddEntry">
+          {{ 'MAP.DISPLAY_LANGUAGE_ADD' | translate }}
+        </button>
+      </div>
+    </div>
+  }
+</div>

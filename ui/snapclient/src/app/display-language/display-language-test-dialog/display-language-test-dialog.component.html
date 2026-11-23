@@ -1,0 +1,59 @@
+<h2 mat-dialog-title>{{ 'MAP.DISPLAY_LANGUAGE_TEST_TITLE' | translate }}</h2>
+<mat-dialog-content>
+  <p class="sequence">
+    <b>{{ 'MAP.DISPLAY_LANGUAGE' | translate }}:</b>
+    <code>{{ data.displayLanguage ?? ('MAP.DISPLAY_LANGUAGE_ENGLISH_FSN' | translate) }}</code>
+  </p>
+
+  <div class="columns">
+    <div class="search">
+      <app-concept-search [version]="data.versionUri" [scope]="data.scope" [displayLanguage]="data.displayLanguage">
+        <span class="search-title">{{ 'MAP.DISPLAY_LANGUAGE_TEST_SEARCH' | translate }}</span>
+      </app-concept-search>
+    </div>
+
+    <div class="result">
+      <mat-form-field class="field-full-width" subscriptSizing="dynamic">
+        <mat-label>{{ 'MAP.DISPLAY_LANGUAGE_TEST_CONCEPT' | translate }}</mat-label>
+        <input matInput id="displayLanguageTestCode" [formControl]="codeControl" autocomplete="off">
+      </mat-form-field>
+
+      @if (loading) {
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      }
+      @if (failed) {
+        <p class="warning">{{ 'MAP.DISPLAY_LANGUAGE_TEST_FAILED' | translate }}</p>
+      }
+      @if (preview) {
+        <table class="terms">
+          <tr>
+            <th>{{ 'MAP.DISPLAY_LANGUAGE_TEST_STORED' | translate }}</th>
+            <td id="displayLanguageTestStored"><b>{{ preview.display }}</b></td>
+          </tr>
+          <tr>
+            <th>{{ 'MAP.DISPLAY_LANGUAGE_TEST_ENGLISH' | translate }}</th>
+            <td>{{ preview.englishDisplay }}</td>
+          </tr>
+        </table>
+        @if (looksLikeFallback) {
+          <p class="warning">{{ 'MAP.DISPLAY_LANGUAGE_TEST_FALLBACK' | translate }}</p>
+        }
+        <h4>{{ 'MAP.DISPLAY_LANGUAGE_TEST_DESIGNATIONS' | translate }}</h4>
+        <div class="designations">
+          <table>
+            @for (designation of preview.designations; track $index) {
+              <tr [class.chosen]="designation.value === preview.display">
+                <td class="lang">{{ designation.language }}</td>
+                <td class="use">{{ designation.use }}</td>
+                <td>{{ designation.value }}</td>
+              </tr>
+            }
+          </table>
+        </div>
+      }
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close>{{ 'FORM.CLOSE' | translate }}</button>
+</mat-dialog-actions>

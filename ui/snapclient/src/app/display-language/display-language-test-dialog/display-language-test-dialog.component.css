@@ -1,0 +1,56 @@
+.columns {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.search {
+  flex: 0 0 280px;
+  min-width: 0;
+}
+
+.result {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sequence code {
+  word-break: break-all;
+}
+
+.terms th {
+  text-align: left;
+  padding-right: 12px;
+  font-weight: normal;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.warning {
+  color: #b26a00;
+}
+
+.designations {
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.designations td {
+  padding: 2px 8px 2px 0;
+  vertical-align: top;
+}
+
+.designations .lang {
+  font-family: monospace;
+}
+
+.designations .use {
+  color: rgba(0, 0, 0, 0.6);
+  white-space: nowrap;
+}
+
+.designations tr.chosen td {
+  font-weight: bold;
+}

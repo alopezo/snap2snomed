@@ -117,18 +117,14 @@
                     <mat-icon>sync</mat-icon>
                   </button>
                 </div>
-                <mat-form-field class="field-full-width">
-                  <mat-label>{{ 'MAP.DISPLAY_LANGUAGE' | translate }}</mat-label>
-                  <mat-select id="displayLanguage" formControlName="displayLanguage">
-                    <mat-option value="">{{ 'MAP.DISPLAY_LANGUAGE_ENGLISH_FSN' | translate }}</mat-option>
-                    @for (context of languageContexts; track context.languageDialects) {
-                      <mat-option [value]="context.languageDialects" [title]="context.languageDialects">
-                        {{context.name}}
-                      </mat-option>
-                    }
-                  </mat-select>
-                  <mat-hint>{{ 'MAP.DISPLAY_LANGUAGE_HINT' | translate }}</mat-hint>
-                </mat-form-field>
+                <div class="field-full-width display-language-field">
+                  <app-display-language-picker id="displayLanguage" formControlName="displayLanguage"
+                    [versionUri]="mappingModel.toVersion"
+                    [scope]="mappingModel.toScope"
+                    [label]="'MAP.DISPLAY_LANGUAGE' | translate"
+                    [hint]="'MAP.DISPLAY_LANGUAGE_HINT' | translate">
+                  </app-display-language-picker>
+                </div>
                 <mat-form-field class="field-full-width" hintLabel="{{'FORM.MAX_CHARS' | translate}} {{MAX_TARGETSCOPE}}">
                   <mat-label for="toScopeSelect">{{ 'MAP.TARGET_SCOPE_COMMON' | translate }}</mat-label>
                   <mat-select id="toScopeSelect" formControlName="toScopeSelect">
@@ -203,17 +199,11 @@
                         <!-- The display language only changes how targets are shown, so it stays editable;
                              saving re-resolves the stored target terms -->
                         <td>
-                          <mat-form-field class="field-full-width" subscriptSizing="dynamic">
-                            <mat-select id="displayLanguageEdit" formControlName="displayLanguage">
-                              <mat-option value="">{{ 'MAP.DISPLAY_LANGUAGE_ENGLISH_FSN' | translate }}</mat-option>
-                              @for (context of languageContexts; track context.languageDialects) {
-                                <mat-option [value]="context.languageDialects" [title]="context.languageDialects">
-                                  {{context.name}}
-                                </mat-option>
-                              }
-                            </mat-select>
-                            <mat-hint>{{ 'MAP.DISPLAY_LANGUAGE_EDIT_HINT' | translate }}</mat-hint>
-                          </mat-form-field>
+                          <app-display-language-picker id="displayLanguageEdit" formControlName="displayLanguage"
+                            [versionUri]="mappingModel.toVersion"
+                            [scope]="mappingModel.toScope"
+                            [hint]="'MAP.DISPLAY_LANGUAGE_EDIT_HINT' | translate">
+                          </app-display-language-picker>
                         </td>
                       } @else {
                         <td [title]="mappingModel.displayLanguage ?? ''">{{ displayLanguageLabel ?? ('MAP.DISPLAY_LANGUAGE_ENGLISH_FSN' | translate) }}</td>

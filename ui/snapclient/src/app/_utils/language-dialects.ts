@@ -27,8 +27,16 @@
 export type TerminologyServerKind = 'snowstorm' | 'snowstorm-lite' | 'ontoserver' | 'other';
 
 const SNOWSTORM_DIALECT = /^([a-z]{2,3})-x-(\d+)$/i;
+// Comma separated language tags ("es", "es-AR", "es-X-450828004"). Only letters, digits, hyphens,
+// commas and spaces, so the value stays a CORS-safelisted Accept-Language header. Same as the API.
+const VALID_DIALECTS = /^\s*[A-Za-z]{2,3}(-[A-Za-z0-9]{1,18})*(\s*,\s*[A-Za-z]{2,3}(-[A-Za-z0-9]{1,18})*)*\s*$/;
 
 export class LanguageDialects {
+
+  /** True for no display language (null/blank) or a well formed dialect sequence. */
+  static isValid(dialects: string | null | undefined): boolean {
+    return !dialects || dialects.trim().length === 0 || VALID_DIALECTS.test(dialects);
+  }
 
   /** Trims every entry and drops empty ones; null when there is no explicit display language. */
   static normalize(dialects: string | null | undefined): string | null {

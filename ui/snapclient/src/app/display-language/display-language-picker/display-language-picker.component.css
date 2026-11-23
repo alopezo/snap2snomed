@@ -1,0 +1,38 @@
+.picker {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.grow {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.language {
+  flex: 0 0 90px;
+}
+
+.test-button {
+  flex: 0 0 auto;
+}
+
+.custom {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-left: 12px;
+  border-left: 2px solid rgba(0, 0, 0, 0.12);
+}
+
+.error-text {
+  color: #f44336;
+  font-size: 12px;
+}

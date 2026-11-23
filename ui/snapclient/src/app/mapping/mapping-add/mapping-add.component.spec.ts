@@ -39,6 +39,8 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatCardModule} from '@angular/material/card';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {DisplayLanguagePickerComponent} from '../../display-language/display-language-picker/display-language-picker.component';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatSelectModule} from '@angular/material/select';
@@ -81,7 +83,8 @@ describe('MappingAddComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    declarations: [MappingAddComponent, ErrormessageComponent, ProjectRolesComponent, UserChipComponent, GravatarComponent],
+    declarations: [MappingAddComponent, ErrormessageComponent, ProjectRolesComponent, UserChipComponent, GravatarComponent,
+        DisplayLanguagePickerComponent],
     imports: [RouterTestingModule,
         BrowserAnimationsModule,
         FormsModule,
@@ -95,6 +98,7 @@ describe('MappingAddComponent', () => {
         MatFormFieldModule,
         ReactiveFormsModule,
         MatInputModule,
+        MatTooltipModule,
         MatGridListModule,
         MatChipsModule,
         MatSelectModule,
