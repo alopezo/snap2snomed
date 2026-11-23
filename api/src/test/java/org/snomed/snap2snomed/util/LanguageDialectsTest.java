@@ -78,6 +78,20 @@ class LanguageDialectsTest {
   }
 
   @ParameterizedTest
+  @NullAndEmptySource
+  @ValueSource(strings = {"es", "es,en", "es-AR", " es-X-450828004 , en-X-900000000000509007 ",
+      "sv-X-63451000052100,sv-X-46011000052107,en-X-900000000000509007", "en-x-sctlang-90000000-00005090-07"})
+  void acceptsWellFormedSequences(String input) {
+    assertThat(LanguageDialects.isValid(input)).isTrue();
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"not a lang!!", "es;q=0.9", "es,,en", ",es", "e", "es_AR", "español", "es-"})
+  void rejectsMalformedSequences(String input) {
+    assertThat(LanguageDialects.isValid(input)).isFalse();
+  }
+
+  @ParameterizedTest
   @CsvSource(delimiter = '|', nullValues = "NULL", value = {
       "Ontoserver®|ONTOSERVER",
       "Snowstorm Lite FHIR Terminology Server|SNOWSTORM_LITE",

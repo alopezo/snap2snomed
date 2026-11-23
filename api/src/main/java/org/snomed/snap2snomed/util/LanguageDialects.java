@@ -33,9 +33,24 @@ import org.snomed.snap2snomed.service.TerminologyServerKind;
  */
 public final class LanguageDialects {
 
+  /**
+   * Accepted display language values: comma separated language tags such as "es", "es-AR" or
+   * "es-X-450828004". Only letters, digits, hyphens, commas and spaces, so the value is always a
+   * CORS-safelisted Accept-Language header (browsers call the terminology server directly).
+   */
+  public static final String VALID_PATTERN =
+      "^\\s*[A-Za-z]{2,3}(-[A-Za-z0-9]{1,18})*(\\s*,\\s*[A-Za-z]{2,3}(-[A-Za-z0-9]{1,18})*)*\\s*$";
+
+  private static final Pattern VALID = Pattern.compile(VALID_PATTERN);
+
   private static final Pattern SNOWSTORM_DIALECT = Pattern.compile("^([a-zA-Z]{2,3})-[xX]-(\\d+)$");
 
   private LanguageDialects() {
+  }
+
+  /** True for a null/blank value (no display language) or a well formed dialect sequence. */
+  public static boolean isValid(String dialects) {
+    return dialects == null || dialects.isBlank() || VALID.matcher(dialects).matches();
   }
 
   /**

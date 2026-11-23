@@ -86,6 +86,8 @@ public class Map implements Snap2SnomedEntity {
    * Snowstorm format, e.g. "es-X-450828004,en-X-900000000000509007". Null means the English FSN.
    */
   @Size(max = 512, message = "A Map's display language must be at most 512 characters")
+  @Pattern(regexp = LanguageDialects.VALID_PATTERN,
+      message = "A Map's display language must be comma separated language tags, e.g. es-X-450828004,en")
   private String displayLanguage;
 
   @PrePersist
