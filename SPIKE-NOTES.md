@@ -1,7 +1,7 @@
 # Spike notes – local run, devauth, Snowstorm Lite (2026-11-19)
 
-Status: **spike stopped.** Changes committed on `feature/local-dev-setup` in the fork `alopezo/snap2snomed`
-(`origin`). `upstream` is `IHTSDO/snap2snomed` with push disabled; PRs to upstream only by explicit decision.
+Status: **spike stopped.** Changes committed on `main` in the fork `alopezo/snap2snomed` (`origin`);
+we work directly on `main`, no feature branches. `upstream` is `IHTSDO/snap2snomed` with push disabled; PRs to upstream only by explicit decision.
 The shrimp stub (`ui/snapclient/dev-stubs/`) is still uncommitted (undecided).
 
 ## Uncommitted changes
