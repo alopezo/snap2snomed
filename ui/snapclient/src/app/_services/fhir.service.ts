@@ -42,6 +42,8 @@ export interface Release {
 export class FhirService {
 
   private isOntoserver: boolean;
+  // Snowstorm Lite supports fuzzy matching by appending '~' to the filter text
+  private isLite: boolean;
 
   constructor(
     @Inject(APP_CONFIG) private config: AppConfig,
@@ -49,6 +51,8 @@ export class FhirService {
   ) {
     this.isOntoserver = this.config && this.config.fhirBaseUrl ?
       this.config.fhirBaseUrl.indexOf('ontoserver') > 0 : false;
+    this.isLite = this.config && this.config.fhirBaseUrl ?
+      this.config.fhirBaseUrl.indexOf('lite') > 0 : false;
   }
 
   findReplacementConcepts(conceptId: string, scope: string, version: string) {
@@ -195,7 +199,25 @@ export class FhirService {
     }
   }
 
+  /**
+   * On Snowstorm Lite, an exact search that finds nothing is retried as a fuzzy search ('~' suffix).
+   * Fuzzy is not used up front because it ranks exact matches lower (e.g. 'Hypertension~' ranks
+   * 'Low blood pressure' first), which matters for automap as it takes the top match.
+   * Text the user already ends with '~' is sent as is.
+   */
   findConcepts(text: string, version: string, scope: string, activeOnly: boolean = true, count: number = 100): Observable<R4.IValueSet> {
+    const trimmed = text?.trim() ?? '';
+    if (!this.isLite || trimmed.length === 0 || trimmed.endsWith('~')) {
+      return this.expandWithFilter(text, version, scope, activeOnly, count);
+    }
+    return this.expandWithFilter(trimmed, version, scope, activeOnly, count).pipe(
+      mergeMap(valueset => (valueset.expansion?.contains?.length ?? 0) > 0
+        ? of(valueset)
+        : this.expandWithFilter(`${trimmed}~`, version, scope, activeOnly, count))
+    );
+  }
+
+  private expandWithFilter(text: string, version: string, scope: string, activeOnly: boolean, count: number): Observable<R4.IValueSet> {
     const url = `${this.config.fhirBaseUrl}/ValueSet/$expand`;
     const params = {
       'filter': text,
