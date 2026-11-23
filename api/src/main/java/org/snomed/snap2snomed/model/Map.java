@@ -80,6 +80,13 @@ public class Map implements Snap2SnomedEntity {
   @Size(min = 1, max = 1024, message = "A Map's target scope ECL expression must be between 1 and 1024 characters")
   private String toScope;
 
+  /**
+   * Ordered sequence of language dialects used to pick the display term of target concepts, in
+   * Snowstorm format, e.g. "es-X-450828004,en-X-900000000000509007". Null means the English FSN.
+   */
+  @Size(max = 512, message = "A Map's display language must be at most 512 characters")
+  private String displayLanguage;
+
   @NotNull(message = "A Map must always belong to a project")
   @ManyToOne(cascade = {CascadeType.MERGE})
   private Project project;
@@ -99,6 +106,8 @@ public class Map implements Snap2SnomedEntity {
     String getToVersion();
 
     String getToScope();
+
+    String getDisplayLanguage();
 
     Instant getCreated();
 

@@ -24,4 +24,5 @@ public class MapCloneDto {
   private String mapVersion;
   private String toVersion;
   private String toScope;
+  private String displayLanguage;
 }

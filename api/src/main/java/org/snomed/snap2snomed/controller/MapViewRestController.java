@@ -55,6 +55,7 @@ import org.snomed.snap2snomed.problem.auth.NotAuthorisedProblem;
 import org.snomed.snap2snomed.repository.MapRepository;
 import org.snomed.snap2snomed.security.WebSecurity;
 import org.snomed.snap2snomed.service.FhirService;
+import org.snomed.snap2snomed.service.LanguageDialects;
 import org.snomed.snap2snomed.service.MapViewService;
 import org.snomed.snap2snomed.service.MapViewService.MapViewFilter;
 import org.snomed.snap2snomed.service.TerminologyProvider;
@@ -531,6 +532,9 @@ public class MapViewRestController {
           cm.setName(title.replaceAll("[^\\w\\d]", "_"));
           cm.setDescription(project.getDescription());
           cm.setVersion(map.getMapVersion());
+          // Language of the target display terms: the map's primary display language, English FSN otherwise
+          final String language = LanguageDialects.primaryLanguage(map.getDisplayLanguage());
+          cm.setLanguage(language == null ? "en" : language);
 
           final ImportedCodeSet source = map.getSource();
           String valuesetUri = source.getValuesetUri();

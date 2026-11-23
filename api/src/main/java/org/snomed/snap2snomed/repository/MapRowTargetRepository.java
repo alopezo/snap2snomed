@@ -163,6 +163,13 @@ public interface MapRowTargetRepository
   // Exported in REST interface
   // ---------------------------------
 
+  @Query(value = "update map_row_target t join map_row r on t.row_id = r.id " +
+          "set t.target_display = :display " +
+          "where r.map_id = :mapId and t.target_code = :code and t.target_display <> :display", nativeQuery = true)
+  @Modifying
+  @RestResource(exported = false)
+  int updateTargetDisplayForMap(Long mapId, String code, String display);
+
   @Query(value = "insert into map_row_target (created, created_by, modified, modified_by, flagged, relationship, target_code, target_display, row_id) select :dateTime created, :user created_by, :dateTime modified, :user modified_by, false, s.relationship, s.target_code, s.target_display, tr.id row_id from map_row_target s, map_row sr, map_row tr where (s.row_id = sr.id) and (sr.map_id = :sourceMapId) and (tr.map_id = :mapId) and (sr.source_code_id = tr.source_code_id)", nativeQuery = true)
   @Modifying
   @RestResource(exported = false)

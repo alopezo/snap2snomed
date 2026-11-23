@@ -112,6 +112,9 @@ public class CodeSetImportService {
   private MappingService mappingService;
 
   @Autowired
+  private TargetDisplayResolver targetDisplayResolver;
+
+  @Autowired
   WebSecurity webSecurity;
 
   private static final List<String> supportedContentTypes = new ArrayList<String>(Arrays.asList("text/plain", "text/csv", "text/tsv"));
@@ -674,6 +677,8 @@ public class CodeSetImportService {
         }
         importResponse.setInsertCount(insertMappingCodeWork.getInsertCount());
       }
+      // Imported displays are replaced by the term in the map's display language
+      targetDisplayResolver.resolveTargetDisplays(Long.valueOf(importDetails.getMapId()));
       importResponse.setTargetValidation(mappingService.validateMapTargets(Long.valueOf(importDetails.getMapId())));
     } catch (final InputMismatchException e) {
       throw new MappingImportProblem("invalid-delimiter", "Invalid delimiter specfied, the first line does not contain the delimiter", e.getLocalizedMessage());

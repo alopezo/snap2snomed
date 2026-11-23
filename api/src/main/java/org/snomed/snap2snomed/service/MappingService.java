@@ -613,7 +613,8 @@ public class MappingService {
   }
 
   @Transactional
-  public Long newMappingVersion(Long mapId, Long newSourceId, String mapVersion, String targetVersion, String targetScope) throws IOException {
+  public Long newMappingVersion(Long mapId, Long newSourceId, String mapVersion, String targetVersion, String targetScope,
+      String displayLanguage) throws IOException {
     final Map originalMap = mapRepository.findById(mapId)
         .orElseThrow(() -> Snap2SnomedProblem.of(HttpStatus.NOT_FOUND, "No Map found with id " + mapId));
     final ImportedCodeSet newSource = importedCodeSetRepository.findById(newSourceId)
@@ -639,6 +640,7 @@ public class MappingService {
         .mapVersion(mapVersion)
         .toVersion(targetVersion)
         .toScope(targetScope)
+        .displayLanguage(LanguageDialects.normalize(displayLanguage))
         .source(newSource)
         .build();
 

@@ -162,7 +162,7 @@ public class MappingRestController {
       throw new NotAuthorisedProblem("Not authorised to import mapping if the user is not admin or member of an associated project!");
     }
     return mappingService.newMappingVersion(mapId, mapDetails.getSourceId(), mapDetails.getMapVersion(),
-        mapDetails.getToVersion(), mapDetails.getToScope());
+        mapDetails.getToVersion(), mapDetails.getToScope(), mapDetails.getDisplayLanguage());
   }
 
   @Operation(description = "Validates the target codes for the given map id. " +
