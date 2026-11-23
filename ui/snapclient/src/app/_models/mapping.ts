@@ -30,6 +30,7 @@ export class Mapping {
     this.source = new Source();
     this.toVersion = null;
     this.toScope = '*'; // ECL for "all SNOMED concepts" - cannot use 'ANY' because SnowStorm
+    this.displayLanguage = null;
     this.created = new Date();
     this.modified = new Date();
     this.blindMapFlag = false;
@@ -42,6 +43,11 @@ export class Mapping {
   toSystem = 'http://snomed.info/sct';  // Always "to snomed" for the moment
   toVersion: string | null;
   toScope: string;
+  /**
+   * Ordered language dialects (Snowstorm format, e.g. "es-X-450828004,en-X-900000000000509007") used
+   * for target display terms; null means the English FSN.
+   */
+  displayLanguage: string | null;
   created: Date;
   modified: Date;
   blindMapFlag: Boolean;

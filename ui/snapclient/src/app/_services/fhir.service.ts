@@ -20,10 +20,11 @@ import {Observable, forkJoin, of} from 'rxjs';
 import {ServiceUtils} from '../_utils/service_utils';
 import {APP_CONFIG, AppConfig} from '../app.config';
 import {R4} from '@ahryman40k/ts-fhir-types';
-import {catchError, concatMap, map, mergeMap, tap} from 'rxjs/operators';
+import {catchError, concatMap, map, mergeMap, shareReplay, tap} from 'rxjs/operators';
 import {ErrorDetail} from '../_models/error_detail';
 import {BundleTypeKind, Bundle_RequestMethodKind} from '@ahryman40k/ts-fhir-types/lib/R4';
 import {Coding, ConceptNode, Match} from '../store/fhir-feature/fhir.reducer';
+import {LanguageDialects, TerminologyServerKind} from '../_utils/language-dialects';
 
 export const SEQUENCE = 'http://ontoserver.csiro.au/fhir/ConceptMap/automapstrategy-seq;automapstrategy-default;automapstrategy-MML'
 export const DEFAULT = 'http://ontoserver.csiro.au/fhir/ConceptMap/automapstrategy-default';
@@ -44,6 +45,8 @@ export class FhirService {
   private isOntoserver: boolean;
   // Snowstorm Lite supports fuzzy matching by appending '~' to the filter text
   private isLite: boolean;
+  // Detected once from CapabilityStatement.software.name; drives the language dialect format
+  private serverKind$?: Observable<TerminologyServerKind>;
 
   constructor(
     @Inject(APP_CONFIG) private config: AppConfig,
@@ -154,7 +157,56 @@ export class FhirService {
     return this.http.get<R4.IBundle>(url, options);
   }
 
-  autoSuggest(text: string, version: string, scope: string, strategy: string, activeOnly: boolean = true, count: number = 5, forceEnglish: boolean = false): Observable<Match[]> {
+  /**
+   * Terminology server kind, detected from its CapabilityStatement and cached. Falls back to
+   * 'other' (Snowstorm dialect format) if the metadata cannot be read.
+   */
+  getServerKind(): Observable<TerminologyServerKind> {
+    if (!this.serverKind$) {
+      const options = ServiceUtils.getHTTPHeaders();
+      options.headers = options.headers.set('Accept', ['application/fhir+json', 'application/json']);
+      options.params = {'_summary': 'true'};
+      this.serverKind$ = this.http.get<R4.ICapabilityStatement>(`${this.config.fhirBaseUrl}/metadata`, options).pipe(
+        map(statement => LanguageDialects.serverKindFromSoftwareName(statement?.software?.name)),
+        catchError(() => of<TerminologyServerKind>('other')),
+        shareReplay(1)
+      );
+    }
+    return this.serverKind$;
+  }
+
+  /**
+   * Accept-Language value for a map's display language: the dialect sequence in the server's
+   * format, or 'en-US' when the map has no display language (English terms, legacy behaviour).
+   */
+  acceptLanguageForMap(displayLanguage: string | null | undefined): Observable<string> {
+    if (!LanguageDialects.normalize(displayLanguage)) {
+      return of('en-US');
+    }
+    return this.getServerKind().pipe(
+      map(kind => LanguageDialects.toServerFormat(displayLanguage, kind) ?? 'en-US')
+    );
+  }
+
+  /**
+   * Term to store as a target display: the preferred term in the map's display language, or the
+   * English FSN when the map has no display language. Empty string if the server returns none.
+   */
+  getTargetDisplay(code: string, system: string, version: string, displayLanguage: string | null | undefined): Observable<string> {
+    if (!LanguageDialects.normalize(displayLanguage)) {
+      return this.getEnglishFsn(code, system, version);
+    }
+    return this.acceptLanguageForMap(displayLanguage).pipe(
+      mergeMap(acceptLanguage => this.lookupConcept(code, system, version, [], acceptLanguage)),
+      map(parameters => parameters.parameter?.find(parameter => parameter.name === 'display')?.valueString ?? '')
+    );
+  }
+
+  /**
+   * @param acceptLanguage when set, sent as Accept-Language so the returned displays are in that
+   * language (see acceptLanguageForMap); otherwise the browser's language applies.
+   */
+  autoSuggest(text: string, version: string, scope: string, strategy: string, activeOnly: boolean = true, count: number = 5, acceptLanguage?: string): Observable<Match[]> {
     if (this.isOntoserver) {
       const isMatch = (match: Match | null): match is Match => !!match;
       const ecl = activeOnly ? `(${scope}){{C active=true}}` : scope;
@@ -169,8 +221,8 @@ export class FhirService {
       const options = ServiceUtils.getHTTPHeaders();
       options.headers = options.headers
         .set('Accept', ['application/fhir+json', 'application/json']);
-      if (forceEnglish) {
-        options.headers = options.headers.append('Accept-Language', 'en-US');
+      if (acceptLanguage) {
+        options.headers = options.headers.set('Accept-Language', acceptLanguage);
       }
       options.params = {...options.params, ...params};
       return this.http.get<R4.IParameters>(url, options).pipe(
@@ -182,7 +234,7 @@ export class FhirService {
         })
       );
     } else {
-      return this.findConcepts(text, version, scope, activeOnly, count).pipe(
+      return this.findConcepts(text, version, scope, activeOnly, count, acceptLanguage).pipe(
         map(valueset => {
           return valueset.expansion?.contains?.slice(0, count).map(entry => {
             return {
@@ -205,19 +257,20 @@ export class FhirService {
    * 'Low blood pressure' first), which matters for automap as it takes the top match.
    * Text the user already ends with '~' is sent as is.
    */
-  findConcepts(text: string, version: string, scope: string, activeOnly: boolean = true, count: number = 100): Observable<R4.IValueSet> {
+  findConcepts(text: string, version: string, scope: string, activeOnly: boolean = true, count: number = 100, acceptLanguage?: string): Observable<R4.IValueSet> {
     const trimmed = text?.trim() ?? '';
     if (!this.isLite || trimmed.length === 0 || trimmed.endsWith('~')) {
-      return this.expandWithFilter(text, version, scope, activeOnly, count);
+      return this.expandWithFilter(text, version, scope, activeOnly, count, acceptLanguage);
     }
-    return this.expandWithFilter(trimmed, version, scope, activeOnly, count).pipe(
+    return this.expandWithFilter(trimmed, version, scope, activeOnly, count, acceptLanguage).pipe(
       mergeMap(valueset => (valueset.expansion?.contains?.length ?? 0) > 0
         ? of(valueset)
-        : this.expandWithFilter(`${trimmed}~`, version, scope, activeOnly, count))
+        : this.expandWithFilter(`${trimmed}~`, version, scope, activeOnly, count, acceptLanguage))
     );
   }
 
-  private expandWithFilter(text: string, version: string, scope: string, activeOnly: boolean, count: number): Observable<R4.IValueSet> {
+  private expandWithFilter(text: string, version: string, scope: string, activeOnly: boolean, count: number,
+                           acceptLanguage?: string): Observable<R4.IValueSet> {
     const url = `${this.config.fhirBaseUrl}/ValueSet/$expand`;
     const params = {
       'filter': text,
@@ -229,6 +282,9 @@ export class FhirService {
     const options = ServiceUtils.getHTTPHeaders();
     options.headers = options.headers
       .set('Accept', ['application/fhir+json', 'application/json']);
+    if (acceptLanguage) {
+      options.headers = options.headers.set('Accept-Language', acceptLanguage);
+    }
     options.params = {...options.params, ...params};
     return this.http.get<R4.IValueSet>(url, options);
   }
@@ -518,7 +574,7 @@ export class FhirService {
     );
   }
 
-  lookupConcept(code: string, system: string, version: string, properties: string[] = []): Observable<R4.IParameters> {
+  lookupConcept(code: string, system: string, version: string, properties: string[] = [], acceptLanguage?: string): Observable<R4.IParameters> {
     const url = `${this.config.fhirBaseUrl}/CodeSystem/$lookup`;
     const params: any = {
       'code': code,
@@ -531,6 +587,9 @@ export class FhirService {
     const options = ServiceUtils.getHTTPHeaders();
     options.headers = options.headers
       .set('Accept', ['application/fhir+json', 'application/json']);
+    if (acceptLanguage) {
+      options.headers = options.headers.set('Accept-Language', acceptLanguage);
+    }
     options.params = {...options.params, ...params};
     return this.http.get<R4.IParameters>(url, options);
   }

@@ -163,7 +163,8 @@ export class MapService {
       sourceId: mapping.source.id,
       mapVersion: mapping.mapVersion,
       toVersion: mapping.toVersion,
-      toScope: mapping.toScope
+      toScope: mapping.toScope,
+      displayLanguage: mapping.displayLanguage
     });
     return this.http.post(url, body, header);
   }

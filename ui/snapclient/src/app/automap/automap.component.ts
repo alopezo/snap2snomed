@@ -103,8 +103,12 @@ export class AutomapComponent implements OnInit {
     const scope = self.mapping?.toScope;
     const version: string = self.mapping.toVersion;
 
-    self.mapService.getTaskAuthorRows(self.task_id).subscribe(
-      (rows: AutomapRow[]) => {
+    // Matches are stored as targets, so their displays must be in the map's display language
+    forkJoin([
+      self.mapService.getTaskAuthorRows(self.task_id),
+      self.fhirService.acceptLanguageForMap(self.mapping.displayLanguage),
+    ]).subscribe(
+      ([rows, acceptLanguage]: [AutomapRow[], string]) => {
         self.automapCount = 0;
         if (rows.length === 0) {
           self.translate.get('AUTOMAP.NOROWS').subscribe((msg) => {
@@ -140,6 +144,7 @@ export class AutomapComponent implements OnInit {
           total: rows.length,
           version,
           scope,
+          acceptLanguage,
           mapViewIndex,
         };
 
@@ -187,6 +192,7 @@ export class AutomapComponent implements OnInit {
   automapRows(rows: AutomapRow[], id: number, context: {
     version: string,
     scope: string,
+    acceptLanguage: string,
     total: number,
     matchCount: number,
     fhirErrors: number,
@@ -203,7 +209,7 @@ export class AutomapComponent implements OnInit {
         return of(null);
       }
 
-      return self.fhirService.autoSuggest(row.display, context.version, context.scope, DEFAULT, true, 1, true).pipe(
+      return self.fhirService.autoSuggest(row.display, context.version, context.scope, DEFAULT, true, 1, context.acceptLanguage).pipe(
         map(matches => matches[0]),
         mergeMap(match => {
           if (match) {

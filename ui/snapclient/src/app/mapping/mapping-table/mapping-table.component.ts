@@ -422,10 +422,11 @@ export class MappingTableComponent implements OnInit, AfterViewInit, OnDestroy {
             (!this.task?.mapping.project.dualMapMode && matchingTargetCodes.length > 0)) {
           self.dialog.open(ConfirmDialogComponent, {data: self.getDuplicateTargetDialogData()});
         } else {
-          self.fhirService.getEnglishFsn(event.data?.code, event.data?.system, self.task?.mapping?.toVersion || '').subscribe(englishFsn => {
+          self.fhirService.getTargetDisplay(event.data?.code, event.data?.system, self.task?.mapping?.toVersion || '',
+            self.task?.mapping?.displayLanguage).subscribe(targetDisplay => {
             let displayTerm = event.data?.display;
-            if (englishFsn !== '') {
-              displayTerm = englishFsn;
+            if (targetDisplay !== '') {
+              displayTerm = targetDisplay;
             }
 
             row.targetCode = event.data?.code;

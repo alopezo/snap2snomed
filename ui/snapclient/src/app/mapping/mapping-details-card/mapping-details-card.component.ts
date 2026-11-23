@@ -22,6 +22,7 @@ import {Mapping} from 'src/app/_models/mapping';
 import { TARGET_OUT_OF_SCOPE_TAG } from 'src/app/_models/map_row';
 import { MapService } from 'src/app/_services/map.service';
 import { TargetChangedService } from 'src/app/_services/target-changed.service';
+import { LanguageMetadataService } from 'src/app/_services/language-metadata.service';
 
 @Component({
     selector: 'app-mapping-details-card',
@@ -37,11 +38,14 @@ export class MappingDetailsCardComponent {
   @Output() clicked = new EventEmitter();
 
   outOfScopeTargetCount: number = 0;
+  // Context name of the map's display language, or its raw dialect sequence if it has no name
+  displayLanguageName: string | null = null;
 
   constructor(private translate: TranslateService,
               private router: Router,
               private mapService: MapService,
-              private targetChangedService: TargetChangedService) {
+              private targetChangedService: TargetChangedService,
+              private languageMetadataService: LanguageMetadataService) {
   }
 
   ngOnInit() {
@@ -51,7 +55,18 @@ export class MappingDetailsCardComponent {
     })
 
     this.updateNumOutOfScopeTargets();
+    this.updateDisplayLanguageName();
 
+  }
+
+  updateDisplayLanguageName() {
+    const dialects = this.mapping?.displayLanguage;
+    this.displayLanguageName = dialects ?? null;
+    if (dialects) {
+      this.languageMetadataService.contextName(this.mapping.toVersion, dialects).subscribe(name => {
+        this.displayLanguageName = name ?? dialects;
+      });
+    }
   }
 
   updateNumOutOfScopeTargets() {
@@ -66,6 +81,7 @@ export class MappingDetailsCardComponent {
     if (changes.mapping?.currentValue && !changes.mapping?.isFirstChange()) {
       this.mapping = changes.mapping.currentValue;
       this.updateNumOutOfScopeTargets();
+      this.updateDisplayLanguageName();
     }
   }
 

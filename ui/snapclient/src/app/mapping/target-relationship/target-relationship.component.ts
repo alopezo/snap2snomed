@@ -162,10 +162,11 @@ export class TargetRelationshipComponent implements OnInit, OnChanges {
     const self = this;
     self.addingTargetRelationship = relationship;
 
-    self.fhirService.getEnglishFsn(code, system, self.task?.mapping?.toVersion || '').subscribe(englishFsn => {
+    self.fhirService.getTargetDisplay(code, system, self.task?.mapping?.toVersion || '', self.task?.mapping?.displayLanguage)
+      .subscribe(targetDisplay => {
       let displayTerm = display;
-      if (englishFsn !== '') {
-        displayTerm = englishFsn;
+      if (targetDisplay !== '') {
+        displayTerm = targetDisplay;
       }
 
       if (self.source) {

@@ -49,6 +49,8 @@ import { MappingImportSource } from 'src/app/_models/mapping_import_source';
 import { selectAuthorizedProjects } from '../../store/app.selectors';
 import { Project } from '../../_models/project';
 import { MatSelectChange } from '@angular/material/select';
+import { LanguageContext, LanguageMetadataService } from '../../_services/language-metadata.service';
+import { LanguageDialects } from '../../_utils/language-dialects';
 
 @Component({
   selector: 'app-mapping-add',
@@ -67,6 +69,8 @@ export class MappingAddComponent implements OnInit {
   loading = false;
   selectedEdition: string = "";
   mappingFile: ImportMappingFileParams | undefined | null;
+  // Display language options for the selected target version; '' is the English FSN (no explicit language)
+  languageContexts: LanguageContext[] = [];
 
   MAX_TITLE = FormUtils.MAX_TITLE;
   MAX_VERSION = FormUtils.MAX_VERSION;
@@ -87,6 +91,7 @@ export class MappingAddComponent implements OnInit {
     toVersion: new UntypedFormControl(''),
     toScopeSelect: new UntypedFormControl(''),
     toScope: new UntypedFormControl('', [Validators.minLength(1)]),
+    displayLanguage: new UntypedFormControl(''),
     dualMapMode: new UntypedFormControl('')
   });
 
@@ -134,7 +139,22 @@ export class MappingAddComponent implements OnInit {
     private store: Store<IAppState>,
     private translate: TranslateService,
     private fhirService: FhirService,
+    private languageMetadataService: LanguageMetadataService,
     public dialog: MatDialog) {
+  }
+
+  /**
+   * Loads the display language options of the target version's edition. A stored language that is
+   * not among them (e.g. after changing edition) is kept as an extra option so it is not lost silently.
+   */
+  loadLanguageContexts(versionUri: string | null): void {
+    this.languageMetadataService.contextsForVersion(versionUri).subscribe(contexts => {
+      const current = LanguageDialects.normalize(this.formGroup.controls.displayLanguage.value);
+      if (current && !contexts.some(context => context.languageDialects === current)) {
+        contexts = [...contexts, {name: current, languageDialects: current}];
+      }
+      this.languageContexts = contexts;
+    });
   }
 
   ngOnInit(): void {
@@ -156,6 +176,8 @@ export class MappingAddComponent implements OnInit {
     self.formGroup.controls.toVersion.setValue(this.mappingModel.toVersion);
     self.formGroup.controls.toScopeSelect.setValue(this.mappingModel.toScope);
     self.formGroup.controls.toScope.setValue(this.mappingModel.toScope);
+    self.formGroup.controls.displayLanguage.setValue(this.mappingModel.displayLanguage ?? '');
+    self.loadLanguageContexts(this.mappingModel.toVersion);
     self.formGroup.controls.dualMapMode.setValue(this.mappingModel.project.dualMapMode);
 
     self.formGroup.controls.title.valueChanges.subscribe((value) => {
@@ -182,6 +204,10 @@ export class MappingAddComponent implements OnInit {
     });
     self.formGroup.controls.toVersion.valueChanges.subscribe((value) => {
       self.mappingModel.toVersion = value;
+      self.loadLanguageContexts(value);
+    });
+    self.formGroup.controls.displayLanguage.valueChanges.subscribe((value) => {
+      self.mappingModel.displayLanguage = LanguageDialects.normalize(value);
     });
     self.formGroup.controls.toScopeSelect.valueChanges.subscribe((value) => {
       self.mappingModel.toScope = value;

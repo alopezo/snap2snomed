@@ -117,6 +117,18 @@
                     <mat-icon>sync</mat-icon>
                   </button>
                 </div>
+                <mat-form-field class="field-full-width">
+                  <mat-label>{{ 'MAP.DISPLAY_LANGUAGE' | translate }}</mat-label>
+                  <mat-select id="displayLanguage" formControlName="displayLanguage">
+                    <mat-option value="">{{ 'MAP.DISPLAY_LANGUAGE_ENGLISH_FSN' | translate }}</mat-option>
+                    @for (context of languageContexts; track context.languageDialects) {
+                      <mat-option [value]="context.languageDialects" [title]="context.languageDialects">
+                        {{context.name}}
+                      </mat-option>
+                    }
+                  </mat-select>
+                  <mat-hint>{{ 'MAP.DISPLAY_LANGUAGE_HINT' | translate }}</mat-hint>
+                </mat-form-field>
                 <mat-form-field class="field-full-width" hintLabel="{{'FORM.MAX_CHARS' | translate}} {{MAX_TARGETSCOPE}}">
                   <mat-label for="toScopeSelect">{{ 'MAP.TARGET_SCOPE_COMMON' | translate }}</mat-label>
                   <mat-select id="toScopeSelect" formControlName="toScopeSelect">
