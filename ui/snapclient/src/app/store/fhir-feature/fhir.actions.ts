@@ -64,7 +64,7 @@ export class LoadReleasesFailure implements Action {
 export class FindConcepts implements Action {
   readonly type = FhirActionTypes.FIND_CONCEPTS;
 
-  constructor(public payload: {text: string, version: string, scope: string, activeOnly?:boolean}) {
+  constructor(public payload: {text: string, version: string, scope: string, activeOnly?:boolean, displayLanguage?: string | null}) {
   }
 }
 
@@ -85,7 +85,7 @@ export class FindConceptsFailure implements Action {
 export class AutoSuggest implements Action {
   readonly type = FhirActionTypes.AUTO_SUGGEST;
 
-  constructor(public payload: {text: string, version: string, scope: string, strategy: string, activeOnly?:boolean}) {
+  constructor(public payload: {text: string, version: string, scope: string, strategy: string, activeOnly?:boolean, displayLanguage?: string | null}) {
   }
 }
 
@@ -106,7 +106,7 @@ export class AutoSuggestFailure implements Action {
 export class LookupConcept implements Action {
   readonly type = FhirActionTypes.LOOKUP_CONCEPT;
 
-  constructor(public payload: {code: string, system: string, version: string, properties: string[]}) {
+  constructor(public payload: {code: string, system: string, version: string, properties: string[], displayLanguage?: string | null}) {
   }
 }
 
@@ -127,7 +127,7 @@ export class LookupConceptFailure implements Action {
 export class DisplayResolvedLookupConcept implements Action {
   readonly type = FhirActionTypes.DISPLAY_RESOLVED_LOOKUP_CONCEPT;
 
-  constructor(public payload: {code: string, system: string, version: string, properties: string[]}) {
+  constructor(public payload: {code: string, system: string, version: string, properties: string[], displayLanguage?: string | null}) {
   }
 }
 
@@ -148,7 +148,7 @@ export class DisplayResolvedLookupConceptFailure implements Action {
 export class ConceptHierarchy implements Action {
   readonly type = FhirActionTypes.CONCEPT_HIERARCHY;
 
-  constructor(public payload: {code: string, system: string, version: string}) {
+  constructor(public payload: {code: string, system: string, version: string, displayLanguage?: string | null}) {
   }
 }
 

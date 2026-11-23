@@ -238,6 +238,7 @@ export class MappingListComponent implements OnInit, AfterViewInit, OnDestroy {
           this.newMapping.source.id = '' + res.source.id;
           this.newMapping.toVersion = res.toVersion;
           this.newMapping.toScope = res.toScope;
+          this.newMapping.displayLanguage = res.displayLanguage ?? null;
           this.newMapping.project = project;
           this.mode = 'FORM.COPY';
           this.opened = true;

@@ -85,7 +85,7 @@
   <div class="container-panels">
     <div class="container-row">
       <div class="search-view card-col">
-        <app-concept-search [scope]="task.mapping.toScope" [version]="task.mapping.toVersion || ''"
+        <app-concept-search [scope]="task.mapping.toScope" [version]="task.mapping.toVersion || ''" [displayLanguage]="task.mapping.displayLanguage"
           [initial]="source.display" [autosuggest]="source.display">
           <span class="search-title">{{'MAP.SEARCH_TARGET' | translate}}</span>
         </app-concept-search>
@@ -159,7 +159,7 @@
             </mat-card-footer>
           </mat-card>
         </div>
-        <app-concept-properties class="tab-view card-col" [version]="task.mapping.toVersion || ''">
+        <app-concept-properties class="tab-view card-col" [version]="task.mapping.toVersion || ''" [displayLanguage]="task.mapping.displayLanguage">
         </app-concept-properties>
       </div>
       <div class="container-row">

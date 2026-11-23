@@ -26,6 +26,7 @@
       @if (((data.task &&  data.task.type !== 'REVIEW') || data.task === null) && !clearTarget && noMapValue == null && changedStatus == null && !isDualMapView()) {
         <app-concept-search #searchComponent [scope]="data.map?.toScope || data.task?.mapping?.toScope || ''"
           [version]="data.map?.toVersion || data.task?.mapping?.toVersion || ''"
+          [displayLanguage]="data.map?.displayLanguage ?? data.task?.mapping?.displayLanguage"
           >
           <span class="search-title">{{'BULKCHANGEDIALOG.SELECTED_TARGET' | translate}} {{currentSelection?.display || 'BULKCHANGEDIALOG.NO_SELECTED_TARGET' | translate}}</span>
         </app-concept-search>

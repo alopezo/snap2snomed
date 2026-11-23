@@ -18,6 +18,7 @@ import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {NestedTreeControl} from '@angular/cdk/tree';
 import {FhirService} from '../_services/fhir.service';
 import {Subscription} from 'rxjs';
+import {mergeMap} from 'rxjs/operators';
 import {SelectionService} from '../_services/selection.service';
 import {Coding, ConceptNode} from '../store/fhir-feature/fhir.reducer';
 import {MatTreeNestedDataSource} from '@angular/material/tree';
@@ -70,7 +71,9 @@ export class TreeViewComponent implements OnInit, OnDestroy {
       this.selectionService.select(element.concept.payload);
     } else if (element.children === null && element.concept.payload) {
       const {code, system, version} = element.concept.payload;
-      self.fhirService.conceptHierarchy(code, system, version).subscribe(nodes => {
+      self.fhirService.acceptLanguageForSearch(self.task?.mapping?.displayLanguage).pipe(
+            mergeMap(acceptLanguage => self.fhirService.conceptHierarchy(code, system, version, acceptLanguage))
+          ).subscribe(nodes => {
         element.children = nodes.filter(node =>
           node.directParents && node.directParents.indexOf(element.concept.id) >= 0
         ).map(node => {
@@ -101,7 +104,9 @@ export class TreeViewComponent implements OnInit, OnDestroy {
             return;
           }
 
-          self.fhirService.conceptHierarchy(code, system, version).subscribe(nodes => {
+          self.fhirService.acceptLanguageForSearch(self.task?.mapping?.displayLanguage).pipe(
+            mergeMap(acceptLanguage => self.fhirService.conceptHierarchy(code, system, version, acceptLanguage))
+          ).subscribe(nodes => {
             const roots: Node[] = [];
             const focus = nodes.find(node => code === node.payload?.code && system === node.payload?.system);
             if (!focus) return;

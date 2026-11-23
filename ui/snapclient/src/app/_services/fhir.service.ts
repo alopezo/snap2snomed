@@ -189,6 +189,20 @@ export class FhirService {
   }
 
   /**
+   * Accept-Language value for browsing (search, suggestions, properties, hierarchy): the map's
+   * dialect sequence in the server's format, or undefined to keep the browser's language when the
+   * map has no display language.
+   */
+  acceptLanguageForSearch(displayLanguage: string | null | undefined): Observable<string | undefined> {
+    if (!LanguageDialects.normalize(displayLanguage)) {
+      return of(undefined);
+    }
+    return this.getServerKind().pipe(
+      map(kind => LanguageDialects.toServerFormat(displayLanguage, kind) ?? undefined)
+    );
+  }
+
+  /**
    * Term to store as a target display: the preferred term in the map's display language, or the
    * English FSN when the map has no display language. Empty string if the server returns none.
    */
@@ -293,12 +307,13 @@ export class FhirService {
     return system + '|' + code;
   }
 
-  displayResolvedLookupConcept(code: string, system: string, version: string, properties: string[] = []): Observable<R4.IParameters> {
+  displayResolvedLookupConcept(code: string, system: string, version: string, properties: string[] = [],
+                               acceptLanguage?: string): Observable<R4.IParameters> {
 
     let expandList = "";
     let conceptDisplayMap = new Map<string, string>();
 
-    return this.lookupConcept(code, system, version, properties).pipe(
+    return this.lookupConcept(code, system, version, properties, acceptLanguage).pipe(
       tap(parameters => {
         // Step 1. find all the concept codes in the properties so their display can be looked up
         parameters.parameter?.map(param => {
@@ -349,13 +364,17 @@ export class FhirService {
         // 2. Look up the display for the concept codes 
 
         const url = `${this.config.fhirBaseUrl}/ValueSet/$expand`;
+        // Resolve the attribute value displays in the same edition (and language) as the concept
         const params: any = {
-          url: FhirService.toValueSet('http://snomed.info/sct', expandList),
+          url: FhirService.toValueSet(acceptLanguage && version ? version : 'http://snomed.info/sct', expandList),
         };
     
         const options = ServiceUtils.getHTTPHeaders();
         options.headers = options.headers
           .set('Accept', ['application/fhir+json', 'application/json']);
+        if (acceptLanguage) {
+          options.headers = options.headers.set('Accept-Language', acceptLanguage);
+        }
     
         options.params = {...options.params, ...params};
         return this.http.get<R4.IValueSet | R4.IOperationOutcome>(url, options).pipe( 
@@ -408,7 +427,7 @@ export class FhirService {
     );
   }
 
-  conceptHierarchy(code: string, system: string, version: string): Observable<ConceptNode<Coding>[]> {
+  conceptHierarchy(code: string, system: string, version: string, acceptLanguage?: string): Observable<ConceptNode<Coding>[]> {
     const toId = FhirService.conceptNodeId;
 
     const expansionToNodes = (valueset: R4.IValueSet): ConceptNode<Coding>[] => {
@@ -480,6 +499,9 @@ export class FhirService {
     const options = ServiceUtils.getHTTPHeaders();
     options.headers = options.headers
       .set('Accept', ['application/fhir+json', 'application/json']);
+    if (acceptLanguage) {
+      options.headers = options.headers.set('Accept-Language', acceptLanguage);
+    }
     options.params = {...options.params, ...params};
     return this.http.get<R4.IValueSet>(url, options).pipe(
       map(expansionToNodes),
@@ -496,7 +518,7 @@ export class FhirService {
           const directParents = nodeMap[id].directParents ?? [];
           const retainedNodes: ConceptNode<Coding>[] = [node];
 
-          return this.lookupConcept(code, system, version).pipe(
+          return this.lookupConcept(code, system, version, [], acceptLanguage).pipe(
             map(parameters => {
               parameters.parameter?.map(param => {
                 if ('property' === param.name) {

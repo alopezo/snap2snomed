@@ -34,6 +34,8 @@ import { SelectionService } from '../_services/selection.service';
 export class ConceptPropertiesComponent implements OnInit, OnDestroy {
   @Input() active = true;
   @Input() version = '';
+  // Map display language (dialect sequence); null keeps the browser's language
+  @Input() displayLanguage: string | null | undefined = null;
 
   code = '';
   display = '';
@@ -106,7 +108,8 @@ export class ConceptPropertiesComponent implements OnInit, OnDestroy {
             code: selection.code,
             system: selection.system,
             version: self.selectionVersion ?? self.version,
-            properties: ["*"]
+            properties: ["*"],
+            displayLanguage: self.displayLanguage
           }));
         }
       },

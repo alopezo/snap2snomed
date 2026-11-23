@@ -298,6 +298,7 @@ export class MappingWorkComponent implements OnInit, OnDestroy {
         code: selection.code,
         system: selection.system,
         version: selection.version ?? self.task?.mapping?.toVersion,
+        displayLanguage: self.task?.mapping?.displayLanguage,
       }));
     }
   }

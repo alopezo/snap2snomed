@@ -16,6 +16,7 @@
 
 import {R4} from '@ahryman40k/ts-fhir-types';
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {LanguageDialects} from '../_utils/language-dialects';
 import {UntypedFormControl} from '@angular/forms';
 import {Store} from '@ngrx/store';
 import {TranslateService} from '@ngx-translate/core';
@@ -38,6 +39,8 @@ export class ConceptSearchComponent implements OnInit, OnDestroy {
   @Input() active: boolean = true;
   @Input() version: string;
   @Input() scope: string;
+  // Map display language (dialect sequence); null keeps the browser's language
+  @Input() displayLanguage: string | null | undefined = null;
   @Input() autosuggest?: string;
   @Input() set initial(value: string) {
     this.searchControl.setValue(value);
@@ -107,6 +110,7 @@ export class ConceptSearchComponent implements OnInit, OnDestroy {
           version: self.version,
           scope: self.scope,
           activeOnly: self.activeOnly,
+          displayLanguage: self.displayLanguage,
         }));
       } else {
         self.matches = [];
@@ -128,8 +132,10 @@ export class ConceptSearchComponent implements OnInit, OnDestroy {
 
   private toMatch(concept: R4.IValueSet_Contains): Match {
     const allFsns = concept.designation?.filter(d => d.use?.code === '900000000000003001');
-    const browserFsn = allFsns?.find(d => d.language === this.translate.getBrowserLang())?.value;
-    const fsn = browserFsn ?? allFsns?.find(() => true)?.value ?? concept.display;
+    // FSN (for the semantic tag) in the map's primary language if it has one, else the browser's
+    const preferredLanguage = LanguageDialects.primaryLanguage(this.displayLanguage) ?? this.translate.getBrowserLang();
+    const preferredFsn = allFsns?.find(d => d.language === preferredLanguage)?.value;
+    const fsn = preferredFsn ?? allFsns?.find(() => true)?.value ?? concept.display;
     const match = fsn?.match(/^(.*) \(([^(]*)\)$/);
 
     const m: Match = {

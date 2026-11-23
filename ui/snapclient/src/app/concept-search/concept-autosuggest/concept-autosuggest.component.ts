@@ -36,6 +36,8 @@ export class ConceptAutosuggestComponent implements OnInit, OnDestroy {
 
   @Input() version = 'http://snomed.info/sct';
   @Input() scope = '*';
+  // Map display language (dialect sequence); null keeps the browser's language
+  @Input() displayLanguage: string | null | undefined = null;
   @Input() strategy: string = DEFAULT_SEQUENCE;
 
   @Input() set search(value: string) {
@@ -88,7 +90,8 @@ export class ConceptAutosuggestComponent implements OnInit, OnDestroy {
         version: this.version,
         scope: this.scope,
         strategy: this.strategy,
-        activeOnly: this._activeOnly
+        activeOnly: this._activeOnly,
+        displayLanguage: this.displayLanguage
       }));
     } else {
       this.matches = [];

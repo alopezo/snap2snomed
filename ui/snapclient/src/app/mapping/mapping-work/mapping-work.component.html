@@ -56,6 +56,7 @@
               <app-concept-search [active]="!opened"
                 [scope]="mapping.toScope || ''"
                 [version]="mapping.toVersion || ''"
+                [displayLanguage]="mapping.displayLanguage"
                 [initial]="targetConceptSearchText">
                 <span class="search-title">{{'MAP.SEARCH_TARGET' | translate}}</span>
               </app-concept-search>
@@ -84,7 +85,7 @@
               }
             </div>
             <div class="properties-view card-col">
-              <app-concept-properties [active]="!opened" [version]="mapping.toVersion || ''">
+              <app-concept-properties [active]="!opened" [version]="mapping.toVersion || ''" [displayLanguage]="mapping.displayLanguage">
               </app-concept-properties>
             </div>
           </div>

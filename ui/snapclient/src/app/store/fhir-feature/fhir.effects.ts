@@ -16,7 +16,7 @@
 
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs/internal/observable/of';
 import { FhirService } from '../../_services/fhir.service';
 import { R4 } from '@ahryman40k/ts-fhir-types';
@@ -90,7 +90,8 @@ export class FhirEffects {
   findConcepts$ = createEffect(() => this.actions$.pipe(
     ofType(FhirActionTypes.FIND_CONCEPTS),
     map(action => action.payload),
-    switchMap((action) => this.fhirService.findConcepts(action.text, action.version, action.scope, action.activeOnly).pipe(
+    switchMap((action) => this.fhirService.acceptLanguageForSearch(action.displayLanguage).pipe(
+      mergeMap(acceptLanguage => this.fhirService.findConcepts(action.text, action.version, action.scope, action.activeOnly, 100, acceptLanguage)),
       map(valueset => {
         if (!valueset.expansion) throw 'No expansion in search result';
         return valueset.expansion;
@@ -102,7 +103,8 @@ export class FhirEffects {
   conceptHierarchy$ = createEffect(() => this.actions$.pipe(
     ofType(FhirActionTypes.CONCEPT_HIERARCHY),
     map(action => action.payload),
-    switchMap((action) => this.fhirService.conceptHierarchy(action.code, action.system, action.version).pipe(
+    switchMap((action) => this.fhirService.acceptLanguageForSearch(action.displayLanguage).pipe(
+      mergeMap(acceptLanguage => this.fhirService.conceptHierarchy(action.code, action.system, action.version, acceptLanguage)),
       switchMap((matches) => of(new ConceptHierarchySuccess(matches))),
       catchError((err) => of(new ConceptHierarchyFailure({error: err})))
     ))), {dispatch: true});
@@ -110,7 +112,8 @@ export class FhirEffects {
   autoSuggest$ = createEffect(() => this.actions$.pipe(
     ofType(FhirActionTypes.AUTO_SUGGEST),
     map(action => action.payload),
-    switchMap((action) => this.fhirService.autoSuggest(action.text, action.version, action.scope, action.strategy, action.activeOnly).pipe(
+    switchMap((action) => this.fhirService.acceptLanguageForSearch(action.displayLanguage).pipe(
+      mergeMap(acceptLanguage => this.fhirService.autoSuggest(action.text, action.version, action.scope, action.strategy, action.activeOnly, 5, acceptLanguage)),
       switchMap((matches) => of(new AutoSuggestSuccess(matches))),
       catchError((err) => of(new AutoSuggestFailure({error: err})))
     ))), {dispatch: true});
@@ -191,7 +194,8 @@ export class FhirEffects {
   lookupConcept$ = createEffect(() => this.actions$.pipe(
     ofType(FhirActionTypes.LOOKUP_CONCEPT),
     map(action => action.payload),
-    switchMap((action) => this.fhirService.lookupConcept(action.code, action.system, action.version, action.properties).pipe(
+    switchMap((action) => this.fhirService.acceptLanguageForSearch(action.displayLanguage).pipe(
+      mergeMap(acceptLanguage => this.fhirService.lookupConcept(action.code, action.system, action.version, action.properties, acceptLanguage)),
       map(parameters => this.mapParameters(parameters, action)),
       switchMap((props) => of(new LookupConceptSuccess(props))),
       catchError((err) => of(new LookupConceptFailure({ error: err })))
@@ -200,7 +204,8 @@ export class FhirEffects {
   displayResolvedLookupConcept$ = createEffect(() => this.actions$.pipe(
     ofType(FhirActionTypes.DISPLAY_RESOLVED_LOOKUP_CONCEPT),
     map(action => action.payload),
-    switchMap((action) => this.fhirService.displayResolvedLookupConcept(action.code, action.system, action.version, action.properties).pipe(
+    switchMap((action) => this.fhirService.acceptLanguageForSearch(action.displayLanguage).pipe(
+      mergeMap(acceptLanguage => this.fhirService.displayResolvedLookupConcept(action.code, action.system, action.version, action.properties, acceptLanguage)),
       map(parameters => this.mapParameters(parameters, action)),
       switchMap((props) => of(new DisplayResolvedLookupConceptSuccess(props))),
       catchError((err) => of(new DisplayResolvedLookupConceptFailure({ error: err })))
