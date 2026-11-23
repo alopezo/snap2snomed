@@ -54,6 +54,7 @@ import {ServiceUtils} from '../../_utils/service_utils';
 import {LoadMapping, LoadMapView, ViewContext} from 'src/app/store/mapping-feature/mapping.actions';
 import {BulkchangeComponent, BulkChangeDialogData, getResultMessage} from '../bulkchange/bulkchange.component';
 import {MatDialog} from '@angular/material/dialog';
+import {ConfirmDialogComponent, DialogData, DialogType} from 'src/app/dialog/confirm-dialog/confirm-dialog.component';
 import {MatBottomSheet, MatBottomSheetConfig} from '@angular/material/bottom-sheet';
 import {ResultsdialogComponent} from 'src/app/resultsdialog/resultsdialog.component';
 import {MappingTableSelectorComponent} from '../mapping-table-selector/mapping-table-selector.component';
@@ -747,6 +748,45 @@ export class MappingViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.clearLoading();
       });
     }
+  }
+
+  clickRefreshTargetDisplays(): void {
+    const mapId = this.mapping_id;
+    if (!mapId) {
+      return;
+    }
+    const texts = this.translate.instant(['MAP.REFRESH_TARGET_DISPLAYS_CONFIRM_TITLE', 'MAP.REFRESH_TARGET_DISPLAYS_CONFIRM',
+      'DIALOG.OK', 'DIALOG.CANCEL']);
+    const dialogData: DialogData = {
+      title: texts['MAP.REFRESH_TARGET_DISPLAYS_CONFIRM_TITLE'],
+      message: texts['MAP.REFRESH_TARGET_DISPLAYS_CONFIRM'],
+      button: texts['DIALOG.OK'],
+      cancel: texts['DIALOG.CANCEL'],
+      type: DialogType.CONFIRM
+    };
+    this.dialog.open(ConfirmDialogComponent, {data: dialogData}).afterClosed().subscribe(confirmed => {
+      if (!confirmed) {
+        return;
+      }
+      this.setLoading();
+      this.mapService.refreshTargetDisplays(mapId).subscribe(result => {
+        this.clearLoading();
+        this._bottomSheet.open(ResultsdialogComponent, {
+          data: {
+            message: this.translate.instant('MAP.REFRESH_TARGET_DISPLAYS_RESULT', {
+              updated: result.updatedCount, codes: result.codeCount, unresolved: result.unresolvedCount
+            }),
+            infoIcon: true
+          }
+        });
+        if (result.updatedCount > 0) {
+          this.refreshTable('');
+        }
+      }, err => {
+        this.clearLoading();
+        this.error = {message: this.translate.instant('MAP.REFRESH_TARGET_DISPLAYS_ERROR'), detail: err};
+      });
+    });
   }
 
   clickBulkChange(): void {

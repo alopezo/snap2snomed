@@ -57,6 +57,13 @@
                 </button>
               }
               @if (isOwner()) {
+                <button id="refresh-target-displays" mat-stroked-button (click)="clickRefreshTargetDisplays()"
+                  matTooltip="{{'MAP.REFRESH_TARGET_DISPLAYS_TOOLTIP' | translate}}"
+                  matTooltipShowDelay="1000">
+                  {{'MAP.REFRESH_TARGET_DISPLAYS' | translate}}
+                </button>
+              }
+              @if (isOwner()) {
                 <button id="bulk-change" mat-stroked-button (click)="clickBulkChange()"
                   [disabled]="!hasSelectedRows()" matTooltip="{{'MAP.BULK_CHANGE_TOOLTIP' | translate}}">
                   {{'TABLE.BULK_CHANGE' | translate}}

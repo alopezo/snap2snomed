@@ -234,6 +234,12 @@ describe('MappingViewComponent', () => {
       expect(el.nativeElement.textContent).toBe(' MAP.VALIDATE_TARGETS ');
       expect(el).toBeTruthy();
     });
+
+    it('should show REFRESH TERMS button', () => {
+      el = fixture.debugElement.query(By.css('#refresh-target-displays'));
+      expect(el).toBeTruthy();
+      expect(el.nativeElement.textContent).toBe(' MAP.REFRESH_TARGET_DISPLAYS ');
+    });
   });
 
   it('should show Map title', () => {

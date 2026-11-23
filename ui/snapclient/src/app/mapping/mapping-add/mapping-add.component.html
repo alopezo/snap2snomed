@@ -199,7 +199,25 @@
                     </tr>
                     <tr>
                       <th><b>{{ 'MAP.DISPLAY_LANGUAGE' | translate }}:</b></th>
-                      <td [title]="mappingModel.displayLanguage ?? ''">{{ displayLanguageLabel ?? ('MAP.DISPLAY_LANGUAGE_ENGLISH_FSN' | translate) }}</td>
+                      @if (mode === 'FORM.EDIT') {
+                        <!-- The display language only changes how targets are shown, so it stays editable;
+                             saving re-resolves the stored target terms -->
+                        <td>
+                          <mat-form-field class="field-full-width" subscriptSizing="dynamic">
+                            <mat-select id="displayLanguageEdit" formControlName="displayLanguage">
+                              <mat-option value="">{{ 'MAP.DISPLAY_LANGUAGE_ENGLISH_FSN' | translate }}</mat-option>
+                              @for (context of languageContexts; track context.languageDialects) {
+                                <mat-option [value]="context.languageDialects" [title]="context.languageDialects">
+                                  {{context.name}}
+                                </mat-option>
+                              }
+                            </mat-select>
+                            <mat-hint>{{ 'MAP.DISPLAY_LANGUAGE_EDIT_HINT' | translate }}</mat-hint>
+                          </mat-form-field>
+                        </td>
+                      } @else {
+                        <td [title]="mappingModel.displayLanguage ?? ''">{{ displayLanguageLabel ?? ('MAP.DISPLAY_LANGUAGE_ENGLISH_FSN' | translate) }}</td>
+                      }
                     </tr>
                     <tr>
                       <th><b>{{ 'MAP.TARGET_SCOPE_LABEL' | translate }}:</b></th>

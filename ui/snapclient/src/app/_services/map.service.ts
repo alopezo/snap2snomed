@@ -129,6 +129,13 @@ export interface CreateMappingParams {
   dualMapMode: boolean;
 }
 
+/** Outcome of POST /map/{id}/refreshTargetDisplays. */
+export interface TargetDisplayRefreshResult {
+  codeCount: number;
+  updatedCount: number;
+  unresolvedCount: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -570,6 +577,13 @@ export class MapService {
     const header = ServiceUtils.getHTTPHeaders();
     const body = mappingUpdateDto;
     return this.http.post<any>(url, body, header);
+  }
+
+  /** Re-resolves every target display of the map in its display language. */
+  public refreshTargetDisplays(mapId: string): Observable<TargetDisplayRefreshResult> {
+    const url = `${this.config.apiBaseUrl}/map/${mapId}/refreshTargetDisplays`;
+    const header = ServiceUtils.getHTTPHeaders();
+    return this.http.post<TargetDisplayRefreshResult>(url, null, header);
   }
 
   public validateTargetCodes(mapId: string): Observable<ValidationResult> {
