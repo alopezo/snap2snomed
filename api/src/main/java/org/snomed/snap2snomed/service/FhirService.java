@@ -91,7 +91,8 @@ public class FhirService {
         });
         valueSetToExpand.getCompose().setInclude(conceptSetComponents);
       }
-      int count = 0, offset = 0;
+      // The first call only reads expansion.total. Snowstorm fails on count=0 ("/ by zero"), so ask for 1.
+      int count = 1, offset = 0;
       final TerminologyClient terminologyClient = terminologyProvider.getClient();
       ValueSet responseVs = new ValueSet();
       try {
