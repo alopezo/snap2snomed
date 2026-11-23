@@ -44,6 +44,25 @@ This is an example of how to list things you need to use the software and how to
    ```
 
 
+### Running locally without AWS Cognito
+
+For local development the API can act as its own (fake) identity provider via the `devauth`
+profile, so no Cognito user pool is needed. The UI needs no changes: it reads the login URL
+from the API's `/config` endpoint.
+
+1. Start MySQL: `cd api && docker compose up -d db`
+2. Start the API with the `local` and `devauth` profiles:
+   ```sh
+   mvn -pl api spring-boot:run -Dspring-boot.run.profiles=local,devauth \
+     -Dspring-boot.run.arguments="--spring.datasource.url=jdbc:aws-wrapper:mysql://localhost:3306/s2s --spring.datasource.username=root"
+   ```
+3. Start the UI (`ui/snapclient`, with `API_BASE_URL=http://localhost:8080` in `.env`) and log in.
+   The login page lets you pick any email/name and whether the user is an admin; the same email
+   always maps to the same user.
+
+Tokens are signed with a key generated at startup, so you need to log in again after restarting
+the API. **Never enable `devauth` in a deployed environment.**
+
 
 <!-- CONTRIBUTING -->
 ## Contributing
