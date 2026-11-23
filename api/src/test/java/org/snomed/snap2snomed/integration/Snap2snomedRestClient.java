@@ -890,6 +890,10 @@ public class Snap2snomedRestClient {
     return objectMapper.writeValueAsString(map);
   }
 
+  public ValidatableResponse refreshTargetDisplays(String user, Long mapId) {
+    return givenUser(user).post(MessageFormat.format("/map/{0}/refreshTargetDisplays", mapId)).then();
+  }
+
   public ValidationResult validateMapTargets(Long mapId) {
     return givenDefaultUser().get(MessageFormat.format("/map/{0}/validateTargetCodes", mapId))
             .then().statusCode(is(200))

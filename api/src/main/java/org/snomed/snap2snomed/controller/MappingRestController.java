@@ -21,16 +21,20 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import java.io.IOException;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.snomed.snap2snomed.controller.dto.MapCloneDto;
 import org.snomed.snap2snomed.controller.dto.MappingDto;
 import org.snomed.snap2snomed.controller.dto.MappingResponse;
 import org.snomed.snap2snomed.controller.dto.MappingUpdateDto;
+import org.snomed.snap2snomed.controller.dto.TargetDisplayRefreshResult;
 import org.snomed.snap2snomed.controller.dto.ValidationResult;
 import org.snomed.snap2snomed.model.Map;
 import org.snomed.snap2snomed.problem.auth.NoSuchUserProblem;
+import org.snomed.snap2snomed.problem.Snap2SnomedProblem;
 import org.snomed.snap2snomed.problem.auth.NotAuthorisedProblem;
 import org.snomed.snap2snomed.security.WebSecurity;
 import org.snomed.snap2snomed.service.MappingService;
+import org.snomed.snap2snomed.service.TargetDisplayResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -38,10 +42,12 @@ import org.springframework.web.bind.annotation.*;
 
 @Validated
 @RestController
+@Slf4j
 public class MappingRestController {
 
   @Autowired private MappingService mappingService;
   @Autowired private WebSecurity webSecurity;
+  @Autowired private TargetDisplayResolver targetDisplayResolver;
 
   @Operation(description = "Deletes a map")
   @Parameter(name = "mapId", in = ParameterIn.PATH, required = true, description = "ID of the map to be deleted")
@@ -179,5 +185,28 @@ public class MappingRestController {
       throw new NotAuthorisedProblem("Not authorised to import mapping if the user is not admin or member of an associated project!");
     }    
     return mappingService.validateMapTargets(mapId);
+  }
+
+  @Operation(description = "Replaces the display term of every target in the map with the term the terminology server "
+      + "returns in the map's display language (the English FSN when the map has none). Row statuses are not changed.")
+  @Parameter(name = "mapId", in = ParameterIn.PATH, required = true, allowEmptyValue = false,
+      description = "Identifier of the map to refresh")
+  @PostMapping(value = "/map/{mapId}/refreshTargetDisplays")
+  TargetDisplayRefreshResult refreshTargetDisplays(@PathVariable("mapId") Long mapId) {
+    if (!webSecurity.isValidUser()) {
+      throw new NoSuchUserProblem();
+    }
+    if (!webSecurity.isAdminUser() && !webSecurity.isProjectOwnerForMapId(mapId)) {
+      throw new NotAuthorisedProblem("Not authorised to refresh target terms if the user is not admin or owner of the associated project!");
+    }
+    try {
+      return targetDisplayResolver.resolveTargetDisplays(mapId);
+    } catch (final Snap2SnomedProblem e) {
+      throw e;
+    } catch (final RuntimeException e) {
+      log.error("Failed to refresh target displays for map " + mapId, e);
+      throw Snap2SnomedProblem.of(HttpStatus.BAD_GATEWAY,
+          "The terminology server could not resolve the target terms: " + e.getMessage());
+    }
   }
 }

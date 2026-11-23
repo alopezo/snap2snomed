@@ -678,7 +678,7 @@ public class CodeSetImportService {
         importResponse.setInsertCount(insertMappingCodeWork.getInsertCount());
       }
       // Imported displays are replaced by the term in the map's display language
-      targetDisplayResolver.resolveTargetDisplays(Long.valueOf(importDetails.getMapId()));
+      targetDisplayResolver.tryResolveTargetDisplays(Long.valueOf(importDetails.getMapId()));
       importResponse.setTargetValidation(mappingService.validateMapTargets(Long.valueOf(importDetails.getMapId())));
     } catch (final InputMismatchException e) {
       throw new MappingImportProblem("invalid-delimiter", "Invalid delimiter specfied, the first line does not contain the delimiter", e.getLocalizedMessage());

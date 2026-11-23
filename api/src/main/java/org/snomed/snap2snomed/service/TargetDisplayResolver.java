@@ -30,6 +30,7 @@ import org.hl7.fhir.r4.model.Parameters;
 import org.hl7.fhir.r4.model.ValueSet;
 import org.ihtsdo.snomed.util.rf2.schema.RF2SchemaConstants;
 import org.snomed.snap2snomed.config.Snap2snomedConfiguration;
+import org.snomed.snap2snomed.controller.dto.TargetDisplayRefreshResult;
 import org.snomed.snap2snomed.model.Map;
 import org.snomed.snap2snomed.model.MapRowTarget;
 import org.snomed.snap2snomed.problem.Snap2SnomedProblem;
@@ -70,13 +71,38 @@ public class TargetDisplayResolver {
 
   /**
    * Updates the stored target display of every target in the map whose term differs from the
-   * one the terminology server returns. Codes the server does not know keep their display, and
-   * so does every target if the terminology server cannot be reached.
+   * one the terminology server returns. Codes the server does not return keep their display.
    *
-   * @return the number of targets updated
+   * @throws RuntimeException if the terminology server cannot be reached or fails; nothing is
+   *     updated in that case
    */
   @Transactional
-  public int resolveTargetDisplays(Long mapId) {
+  public TargetDisplayRefreshResult resolveTargetDisplays(Long mapId) {
+    return doResolve(mapId);
+  }
+
+  /**
+   * Same as {@link #resolveTargetDisplays(Long)}, but a terminology server failure is only logged
+   * and every target keeps its display. For flows that must not fail because of it (mapping
+   * import, new map version).
+   *
+   * @return the refresh result, or null if the terminology server failed
+   */
+  @Transactional
+  public TargetDisplayRefreshResult tryResolveTargetDisplays(Long mapId) {
+    try {
+      return doResolve(mapId);
+    } catch (final Snap2SnomedProblem e) {
+      throw e;
+    } catch (final RuntimeException e) {
+      // Caught here, inside the transactional proxy, so a terminology server failure never marks
+      // the caller's transaction (e.g. a mapping import) as rollback-only.
+      log.warn("Could not resolve target displays for map {}: {}", mapId, e.getMessage());
+      return null;
+    }
+  }
+
+  private TargetDisplayRefreshResult doResolve(Long mapId) {
     final Map map = mapRepository.findById(mapId)
         .orElseThrow(() -> Snap2SnomedProblem.of(HttpStatus.NOT_FOUND, "No Map found with id " + mapId));
     final Set<String> codes = mapRowTargetRepository.findByMapId(mapId).stream()
@@ -84,24 +110,18 @@ public class TargetDisplayResolver {
         .filter(code -> code != null && FhirService.isValidSctId(code, RF2SchemaConstants.PartionIdentifier.CONCEPT))
         .collect(Collectors.toSet());
     if (codes.isEmpty()) {
-      return 0;
+      return new TargetDisplayRefreshResult(0, 0, 0);
     }
-    final java.util.Map<String, String> displays;
-    try {
-      displays = fetchDisplays(codes, map.getToVersion(), map.getDisplayLanguage());
-    } catch (final RuntimeException e) {
-      // Caught here, inside the transactional proxy, so a terminology server failure never marks
-      // the caller's transaction (e.g. a mapping import) as rollback-only. Targets keep their display.
-      log.warn("Could not resolve target displays for map {}: {}", mapId, e.getMessage());
-      return 0;
-    }
+    // Fetch everything first: if the server fails, nothing has been updated yet
+    final java.util.Map<String, String> displays = fetchDisplays(codes, map.getToVersion(), map.getDisplayLanguage());
     int updated = 0;
     for (final java.util.Map.Entry<String, String> entry : displays.entrySet()) {
       updated += mapRowTargetRepository.updateTargetDisplayForMap(mapId, entry.getKey(), entry.getValue());
     }
-    log.info("Resolved target displays for map {} ({} codes, {} targets updated, display language {})",
-        mapId, codes.size(), updated, map.getDisplayLanguage() == null ? "English FSN" : map.getDisplayLanguage());
-    return updated;
+    final TargetDisplayRefreshResult result = new TargetDisplayRefreshResult(codes.size(), updated, codes.size() - displays.size());
+    log.info("Resolved target displays for map {} ({}, display language {})",
+        mapId, result, map.getDisplayLanguage() == null ? "English FSN" : map.getDisplayLanguage());
+    return result;
   }
 
   /** Fetches the display term of each code, in batches of {@code expandBatchSize} codes. */

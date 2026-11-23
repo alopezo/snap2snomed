@@ -116,7 +116,7 @@ public class MappingService {
             || !Objects.equals(existing.get().getToVersion(), map.getToVersion()));
     mapRepository.save(map);
     if (termsChanged) {
-      targetDisplayResolver.resolveTargetDisplays(map.getId());
+      targetDisplayResolver.tryResolveTargetDisplays(map.getId());
     }
   }
 
@@ -701,7 +701,7 @@ public class MappingService {
     // Copied targets keep the original display; re-resolve them if the terms can differ
     if (!Objects.equals(LanguageDialects.normalize(originalMap.getDisplayLanguage()), mapCreated.getDisplayLanguage())
         || !Objects.equals(originalMap.getToVersion(), mapCreated.getToVersion())) {
-      targetDisplayResolver.resolveTargetDisplays(createdId);
+      targetDisplayResolver.tryResolveTargetDisplays(createdId);
     }
 
     validateMapTargets(createdId);
