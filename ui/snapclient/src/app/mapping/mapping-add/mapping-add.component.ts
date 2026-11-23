@@ -157,6 +157,15 @@ export class MappingAddComponent implements OnInit {
     });
   }
 
+  /** Name of the map's display language context (or its raw sequence); null for the English FSN. */
+  get displayLanguageLabel(): string | null {
+    const current = LanguageDialects.normalize(this.mappingModel?.displayLanguage);
+    if (!current) {
+      return null;
+    }
+    return this.languageContexts.find(context => context.languageDialects === current)?.name ?? current;
+  }
+
   ngOnInit(): void {
     const self = this;
     self.error = {};

@@ -198,6 +198,10 @@
                       </td>
                     </tr>
                     <tr>
+                      <th><b>{{ 'MAP.DISPLAY_LANGUAGE' | translate }}:</b></th>
+                      <td [title]="mappingModel.displayLanguage ?? ''">{{ displayLanguageLabel ?? ('MAP.DISPLAY_LANGUAGE_ENGLISH_FSN' | translate) }}</td>
+                    </tr>
+                    <tr>
                       <th><b>{{ 'MAP.TARGET_SCOPE_LABEL' | translate }}:</b></th>
                       <td>{{mappingModel.toScope}}</td>
                     </tr>
