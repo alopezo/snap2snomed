@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.snomed.snap2snomed.service;
+package org.snomed.snap2snomed.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,6 +23,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.snomed.snap2snomed.service.TerminologyServerKind;
 
 // Same cases as language-dialects.spec.ts in the UI: keep both in sync
 class LanguageDialectsTest {

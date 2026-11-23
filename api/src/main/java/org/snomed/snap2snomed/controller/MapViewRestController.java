@@ -55,7 +55,7 @@ import org.snomed.snap2snomed.problem.auth.NotAuthorisedProblem;
 import org.snomed.snap2snomed.repository.MapRepository;
 import org.snomed.snap2snomed.security.WebSecurity;
 import org.snomed.snap2snomed.service.FhirService;
-import org.snomed.snap2snomed.service.LanguageDialects;
+import org.snomed.snap2snomed.util.LanguageDialects;
 import org.snomed.snap2snomed.service.MapViewService;
 import org.snomed.snap2snomed.service.MapViewService.MapViewFilter;
 import org.snomed.snap2snomed.service.TerminologyProvider;

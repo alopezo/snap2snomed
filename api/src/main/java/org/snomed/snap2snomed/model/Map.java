@@ -27,6 +27,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.envers.Audited;
 import org.snomed.snap2snomed.model.Project.ListView;
+import org.snomed.snap2snomed.util.LanguageDialects;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -86,6 +87,12 @@ public class Map implements Snap2SnomedEntity {
    */
   @Size(max = 512, message = "A Map's display language must be at most 512 characters")
   private String displayLanguage;
+
+  @PrePersist
+  @PreUpdate
+  void normalizeDisplayLanguage() {
+    this.displayLanguage = LanguageDialects.normalize(this.displayLanguage);
+  }
 
   @NotNull(message = "A Map must always belong to a project")
   @ManyToOne(cascade = {CascadeType.MERGE})

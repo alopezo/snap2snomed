@@ -48,6 +48,8 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.time.Instant;
 import java.util.*;
+
+import org.snomed.snap2snomed.util.LanguageDialects;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
@@ -60,6 +62,7 @@ public class MappingService {
 
   @Autowired private AuthenticationFacade authenticationFacade;
   @Autowired private FhirService fhirService;
+  @Autowired private TargetDisplayResolver targetDisplayResolver;
   @Autowired private ImportedCodeSetRepository importedCodeSetRepository;
   @Autowired private MapRepository mapRepository;
   @Autowired private MapRowEventHandler mapRowEventHandler;
@@ -107,7 +110,14 @@ public class MappingService {
 
   @Transactional
   public void updateMap(Map map) {
+    final Optional<Map> existing = mapRepository.findById(map.getId());
+    final boolean termsChanged = existing.isPresent()
+        && (!Objects.equals(LanguageDialects.normalize(existing.get().getDisplayLanguage()), LanguageDialects.normalize(map.getDisplayLanguage()))
+            || !Objects.equals(existing.get().getToVersion(), map.getToVersion()));
     mapRepository.save(map);
+    if (termsChanged) {
+      targetDisplayResolver.resolveTargetDisplays(map.getId());
+    }
   }
 
   @Transactional
@@ -640,7 +650,7 @@ public class MappingService {
         .mapVersion(mapVersion)
         .toVersion(targetVersion)
         .toScope(targetScope)
-        .displayLanguage(LanguageDialects.normalize(displayLanguage))
+        .displayLanguage(displayLanguage)
         .source(newSource)
         .build();
 
@@ -686,6 +696,12 @@ public class MappingService {
       // Any rows in draft state will be cleared and reblinded
       mapRowRepository.resetMapRowResetRowsForNewMap(createdId);
 
+    }
+
+    // Copied targets keep the original display; re-resolve them if the terms can differ
+    if (!Objects.equals(LanguageDialects.normalize(originalMap.getDisplayLanguage()), mapCreated.getDisplayLanguage())
+        || !Objects.equals(originalMap.getToVersion(), mapCreated.getToVersion())) {
+      targetDisplayResolver.resolveTargetDisplays(createdId);
     }
 
     validateMapTargets(createdId);

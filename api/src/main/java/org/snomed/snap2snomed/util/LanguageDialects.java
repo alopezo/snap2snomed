@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package org.snomed.snap2snomed.service;
+package org.snomed.snap2snomed.util;
 
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import org.snomed.snap2snomed.service.TerminologyServerKind;
 
 /**
  * Helpers for the map display language: an ordered, comma separated sequence of language
