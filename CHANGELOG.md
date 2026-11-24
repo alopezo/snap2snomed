@@ -17,6 +17,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.2.0] - 2026-11-24
+
+The user interface is available in seven languages.
+
+#### Added
+
+- Interface language selector in the footer (also on the login page): English, Español, Français,
+  Dansk, Nederlands, Magyar and Svenska. The choice applies immediately, is kept in the browser
+  (also across logout and login) and otherwise follows the browser language, then `defaultLang`.
+- New Spanish, Danish and Swedish translations; the French translation is now complete and the
+  Dutch and Hungarian ones are updated to cover the whole interface. The new texts are
+  machine-assisted and still need review by native speakers (see `src/assets/i18n/README.md`).
+- Dates, the "last updated" times, the target version date and the table paginator follow the
+  interface language.
+- A test that checks every translation file has the same keys and `{{parameters}}` as English, and a
+  development-mode console warning for keys missing from English.
+
+#### Changed
+
+- Remaining hard-coded interface texts (login page, terms of service dialog, table headers and
+  filters, tooltips, accessibility labels, error messages) now come from the translation files.
+- The map view action buttons wrap onto a second line instead of overlapping when labels are long.
+
+#### Fixed
+
+- Error messages for failed concept lookup, concept search and match suggestions showed their
+  translation keys instead of text.
+- The SHOW / HIDE column menu showed a translation key for the notes column.
+- The map view showed the raw `INREVIEW` status instead of "IN REVIEW".
+- Typos in English messages ("occured", missing and doubled spaces).
+
 ## [1.1.0] - 2026-11-23
 
 First release of this fork. It starts adapting Snap2SNOMED to terminology servers other than
