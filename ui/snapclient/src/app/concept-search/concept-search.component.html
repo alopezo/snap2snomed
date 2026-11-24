@@ -36,7 +36,7 @@
             placeholder="{{'SEARCH.PLACEHOLDER' | translate}}">
             @if (searchControl.value.trim()) {
               <button id="btn-search-clear" matSuffix mat-icon-button
-                aria-label="Clear" (click)="searchControl.setValue('')">
+                [attr.aria-label]="'FORM.CLEAR' | translate" (click)="searchControl.setValue('')">
                 <mat-icon>cancel</mat-icon>
               </button>
             }

@@ -93,7 +93,7 @@ export class MappingTableComponent implements OnInit, AfterViewInit, OnDestroy {
     {columnId: 'status', columnDisplay: 'TABLE.STATUS', displayed: true},
     {columnId: 'targetOutOfScope', columnDisplay: 'TABLE.TARGET_OUT_OF_SCOPE', displayed: true},
     {columnId: 'flagged', columnDisplay: 'TABLE.FLAG', displayed: true},
-    {columnId: 'latestNote', columnDisplay: 'SOURCE.TABLE.NOTES', displayed: true},
+    {columnId: 'latestNote', columnDisplay: 'TABLE.NOTES', displayed: true},
     {columnId: 'lastAuthorReviewer', columnDisplay: 'TABLE.LAST_AUTHOR_REVIEWER', displayed: true},
     {columnId: 'actions', columnDisplay: '', displayed: true}
   ];

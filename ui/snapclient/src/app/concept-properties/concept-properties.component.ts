@@ -81,6 +81,17 @@ export class ConceptPropertiesComponent implements OnInit, OnDestroy {
     'moduleId',
   ];
 
+  /** Translation keys of the property row labels; other keys (attribute names) come from the server. */
+  readonly propertyLabels: Record<string, string> = {
+    'code': 'PROPERTIES.CODE',
+    'Fully specified name': 'PROPERTIES.FULLY_SPECIFIED_NAME',
+    'preferred term': 'PROPERTIES.PREFERRED_TERM',
+    'active': 'PROPERTIES.ACTIVE',
+    'Synonym': 'PROPERTIES.SYNONYM',
+    'effectiveTime': 'PROPERTIES.EFFECTIVE_TIME',
+    'moduleId': 'PROPERTIES.MODULE_ID',
+  };
+
   private displayedAttributeRelationshipProps = [
     'parent',
     'attributeRelationships'

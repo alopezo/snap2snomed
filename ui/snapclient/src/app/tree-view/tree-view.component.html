@@ -18,7 +18,7 @@
         <div class="mat-tree-node">
           <button mat-icon-button matTreeNodeToggle
             (click)="toggle(node)"
-            [attr.aria-label]="'Toggle ' + node.concept.display">
+            [attr.aria-label]="'TREE.TOGGLE_NODE' | translate:{display: node.concept.display}">
             <mat-icon class="mat-icon-rtl-mirror">
               {{node.isParent ? 'expand_less' : (treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right')}}
             </mat-icon>

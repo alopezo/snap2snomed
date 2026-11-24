@@ -25,6 +25,11 @@ import {MatDialogRef} from "@angular/material/dialog";
 })
 export class AcceptTermsComponent {
 
+  // Interpolation params for the TERMS.* texts; the product name is not translated
+  readonly params = {
+    product: '<strong><span>SNOMED International Snap2SNOMED</span></strong>'
+  };
+
   constructor(public dialogRef: MatDialogRef<AcceptTermsComponent>) {}
 
   onReject(): void {

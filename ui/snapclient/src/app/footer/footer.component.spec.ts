@@ -26,6 +26,11 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { HttpLoaderFactory } from '../app.module';
 import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
+import {MatIconModule} from '@angular/material/icon';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatButtonModule} from '@angular/material/button';
+
 describe('FooterComponent', () => {
   let component: FooterComponent;
   let fixture: ComponentFixture<FooterComponent>;
@@ -33,7 +38,7 @@ describe('FooterComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
     declarations: [FooterComponent],
-    imports: [MatDialogModule,
+    imports: [MatDialogModule, MatIconModule, MatMenuModule, MatTooltipModule, MatButtonModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,

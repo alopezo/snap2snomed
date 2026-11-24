@@ -19,7 +19,7 @@
                   <app-task-select [myTasks]="myTasks" [selectedTask]="task"></app-task-select>
                 </div>
                 <div class="col-right">
-                  <h2>{{task.type | translate}}</h2>
+                  <h2>{{'TASK.' + task.type | translate}}</h2>
                   <div class="row-actions">
                     @if (task.type === 'AUTHOR') {
                       <span>

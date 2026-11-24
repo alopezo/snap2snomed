@@ -15,7 +15,7 @@
                   <ng-container matColumnDef="key">
                     <th mat-header-cell *matHeaderCellDef>{{'SEARCH.PROPERTY' | translate}}</th>
                     <td mat-cell class="properties-header" *matCellDef="let element">
-                      <span> {{element.key}} </span>
+                      <span> {{ propertyLabels[element.key] ? (propertyLabels[element.key] | translate) : element.key }} </span>
                     </td>
                   </ng-container>
                   <!-- Auxilliary column -->

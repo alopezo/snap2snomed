@@ -31,6 +31,7 @@ import { jwtDecode } from 'jwt-decode';
 import {selectMappingLoading} from '../store/mapping-feature/mapping.selectors';
 import {map} from "rxjs/operators";
 import {MapService} from "./map.service";
+import {UI_LANGUAGE_STORAGE_KEY} from './ui-language.service';
 
 
 @Injectable({
@@ -130,8 +131,13 @@ export class AuthService {
     localStorage.setItem('userid', userid);
   }
 
+  /** Clears the session, keeping the interface language the user picked. */
   clearSessionStorage(): void {
+    const uiLanguage = localStorage.getItem(UI_LANGUAGE_STORAGE_KEY);
     localStorage.clear();
+    if (uiLanguage) {
+      localStorage.setItem(UI_LANGUAGE_STORAGE_KEY, uiLanguage);
+    }
   }
 
   isAuthenticated(): boolean {

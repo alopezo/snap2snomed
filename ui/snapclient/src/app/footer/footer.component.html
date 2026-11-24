@@ -6,6 +6,18 @@
       <a class="footer-link" title= "{{'FOOTER.PRIVACY_POLICY' | translate}}" [href]="privacy">{{'FOOTER.PRIVACY_POLICY' | translate}}</a>
       <a class="footer-link" title= "{{'FOOTER.FEEDBACK' | translate}}" (click)="showFeedback()" href="">{{'FOOTER.FEEDBACK' | translate}}</a>
       <a class="footer-link" title= "{{'FOOTER.USER_GUIDE' | translate}}" (click)="openUserGuide()" href="">{{'FOOTER.USER_GUIDE' | translate}}</a>
+      <button class="footer-link language-button" mat-button [matMenuTriggerFor]="languageMenu"
+              [attr.aria-label]="'FOOTER.LANGUAGE' | translate" [matTooltip]="'FOOTER.LANGUAGE' | translate">
+        <mat-icon>language</mat-icon>{{currentLanguageName}}
+      </button>
+      <mat-menu #languageMenu="matMenu">
+        @for (language of uiLanguage.languages; track language.code) {
+          <button mat-menu-item (click)="useLanguage(language.code)" [attr.lang]="language.code"
+                  [class.selected-language]="language.code === uiLanguage.current">
+            {{language.nativeName}}
+          </button>
+        }
+      </mat-menu>
 
     </div>
   </div>

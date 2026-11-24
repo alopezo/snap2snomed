@@ -160,7 +160,7 @@
                       type="button" (click)="onImportMapping($event)">
                       {{ 'FORM.IMPORT_EXISTING_MAP' | translate }}
                     </button>
-                    <span>Selected Mapping File:</span>
+                    <span>{{ 'MAPPING_ADD.SELECTED_MAPPING_FILE' | translate }}</span>
                     <div>
                       {{mappingFile?.source?.source_file?.name}}
                       @if (mappingFile?.source?.source_file?.name) {

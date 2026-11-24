@@ -1,5 +1,5 @@
-<button mat-mini-fab class="btn-primary pull-right" aria-label="Close" (click)="onClose()">
+<button mat-mini-fab class="btn-primary pull-right" [attr.aria-label]="'FORM.CLOSE' | translate" (click)="onClose()">
   <mat-icon>close</mat-icon>
 </button>
-<iframe title="Feedback Form" class="freshwidget-embedded-form" id="freshwidget-embedded-form" src="https://ihtsdo.freshdesk.com/widgets/feedback_widget/new?&widgetType=embedded&searchArea=no" scrolling="no" height="500px" width="100%" frameborder="0" >
+<iframe [title]="'FEEDBACK.FORM_TITLE' | translate" class="freshwidget-embedded-form" id="freshwidget-embedded-form" src="https://ihtsdo.freshdesk.com/widgets/feedback_widget/new?&widgetType=embedded&searchArea=no" scrolling="no" height="500px" width="100%" frameborder="0" >
 </iframe>

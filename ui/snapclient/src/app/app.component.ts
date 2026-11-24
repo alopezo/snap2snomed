@@ -25,6 +25,7 @@ import {selectAuthState} from './store/auth-feature/auth.selectors';
 import {TranslateService} from '@ngx-translate/core';
 import {APP_CONFIG, AppConfig} from './app.config';
 import {ErrorInfo} from './errormessage/errormessage.component';
+import {UiLanguageService} from './_services/ui-language.service';
 
 
 @Component({
@@ -51,7 +52,8 @@ export class AppComponent implements OnInit {
               private store: Store<IAppState>,
               public router: Router,
               private route: ActivatedRoute,
-              public translate: TranslateService) {
+              public translate: TranslateService,
+              private uiLanguage: UiLanguageService) {
     this.title = this.config.appName;
     this.isAuthenticated = false;
     this.isLoading = false;
@@ -80,14 +82,9 @@ export class AppComponent implements OnInit {
   }
 
   setupTranslator(): void {
-    // Set up translation service - uses i18n/*.json
+    // Set up translation service - uses i18n/*.json (see UiLanguageService)
     AppComponent.translator = this.translate;
-    this.translate.setDefaultLang(this.config.defaultLang);
-    const supportedLangs = ['en', 'fr', 'nl', 'hu', 'sv'];
-    const userLang = this.translate.getBrowserLang() ?? this.config.defaultLang; // TODO - Get from user profile when ready
-    const lang = supportedLangs.indexOf(userLang) >= 0 ? userLang : this.config.defaultLang;
-    this.translate.addLangs(supportedLangs);
-    this.translate.use(lang);
+    this.uiLanguage.init(this.config.defaultLang);
   }
 
   showLogin(): void {

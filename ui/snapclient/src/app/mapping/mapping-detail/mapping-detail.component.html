@@ -9,13 +9,13 @@
       <mat-card-content>
         <div class="panel-header">
           <div class="col">
-            <button mat-icon-button class="btn-accent" type="button" title="Close" (click)="backToTask()">
+            <button mat-icon-button class="btn-accent" type="button" title="{{'FORM.CLOSE' | translate}}" (click)="backToTask()">
               <mat-icon>cancel</mat-icon>
             </button>
           </div>
           <div class="col-main">
             <h2><b>{{'SOURCE.SOURCE' | translate}}:</b> {{source.display}}
-            <button mat-icon-button type="button" title="Copy source label"
+            <button mat-icon-button type="button" title="{{'MAPPING_DETAIL.COPY_SOURCE_LABEL' | translate}}"
               [cdkCopyToClipboard]="source.display">
               <mat-icon>content_copy</mat-icon>
             </button>
@@ -43,13 +43,13 @@
           </table>
         </div>
         <div class="col-status">
-          <button id="previous-code-button" mat-button type="button" title="Previous code" (click)="loadPrevious()"
+          <button id="previous-code-button" mat-button type="button" title="{{'MAPPING_DETAIL.PREVIOUS_CODE' | translate}}" (click)="loadPrevious()"
             [disabled]="!hasPrevious()">
             <mat-icon>navigate_before</mat-icon>
             {{'MAP.PREVIOUS' | translate}}
           </button>
           <span class="status-group">
-            <mat-button-toggle-group name="status" aria-label="Status"
+            <mat-button-toggle-group name="status" [attr.aria-label]="'TABLE.STATUS' | translate"
               [(ngModel)]="source.status">
               @for (status of getStatusList(); track status) {
                 <mat-button-toggle
@@ -59,18 +59,18 @@
               }
             </mat-button-toggle-group>
           </span>
-          <button id="next-code-button" mat-button type="button" title="Next code" (click)="loadNext()"
+          <button id="next-code-button" mat-button type="button" title="{{'MAPPING_DETAIL.NEXT_CODE' | translate}}" (click)="loadNext()"
             [disabled]="!hasNext()">{{'MAP.NEXT' | translate}}
             <mat-icon>navigate_next</mat-icon>
           </button>
         </div>
         <div class="col-right">
           <small>{{'MAP.MAP' | translate}}: {{task.mapping.project.title}}</small>
-          <h2>{{task.type | translate}}</h2>
+          <h2>{{'TASK.' + task.type | translate}}</h2>
         </div>
       </div>
       <div class="row">
-        <mat-chip-listbox aria-label="Filters">
+        <mat-chip-listbox [attr.aria-label]="'MAPPING_DETAIL.FILTERS' | translate">
           @for (filter of appliedFilters; track filter) {
             <mat-chip-option [disabled]="true" [selected]="false" #tooltip="matTooltip"
             matTooltip="{{'DETAILS.APPLIED_FILTER' | translate}}">{{filter | translate}}</mat-chip-option>
@@ -139,19 +139,19 @@
           <mat-card-footer>
             <span class="button-actions">
               <button (click)="loadPrevious()" [disabled]="!hasPrevious()" mat-icon-button
-                title="Previous code" type="button">
+                title="{{'MAPPING_DETAIL.PREVIOUS_CODE' | translate}}" type="button">
                 <mat-icon>navigate_before</mat-icon>
               </button>
               <mat-button-toggle-group (change)="updateStatus($event.value)" [(ngModel)]="source.status"
                 [disabled]="writeDisableUtils.isStatusSelectionDisabled(this.task.type, toMapRowStatus(source.status))"
-                aria-label="Status" name="status">
+                [attr.aria-label]="'TABLE.STATUS' | translate" name="status">
                 @for (status of getStatusList(); track status) {
                   <mat-button-toggle [value]="status"
                     matTooltip="{{'STATUS.'   + status | translate}}">
                     <mat-icon>{{toIconName(status)}}</mat-icon></mat-button-toggle>
                   }
                 </mat-button-toggle-group>
-                <button (click)="loadNext()" [disabled]="!hasNext()" mat-icon-button title="Next code"
+                <button (click)="loadNext()" [disabled]="!hasNext()" mat-icon-button title="{{'MAPPING_DETAIL.NEXT_CODE' | translate}}"
                   type="button">
                   <mat-icon>navigate_next</mat-icon>
                 </button>

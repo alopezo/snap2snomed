@@ -15,14 +15,24 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
+import {TranslateService} from '@ngx-translate/core';
 
 const min = 1000 * 60;
 
+/**
+ * How long ago a date was, in the current interface language (LAST_UPDATED.* keys). Impure so
+ * that it follows a language change without a page reload.
+ */
 @Pipe({
     name: 'lastupdated',
+    pure: false,
     standalone: false
 })
 export class LastupdatedPipe implements PipeTransform {
+
+  constructor(private translate: TranslateService) {
+  }
+
   transform(datefield?: Date | null): string | null {
     if (!datefield) {
       return null;
@@ -38,26 +48,29 @@ export class LastupdatedPipe implements PipeTransform {
     let interval: string[] = [];
     if (days == 0) {
       if (hours > 0) {
-        interval.push(hours%24 + ' hours');
+        interval.push(this.unit('HOURS', hours % 24));
       }
       if (mins > 0) {
-        interval.push(mins%60 + ' minutes');
+        interval.push(this.unit('MINUTES', mins % 60));
       }
     } else if (years == 0) {
-      interval.push(days%31 + ' days');
+      interval.push(this.unit('DAYS', days % 31));
     }
     if (months > 0) {
-      interval.push(months%12 + ' months');
+      interval.push(this.unit('MONTHS', months % 12));
     }
     if (years > 0) {
-      interval.push(years + ' years');
+      interval.push(this.unit('YEARS', years));
     }
     interval = interval.slice(-2);
     if (interval.length) {
-      return interval.join(', ') + ' ago';
+      return this.translate.instant('LAST_UPDATED.AGO', {interval: interval.join(', ')});
     } else {
-      return 'just now'
+      return this.translate.instant('LAST_UPDATED.JUST_NOW');
     }
+  }
 
+  private unit(unit: string, count: number): string {
+    return this.translate.instant('LAST_UPDATED.' + unit, {count});
   }
 }

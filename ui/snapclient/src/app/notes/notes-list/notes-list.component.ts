@@ -132,7 +132,7 @@ export class NotesListComponent implements OnInit, OnDestroy {
             },
             error => {
               if (error.error.detail) {
-                this.errorNotifier.showError(`Error encountered while attempting to delete note: ${error.error.detail}`)
+                this.errorNotifier.showError(this.translate.instant('NOTES.DELETE_NOTE_ERROR', {detail: error.error.detail}));
               }
             }
           );

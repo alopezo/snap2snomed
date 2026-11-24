@@ -7,11 +7,11 @@
       @if (existingConflicts > 0) {
         <div class="conflictmessage">
           <mat-chip-option [disabled]="true">{{existingConflicts}}</mat-chip-option>
-          {{ 'TASK.EXISTING_TASK' | translate : {taskType: data.task?.type} }}
+          {{ 'TASK.EXISTING_TASK' | translate : {taskType: ('TASK.' + data.task?.type | translate)} }}
           @if (data.isOwner) {
             <div class="assign-select">
               <mat-slide-toggle class="slide"
-                matTooltip="{{ 'TASK.REASSIGN_TOOLTIP' | translate : {taskType: data.task?.type} }}"
+                matTooltip="{{ 'TASK.REASSIGN_TOOLTIP' | translate : {taskType: ('TASK.' + data.task?.type | translate)} }}"
                 matTooltipPosition="above" [(ngModel)]="data.task.reassignAlreadyAssignedRows">
               {{ 'TASK.REASSIGN' | translate }}</mat-slide-toggle>
             </div>

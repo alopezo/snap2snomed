@@ -183,7 +183,7 @@
                   [(ngModel)]="filterEntity.sourceCode" (input)="filterUpdate()">
                   <datalist id="no_source_code"></datalist><!-- workaround for Edge ignoring autocomplete="false" -->
                   @if (filterEntity.sourceCode) {
-                    <button matSuffix mat-icon-button aria-label="Clear" (click)="filterEntity.sourceCode=''; filterUpdate()">
+                    <button matSuffix mat-icon-button [attr.aria-label]="'FORM.CLEAR' | translate" (click)="filterEntity.sourceCode=''; filterUpdate()">
                       <mat-icon>cancel</mat-icon>
                     </button>
                   }
@@ -198,7 +198,7 @@
                     [(ngModel)]="filterEntity.sourceDisplay" (input)="filterUpdate()">
                     <datalist id="no_source_display"></datalist><!-- workaround for Edge ignoring autocomplete="false" -->
                     @if (filterEntity.sourceDisplay) {
-                      <button matSuffix mat-icon-button aria-label="Clear" (click)="filterEntity.sourceDisplay=''; filterUpdate()">
+                      <button matSuffix mat-icon-button [attr.aria-label]="'FORM.CLEAR' | translate" (click)="filterEntity.sourceDisplay=''; filterUpdate()">
                         <mat-icon>cancel</mat-icon>
                       </button>
                     }
@@ -227,7 +227,7 @@
                       [(ngModel)]="filterEntity.targetCode" (input)="filterUpdate()">
                       <datalist id="no_target_code"></datalist><!-- workaround for Edge ignoring autocomplete="false" -->
                       @if (filterEntity.targetCode) {
-                        <button matSuffix mat-icon-button aria-label="Clear" (click)="filterEntity.targetCode=''; filterUpdate()">
+                        <button matSuffix mat-icon-button [attr.aria-label]="'FORM.CLEAR' | translate" (click)="filterEntity.targetCode=''; filterUpdate()">
                           <mat-icon>cancel</mat-icon>
                         </button>
                       }
@@ -242,7 +242,7 @@
                         [(ngModel)]="filterEntity.targetDisplay" (input)="filterUpdate()">
                         <datalist id="no_target_display"></datalist><!-- workaround for Edge ignoring autocomplete="false" -->
                         @if (filterEntity.targetDisplay) {
-                          <button matSuffix mat-icon-button aria-label="Clear" (click)="filterEntity.targetDisplay=''; filterUpdate()">
+                          <button matSuffix mat-icon-button [attr.aria-label]="'FORM.CLEAR' | translate" (click)="filterEntity.targetDisplay=''; filterUpdate()">
                             <mat-icon>cancel</mat-icon>
                           </button>
                         }
@@ -355,7 +355,7 @@
                             <datalist id="getDataListId(idx)"></datalist>
                             <!-- workaround for Edge ignoring autocomplete="false" -->
                             @if (filterEntity.additionalColumns[idx]) {
-                              <button matSuffix mat-icon-button aria-label="Clear"
+                              <button matSuffix mat-icon-button [attr.aria-label]="'FORM.CLEAR' | translate"
                                 (click)="filterEntity.additionalColumns[idx]=''; filterUpdate()">
                                 <mat-icon>cancel</mat-icon>
                               </button>
@@ -382,5 +382,5 @@
                   [pageIndex]="page.pageIndex"
                   [pageSize]="page.size"
                   [showFirstLastButtons]="true"
-                  [pageSizeOptions]="[10, 20, 50, 100, 250]">>
+                  [pageSizeOptions]="[10, 20, 50, 100, 250]">
                 </mat-paginator>

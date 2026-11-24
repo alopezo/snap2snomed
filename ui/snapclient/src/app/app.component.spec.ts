@@ -23,9 +23,8 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { IAppState, initialAppState } from './store/app.state';
 import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { By } from '@angular/platform-browser';
-import { HttpLoaderFactory } from './app.module';
 import { APP_CONFIG } from './app.config';
 import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { ActivatedRoute, provideRouter } from '@angular/router';
@@ -54,6 +53,13 @@ export class TranslateServiceStub {
   }
 }
 
+/** Loads the only text these tests check, instead of fetching i18n files over HTTP. */
+class LoginTranslationsLoader implements TranslateLoader {
+  getTranslation(lang: string): Observable<any> {
+    return of({LOGIN: {LOGIN: 'Login'}});
+  }
+}
+
 describe('AppComponent', () => {
   let app: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
@@ -72,11 +78,7 @@ describe('AppComponent', () => {
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       imports: [
         TranslateModule.forRoot({
-          loader: {
-            provide: TranslateLoader,
-            useFactory: HttpLoaderFactory,
-            deps: [HttpClient]
-          }
+          loader: {provide: TranslateLoader, useClass: LoginTranslationsLoader}
         })],
       providers: [
         { provide: ActivatedRoute, useValue: { snapshot: {}, params: of({}), queryParams: of({}), data: of({})} },
@@ -86,7 +88,6 @@ describe('AppComponent', () => {
           initialState: initialAppState,
           selectors: [{ selector: selectAuthState, value: initialAppState.auth }]
         }), AuthService, UserService,
-        { provide: TranslateService, useClass: TranslateServiceStub },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
       ]

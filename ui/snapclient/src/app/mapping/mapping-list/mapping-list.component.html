@@ -17,17 +17,17 @@
   <div class="container" [ngClass]="{'has-error': error.message}">
     <div class="header">
       <mat-form-field class='filter' appearance="fill" subscriptSizing="dynamic">
-        <mat-label>Filter</mat-label>
-        <input matInput (keyup)="applyFilter($event)" placeholder="Search title and description" #input>
+        <mat-label>{{'MAPPING_LIST.FILTER' | translate}}</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="{{'MAPPING_LIST.FILTER_PLACEHOLDER' | translate}}" #input>
         <button matSuffix mat-icon-button class="cancel" [disabled]="input.value == ''" (click)="clearInput(input)"><mat-icon>cancel</mat-icon></button>
       </mat-form-field>
 
       <mat-form-field appearance="fill" subscriptSizing="dynamic">
-        <mat-label>Roles</mat-label>
+        <mat-label>{{'MAPPING_LIST.ROLES' | translate}}</mat-label>
         <mat-select [(value)]="roles.defaultValue" (selectionChange)="applyRoleFilter($event)">
           @for (op of roles.options; track op) {
             <mat-option [value]="op">
-              {{op |titlecase}}
+              {{(op === 'all' ? 'MAPPING_LIST.ROLE_ALL' : 'ROLE.' + (op | uppercase)) | translate}}
             </mat-option>
           }
         </mat-select>
@@ -45,7 +45,7 @@
     <div class="container-scroll-list" [ngClass]="{'has-error': error.message}">
       <table mat-table [dataSource]="dataSource" matSort>
         <ng-container matColumnDef="title">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by title">{{'PROJECT_TABLE.TITLE' | translate}}</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="{{'MAPPING_LIST.SORT_BY_TITLE' | translate}}">{{'PROJECT_TABLE.TITLE' | translate}}</th>
           <td mat-cell *matCellDef="let project">{{project.title}}</td>
         </ng-container>
         <ng-container matColumnDef="description">
@@ -53,8 +53,8 @@
           <td mat-cell *matCellDef="let project">{{project.description}}</td>
         </ng-container>
         <ng-container matColumnDef="modified">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by last updated">{{'PROJECT_TABLE.LAST_UPDATED' | translate}}</th>
-          <td mat-cell *matCellDef="let project">{{selectedMapping[project.id]?.modified | date }}</td>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="{{'MAPPING_LIST.SORT_BY_LAST_UPDATED' | translate}}">{{'PROJECT_TABLE.LAST_UPDATED' | translate}}</th>
+          <td mat-cell *matCellDef="let project">{{selectedMapping[project.id]?.modified | uiDate }}</td>
         </ng-container>
         <ng-container matColumnDef="users">
           <th mat-header-cell *matHeaderCellDef>{{'PROJECT_TABLE.USERS' | translate}}</th>

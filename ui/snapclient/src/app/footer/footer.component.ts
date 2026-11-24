@@ -18,6 +18,7 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {APP_CONFIG, AppConfig} from '../app.config';
 import {FeedbackWidgetComponent} from "../feedback-widget/feedback-widget.component";
 import {MatDialog} from "@angular/material/dialog";
+import {UiLanguageService} from "../_services/ui-language.service";
 
 @Component({
     selector: 'app-footer',
@@ -30,7 +31,8 @@ export class FooterComponent implements OnInit {
   tos: string;
   privacy: string;
 
-  constructor(@Inject(APP_CONFIG) private config: AppConfig, public dialog: MatDialog) {
+  constructor(@Inject(APP_CONFIG) private config: AppConfig, public dialog: MatDialog,
+              public uiLanguage: UiLanguageService) {
     this.si = 'http://www.snomed.org';
     this.tos = config.termsOfServiceUrl;
     this.privacy = config.privacyPolicyUrl;
@@ -46,6 +48,14 @@ export class FooterComponent implements OnInit {
       closeOnNavigation: true
     });
     return false;
+  }
+
+  get currentLanguageName(): string {
+    return this.uiLanguage.languages.find(l => l.code === this.uiLanguage.current)?.nativeName ?? '';
+  }
+
+  useLanguage(code: string): void {
+    this.uiLanguage.use(code);
   }
 
   openUserGuide(): void {

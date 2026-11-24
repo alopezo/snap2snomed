@@ -108,6 +108,7 @@ export class BulkchangeComponent implements OnInit {
     private mapService: MapService,
     private errorNotifier: ErrorNotifier,
     private selectionService: SelectionService,
+    private translate: TranslateService,
     @Inject(MAT_DIALOG_DATA) public data: BulkChangeDialogData) {
     dialogRef.disableClose = true;
     this.relationships = mapRowRelationships;
@@ -147,7 +148,7 @@ export class BulkchangeComponent implements OnInit {
     this.statuses = this.getStatuses(self.data.task)
 
     if (!self.data.selectedRows || self.data.selectedRows.length == 0) {
-      self.error = new Error("NO ROWS SELECTED")
+      self.error = {message: self.translate.instant('BULKCHANGEDIALOG.NO_ROWS_SELECTED')};
     }
 
     self.subscription.add(self.selectionService.subscribeWithCurrent({

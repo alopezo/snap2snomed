@@ -38,6 +38,8 @@ import {MatCardModule} from '@angular/material/card';
 import {Project} from '../../_models/project';
 import {InitialsPipe} from '../../_utils/initialize_pipe';
 import {LastupdatedPipe} from '../../_utils/lastupdated_pipe';
+import {UiDatePipe} from '../../_utils/ui-date.pipe';
+import {MatSortModule} from '@angular/material/sort';
 import {ErrormessageComponent} from '../../errormessage/errormessage.component';
 import {MatChipsModule} from '@angular/material/chips';
 import {APP_CONFIG} from '../../app.config';
@@ -73,6 +75,7 @@ describe('MappingListComponent', () => {
         MappingListComponent,
         InitialsPipe,
         LastupdatedPipe,
+        UiDatePipe,
         ErrormessageComponent,
         ProjectBadgesComponent,
         UserChipComponent,
@@ -96,6 +99,7 @@ describe('MappingListComponent', () => {
         MatLabel,
         MatSelectModule,
         MatPaginatorModule,
+        MatSortModule,
         MatBadgeModule,
         MatTooltipModule,
         TranslateModule.forRoot({

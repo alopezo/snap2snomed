@@ -370,6 +370,13 @@ td.mat-mdc-cell {
 .button-row {
   display: flex;
   align-items: flex-end;
+  /* Translated labels can be much longer than English: wrap instead of overlapping */
+  flex-wrap: wrap;
+  row-gap: 8px;
+}
+
+.button-row button {
+  flex-shrink: 0;
 }
 
 .mapping-details {

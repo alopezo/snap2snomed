@@ -9,3 +9,21 @@ a.footer-link {
   color: darkgray;
   font-size: 0.8em;
 }
+
+button.language-button {
+  font-size: 0.8em;
+  color: darkgray;
+  vertical-align: middle;
+}
+
+button.language-button mat-icon {
+  font-size: 1.3em;
+  height: 1.3em;
+  width: 1.3em;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+.selected-language {
+  font-weight: bold;
+}

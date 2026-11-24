@@ -37,7 +37,8 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatListModule} from '@angular/material/list';
 import {MatMenuModule} from '@angular/material/menu';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
+import {MissingTranslationHandler, TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
+import {DevMissingTranslationHandler} from './_utils/dev-missing-translation-handler';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MappingAddComponent} from './mapping/mapping-add/mapping-add.component';
@@ -57,6 +58,9 @@ import {MatGridListModule} from '@angular/material/grid-list';
 import {MatChipsModule} from '@angular/material/chips';
 import {InitialsPipe} from './_utils/initialize_pipe';
 import {LastupdatedPipe} from './_utils/lastupdated_pipe';
+import {UiDatePipe} from './_utils/ui-date.pipe';
+import {TranslatedPaginatorIntl} from './_utils/translated-paginator-intl';
+import {MatPaginatorIntl} from '@angular/material/paginator';
 import {ErrormessageComponent} from './errormessage/errormessage.component';
 import {SourceImportComponent} from './source/source-import/source-import.component';
 import {MatSelectModule} from '@angular/material/select';
@@ -150,6 +154,7 @@ export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
         MappingListComponent,
         InitialsPipe,
         LastupdatedPipe,
+        UiDatePipe,
         TrimPipe,
         ErrormessageComponent,
         SourceImportComponent,
@@ -209,6 +214,7 @@ export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
                 useFactory: HttpLoaderFactory,
                 deps: [HttpClient]
             },
+            missingTranslationHandler: {provide: MissingTranslationHandler, useClass: DevMissingTranslationHandler},
         }),
         MatDialogModule,
         MatButtonModule,
@@ -248,6 +254,7 @@ export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
         BreadcrumbItemDirective,
         ShrimpHierarchyViewModule], providers: [AuthService, AuthGuard, UserService, MapService, TranslateService,
         { provide: MAT_DATE_LOCALE, useValue: 'en-AU' },
+        { provide: MatPaginatorIntl, useClass: TranslatedPaginatorIntl },
         { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } },
         {
             provide: ErrorHandler,

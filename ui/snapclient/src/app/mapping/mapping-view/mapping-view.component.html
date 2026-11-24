@@ -40,7 +40,7 @@
                   <a mat-menu-item (click)="exportMapView('xlsx')">{{'MAP.EXPORT_XLSX' | translate}}</a>
                   <a mat-menu-item (click)="exportMapView('fhir-json')">{{'MAP.EXPORT_FHIR_JSON' | translate}}</a>
                   <a mat-menu-item (click)="exportMapViewAdditionalColumns('xlsx', ['notes', 'lastAuthor', 'lastReviewer', 'assignedAuthor', 'assignedReviewer'])"
-                  matTooltip="Extended export also includes Author, Reviewer, and Notes">{{'MAP.EXPORT_XLSX_EXTENDED' | translate}}</a>
+                  matTooltip="{{'MAPPING_VIEW.EXPORT_XLSX_EXTENDED_TOOLTIP' | translate}}">{{'MAP.EXPORT_XLSX_EXTENDED' | translate}}</a>
                 </mat-menu>
               </span>
               @if (isOwner() && !isDualMapMode()) {
@@ -147,7 +147,7 @@
                 <!-- Status Column -->
                 <ng-container matColumnDef="status">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'TABLE.STATUS' | translate}}</th>
-                  <td mat-cell *matCellDef="let maprow">{{maprow.status}}</td>
+                  <td mat-cell *matCellDef="let maprow">{{maprow.status && 'STATUS.' + maprow.status | translate}}</td>
                 </ng-container>
                 <!-- Out of Scope Column -->
                 <ng-container matColumnDef="targetOutOfScope">
@@ -175,7 +175,7 @@
                   <td mat-cell *matCellDef="let maprow; let i = index">
                     @if (maprow.latestNote) {
                       <button class="view-notes-button" mat-icon-button
-                        #tooltip="matTooltip" matTooltip="View Notes"
+                        #tooltip="matTooltip" matTooltip="{{'MAP.VIEW_NOTES' | translate}}"
                         (click)="notesView(i, maprow)"
                         ><mat-icon>chat_bubble_outline</mat-icon></button>
                       }
@@ -249,7 +249,7 @@
                           [(ngModel)]="filterEntity.sourceCode" (input)="filterChange()">
                           <datalist id="no_source_code"></datalist><!-- workaround for Edge ignoring autocomplete="false" -->
                           @if (filterEntity.sourceCode) {
-                            <button matSuffix mat-icon-button aria-label="Clear"
+                            <button matSuffix mat-icon-button [attr.aria-label]="'FORM.CLEAR' | translate"
                               (click)="filterEntity.sourceCode=''; filterChange()">
                               <mat-icon>cancel</mat-icon>
                             </button>
@@ -266,7 +266,7 @@
                             <datalist id="no_source_display"></datalist>
                             <!-- workaround for Edge ignoring autocomplete="false" -->
                             @if (filterEntity.sourceDisplay) {
-                              <button matSuffix mat-icon-button aria-label="Clear"
+                              <button matSuffix mat-icon-button [attr.aria-label]="'FORM.CLEAR' | translate"
                                 (click)="filterEntity.sourceDisplay=''; filterChange()">
                                 <mat-icon>cancel</mat-icon>
                               </button>
@@ -284,7 +284,7 @@
                                 <datalist id="getDataListId(idx)"></datalist>
                                 <!-- workaround for Edge ignoring autocomplete="false" -->
                                 @if (filterEntity.additionalColumns[idx]) {
-                                  <button matSuffix mat-icon-button aria-label="Clear"
+                                  <button matSuffix mat-icon-button [attr.aria-label]="'FORM.CLEAR' | translate"
                                     (click)="filterEntity.additionalColumns[idx]=''; filterChange()">
                                     <mat-icon>cancel</mat-icon>
                                   </button>
@@ -314,7 +314,7 @@
                                 [(ngModel)]="filterEntity.targetCode" (input)="filterChange()">
                                 <datalist id="no_target_code"></datalist><!-- workaround for Edge ignoring autocomplete="false" -->
                                 @if (filterEntity.targetCode) {
-                                  <button matSuffix mat-icon-button aria-label="Clear"
+                                  <button matSuffix mat-icon-button [attr.aria-label]="'FORM.CLEAR' | translate"
                                     (click)="filterEntity.targetCode=''; filterChange()">
                                     <mat-icon>cancel</mat-icon>
                                   </button>
@@ -331,7 +331,7 @@
                                   <datalist id="no_target_display"></datalist>
                                   <!-- workaround for Edge ignoring autocomplete="false" -->
                                   @if (filterEntity.targetDisplay) {
-                                    <button matSuffix mat-icon-button aria-label="Clear"
+                                    <button matSuffix mat-icon-button [attr.aria-label]="'FORM.CLEAR' | translate"
                                       (click)="filterEntity.targetDisplay=''; filterChange()">
                                       <mat-icon>cancel</mat-icon>
                                     </button>
