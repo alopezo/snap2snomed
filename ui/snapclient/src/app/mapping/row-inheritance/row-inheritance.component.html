@@ -3,9 +3,9 @@
     <div class="info">
       @switch (r.state) {
         @case ('ASSERTED') {
-          @if (r.inheritedBy > 0) {
+          @if (r.inheritedBy + (r.generatedBy ?? 0) > 0) {
             <mat-icon class="state-icon">account_tree</mat-icon>
-            <span>{{'INHERITANCE.ROW_PASSES_ON' | translate: {count: r.inheritedBy} }}</span>
+            <span>{{'INHERITANCE.POPOVER_PASSES_ON' | translate: {rows: r.inheritedBy, generated: r.generatedBy ?? 0} }}</span>
           }
         }
         @case ('INHERITED') {

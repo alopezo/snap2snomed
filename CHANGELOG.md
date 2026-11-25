@@ -45,11 +45,21 @@ Maps from SNOMED CT (branch `from-snomed`).
   what each unmapped concept inherits, and the mapping detail shows what a concept inherits or passes
   on, with the stop switch. Exports include inherited targets with "Mapping origin" and "Inherited
   from" columns (or a FHIR target comment), unless switched off in the export dialog.
+- The source of a map from SNOMED CT can also be an imported list of SNOMED CT codes (checked against
+  the chosen version when the map is created), and maps with inheritance have their own inheritance
+  scope (ECL, editable). Descendants of mapped or stopping concepts within that scope that are not
+  rows of the map are generated at export time ("GENERATED" lines, or FHIR elements with a comment),
+  never stored; the map details offer a paged preview of them, with filters by state. Generation is
+  refused when a concept, or all together, exceed 50,000 concepts
+  (`snap2snomed.inheritance.max-generated`).
+- An "Inheritance" column in the mapping tables summarises each row (mapped and how many inherit it,
+  inherits from, stopped, in conflict, uncovered) and opens a popover with the details.
 - Inheritance is recomputed after every change; the descendants of each mapped or stopping concept
   within the map's ECL are expanded once and cached in the database (migration V24).
 - API: `POST /importedCodeSets/fromEcl`, `GET /map/{mapId}/targetCodes`,
-  `GET /map/{mapId}/sourceChanges` and `GET /map/{mapId}/inheritance` (authorised through the map's
-  project roles), the export parameter `inherited` and the map row field `stopInheritance` and the map fields `direction` and `targetCodeSet` (migration V23).
+  `GET /map/{mapId}/sourceChanges`, `GET /map/{mapId}/inheritance` and
+  `GET /map/{mapId}/inheritance/generated` (authorised through the map's project roles), the export
+  parameter `inherited`, the map field `sourceEcl` and the map row field `stopInheritance` (migration V25) and the map fields `direction` and `targetCodeSet` (migration V23).
 
 #### Changed
 
