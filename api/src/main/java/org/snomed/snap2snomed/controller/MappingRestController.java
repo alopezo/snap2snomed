@@ -167,6 +167,7 @@ public class MappingRestController {
     if (!webSecurity.isAdminUser() && !webSecurity.isProjectOwnerForMapId(mapId)) {
       throw new NotAuthorisedProblem("Not authorised to import mapping if the user is not admin or member of an associated project!");
     }
+    mappingService.requireToSnomed(mapId, "A new map version");
     return mappingService.newMappingVersion(mapId, mapDetails.getSourceId(), mapDetails.getMapVersion(),
         mapDetails.getToVersion(), mapDetails.getToScope(), mapDetails.getDisplayLanguage());
   }
@@ -184,6 +185,7 @@ public class MappingRestController {
     if (!(webSecurity.isAdminUser() || webSecurity.hasAnyProjectRoleForMapId(mapId))) {
       throw new NotAuthorisedProblem("Not authorised to import mapping if the user is not admin or member of an associated project!");
     }    
+    mappingService.requireToSnomed(mapId, "Validating target codes");
     return mappingService.validateMapTargets(mapId);
   }
 
@@ -199,6 +201,7 @@ public class MappingRestController {
     if (!webSecurity.isAdminUser() && !webSecurity.isProjectOwnerForMapId(mapId)) {
       throw new NotAuthorisedProblem("Not authorised to refresh target terms if the user is not admin or owner of the associated project!");
     }
+    mappingService.requireToSnomed(mapId, "Refreshing target terms");
     try {
       return targetDisplayResolver.resolveTargetDisplays(mapId);
     } catch (final Snap2SnomedProblem e) {

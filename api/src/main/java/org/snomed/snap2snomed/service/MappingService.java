@@ -22,6 +22,7 @@ import org.snomed.snap2snomed.model.Map;
 import org.snomed.snap2snomed.model.*;
 import org.snomed.snap2snomed.model.enumeration.MapStatus;
 import org.snomed.snap2snomed.model.enumeration.TaskType;
+import org.snomed.snap2snomed.problem.BadRequestDataProblem;
 import org.snomed.snap2snomed.problem.Snap2SnomedProblem;
 import org.snomed.snap2snomed.problem.auth.NotAuthorisedProblem;
 import org.snomed.snap2snomed.problem.mapping.DeleteMapProblem;
@@ -719,6 +720,16 @@ public class MappingService {
     validateMapTargets(createdId);
 
     return createdId;
+  }
+
+  /**
+   * Fails for a map from SNOMED CT: its targets come from an imported code set, so the operations that
+   * check, re-resolve or copy SNOMED CT targets do not apply.
+   */
+  public void requireToSnomed(Long mapId, String operation) {
+    mapRepository.findById(mapId).filter(Map::isFromSnomed).ifPresent(m -> {
+      throw new BadRequestDataProblem(operation + " is not available for maps from SNOMED CT");
+    });
   }
 
   @Transactional

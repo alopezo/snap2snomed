@@ -629,6 +629,9 @@ public class CodeSetImportService {
     if (!map.isPresent()) {
       throw new MappingImportProblem("invalid-map-id", "Invalid map id provided");
     }
+    if (map.get().isFromSnomed()) {
+      throw new MappingImportProblem("from-snomed", "Importing a mapping file is not available for maps from SNOMED CT");
+    }
 
     if (!(webSecurity.isAdminUser() || webSecurity.isProjectOwnerForMapId(map.get().getId()))) {
       throw new NotAuthorisedProblem("Not authorised to import mapping if the user is not admin or member of an associated project!");

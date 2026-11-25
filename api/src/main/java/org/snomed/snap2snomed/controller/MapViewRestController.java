@@ -568,13 +568,31 @@ public class MapViewRestController {
           cm.setLanguage(language == null ? "en" : language);
 
           final ImportedCodeSet source = map.getSource();
+          final String ecl = map.getToScope();
+          final String snomedValueSet = FhirService.DEFAULT_CODE_SYSTEM + "?fhir_vs=ecl/" + ecl;
+
+          if (map.isFromSnomed()) {
+              // SNOMED CT concepts (the map's ECL) mapped to the codes of the target code set
+              final ImportedCodeSet target = map.getTargetCodeSet();
+              cm.setSource(new UriType(snomedValueSet));
+              if (target.getValuesetUri() != null) {
+                  cm.setTarget(new UriType(target.getValuesetUri()));
+              }
+              group.setSource(FhirService.DEFAULT_CODE_SYSTEM);
+              group.setSourceVersion(map.getToVersion());
+              if (target.getSystemUri() != null) {
+                  group.setTarget(target.getSystemUri());
+              }
+              group.setTargetVersion(target.getVersion());
+              return;
+          }
+
           String valuesetUri = source.getValuesetUri();
           if (null != valuesetUri) {
               cm.setSource(new UriType(valuesetUri));
           }
 
-          final String ecl = map.getToScope();
-          cm.setTarget(new UriType(FhirService.DEFAULT_CODE_SYSTEM + "?fhir_vs=ecl/" + ecl));
+          cm.setTarget(new UriType(snomedValueSet));
 
           String systemUri = source.getSystemUri();
           if (null != systemUri) {
