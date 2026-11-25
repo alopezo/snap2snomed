@@ -27,6 +27,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.envers.Audited;
 import org.snomed.snap2snomed.model.Project.ListView;
+import org.snomed.snap2snomed.model.enumeration.InheritanceMode;
 import org.snomed.snap2snomed.model.enumeration.MapDirection;
 import org.snomed.snap2snomed.util.LanguageDialects;
 import org.springframework.beans.factory.annotation.Value;
@@ -120,7 +121,7 @@ public class Map implements Snap2SnomedEntity {
 
   /**
    * Maps from SNOMED CT: the ECL expanded into the source code set, or null when the source is an imported
-   * list of SNOMED CT codes. {@link #toScope} is then the scope inheritance can expand into.
+   * list of SNOMED CT codes. {@link #toScope} then describes the source: this ECL, or every concept.
    */
   @ReadOnlyProperty
   @Size(max = 1024)
@@ -132,6 +133,12 @@ public class Map implements Snap2SnomedEntity {
    */
   @Builder.Default
   private boolean inheritance = false;
+
+  /** Maps with inheritance: whether it reaches the descendants beyond the map's source. */
+  @NotNull
+  @Enumerated(EnumType.STRING)
+  @Builder.Default
+  private InheritanceMode inheritanceMode = InheritanceMode.WITHIN_SOURCE;
 
   public boolean isFromSnomed() {
     return direction == MapDirection.FROM_SNOMED;
@@ -161,6 +168,8 @@ public class Map implements Snap2SnomedEntity {
     ImportedCodeSet getTargetCodeSet();
 
     boolean isInheritance();
+
+    InheritanceMode getInheritanceMode();
 
     String getSourceEcl();
 

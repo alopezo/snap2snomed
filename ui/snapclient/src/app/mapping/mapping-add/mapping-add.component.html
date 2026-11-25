@@ -45,13 +45,17 @@
             <mat-checkbox id="inheritance" formControlName="inheritance">{{'MAP.INHERITANCE' | translate}}</mat-checkbox>
             <p class="direction-hint">{{'MAP.INHERITANCE_HINT' | translate}}</p>
             @if (formGroup.controls.inheritance.value && (mode === 'FORM.CREATE' || mode === 'FORM.EDIT')) {
-              <mat-form-field class="field-full-width" subscriptSizing="dynamic">
-                <mat-label>{{ 'MAP.INHERITANCE_SCOPE' | translate }}</mat-label>
-                <textarea id="inheritanceScope" class="ecl" matInput cdkTextareaAutosize cdkAutosizeMinRows="1"
-                  formControlName="inheritanceScope" [maxLength]="MAX_TARGETSCOPE"
-                  [placeholder]="fromSnomedCodes ? '*' : ('MAP.INHERITANCE_SCOPE_SAME_AS_SOURCE' | translate)"></textarea>
-                <mat-hint>{{ (fromSnomedCodes ? 'MAP.INHERITANCE_SCOPE_HINT_CODES' : 'MAP.INHERITANCE_SCOPE_HINT_ECL') | translate }}</mat-hint>
-              </mat-form-field>
+              <mat-radio-group id="inheritanceMode" class="inheritance-mode" formControlName="inheritanceMode"
+                [attr.aria-label]="'MAP.INHERITANCE_MODE' | translate">
+                <mat-radio-button value="WITHIN_SOURCE">
+                  {{'MAP.INHERITANCE_WITHIN_SOURCE' | translate}}
+                  <span class="direction-hint">{{'MAP.INHERITANCE_WITHIN_SOURCE_HINT' | translate}}</span>
+                </mat-radio-button>
+                <mat-radio-button value="BEYOND_SOURCE">
+                  {{'MAP.INHERITANCE_BEYOND_SOURCE' | translate}}
+                  <span class="direction-hint">{{'MAP.INHERITANCE_BEYOND_SOURCE_HINT' | translate}}</span>
+                </mat-radio-button>
+              </mat-radio-group>
             }
           </div>
         }
@@ -189,8 +193,8 @@
                     </tr>
                     @if (mappingModel.inheritance) {
                       <tr>
-                        <th><b>{{ 'MAP.INHERITANCE_SCOPE' | translate }}:</b></th>
-                        <td>{{ mappingModel.toScope }}</td>
+                        <th><b>{{ 'MAP.INHERITANCE_MODE' | translate }}:</b></th>
+                        <td>{{ 'MAP.INHERITANCE_' + mappingModel.inheritanceMode | translate }}</td>
                       </tr>
                     }
                   </table>
@@ -288,8 +292,8 @@
                       </tr>
                       @if (mappingModel.inheritance && mode === 'FORM.VIEW') {
                         <tr>
-                          <th><b>{{ 'MAP.INHERITANCE_SCOPE' | translate }}:</b></th>
-                          <td>{{mappingModel.toScope}}</td>
+                          <th><b>{{ 'MAP.INHERITANCE_MODE' | translate }}:</b></th>
+                          <td>{{ 'MAP.INHERITANCE_' + mappingModel.inheritanceMode | translate }}</td>
                         </tr>
                       }
                       <tr>

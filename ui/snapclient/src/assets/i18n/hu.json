@@ -282,10 +282,11 @@
     "SOURCE_CODES": "Forrás SNOMED CT kódok",
     "SOURCE_CODES_HINT": "SNOMED CT fogalomazonosítók importált listája (legfeljebb {{max}}), mind aktív a választott verzióban",
     "SOURCE_CODES_REQUIRED": "Válassza ki vagy importálja a SNOMED CT kódok listáját",
-    "INHERITANCE_SCOPE": "Az öröklés hatóköre (ECL)",
-    "INHERITANCE_SCOPE_SAME_AS_SOURCE": "Ugyanaz, mint a forrás ECL",
-    "INHERITANCE_SCOPE_HINT_CODES": "Hol jönnek létre leszármazottak exportáláskor; üresen minden fogalom",
-    "INHERITANCE_SCOPE_HINT_ECL": "Hol jönnek létre leszármazottak exportáláskor; üresen a forrás ECL"
+    "INHERITANCE_MODE": "Öröklés",
+    "INHERITANCE_WITHIN_SOURCE": "A forráson belül",
+    "INHERITANCE_WITHIN_SOURCE_HINT": "Csak a forrás fogalmai örökölnek egymástól; exportáláskor semmi sem jön létre",
+    "INHERITANCE_BEYOND_SOURCE": "A forráson túl",
+    "INHERITANCE_BEYOND_SOURCE_HINT": "Minden olyan SNOMED CT leszármazott is, amely nincs a forrásban, exportáláskor létrehozva"
   },
   "TABLE": {
     "SOURCE_CODE": "Forráskód",
@@ -787,10 +788,10 @@
     "POPOVER_CONFLICT_HINT": "Az ütközés feloldásához feleltesse meg közvetlenül ezt a fogalmat.",
     "POPOVER_NO_MAP": "Egyetlen helyi kód sem alkalmazható; a leszármazottai sem örökölnek.",
     "GENERATED_TITLE": "Exportáláskor generált",
-    "GENERATED_HINT": "Megfeleltetett vagy öröklést leállító fogalmak hatókörön belüli leszármazottai, amelyek nem sorok. Nem kerülnek tárolásra: minden exportáláskor újra kiszámítjuk őket.",
+    "GENERATED_HINT": "Megfeleltetett vagy öröklést leállító fogalmak leszármazottai, amelyek nem sorok. Nem kerülnek tárolásra: minden exportáláskor újra kiszámítjuk őket.",
     "GENERATED_FAILED": "A generált fogalmakat nem sikerült betölteni",
     "GENERATED_COUNT": "Exportáláskor generált: {{count}}",
-    "GENERATED_TOO_LARGE": "Az öröklés hatóköre túl nagy (több mint {{max}} fogalom)",
+    "GENERATED_TOO_LARGE": "Egy megfeleltetett fogalomnak túl sok leszármazottja van (több mint {{max}} fogalom)",
     "ALL": "Mind",
     "ACCEPT": "Öröklés elfogadása",
     "ACCEPT_AGAIN": "Újbóli elfogadás",

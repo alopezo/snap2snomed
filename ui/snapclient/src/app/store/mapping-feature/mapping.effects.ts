@@ -303,6 +303,7 @@ function toMapping(mapDto: any, project?: Project): Mapping {
   mapping.direction = mapDto.direction ?? 'TO_SNOMED';
   mapping.targetCodeSet = (mapDto.targetCodeSet as Source) ?? null;
   mapping.inheritance = !!mapDto.inheritance;
+  mapping.inheritanceMode = mapDto.inheritanceMode ?? 'WITHIN_SOURCE';
   mapping.sourceEcl = mapDto.sourceEcl ?? null;
 
   if (project) {

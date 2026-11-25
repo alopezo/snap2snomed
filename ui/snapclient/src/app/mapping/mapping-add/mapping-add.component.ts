@@ -99,7 +99,7 @@ export class MappingAddComponent implements OnInit {
     // maps from SNOMED CT: source from an ECL or from an imported list of SNOMED CT codes
     sourceKind: new UntypedFormControl('ECL'),
     sourceCodeSetId: new UntypedFormControl(''),
-    inheritanceScope: new UntypedFormControl('')
+    inheritanceMode: new UntypedFormControl('WITHIN_SOURCE')
   });
 
   /** A map from SNOMED CT whose source is an imported list of codes (chosen on creation, fixed after). */
@@ -110,18 +110,9 @@ export class MappingAddComponent implements OnInit {
     return this.mode === 'FORM.CREATE' ? this.formGroup.controls.sourceKind.value === 'CODES' : !this.mappingModel.sourceEcl;
   }
 
-  /** The ECL the form saves: the inheritance scope when one is typed, else the map's scope or source ECL. */
+  /** The ECL the form saves: the scope, or the source ECL (every concept for a list of codes). */
   private eclToValidate(): string {
-    if (this.fromSnomed && this.mode === 'FORM.CREATE') {
-      return this.inheritanceScopeOr(this.fromSnomedCodes ? '*' : this.mappingModel.toScope);
-    }
-    return this.mappingModel.toScope;
-  }
-
-  /** Inheritance scope to save: the one typed, else the source ECL (or every concept for a list of codes). */
-  private inheritanceScopeOr(fallback: string): string {
-    const scope = (this.formGroup.controls.inheritanceScope.value ?? '').trim();
-    return this.mappingModel.inheritance && scope ? scope : fallback;
+    return this.fromSnomedCodes && this.mode === 'FORM.CREATE' ? '*' : this.mappingModel.toScope;
   }
 
   readonly MAX_FROM_SNOMED_CONCEPTS = MAX_FROM_SNOMED_CONCEPTS;
@@ -223,13 +214,9 @@ export class MappingAddComponent implements OnInit {
     self.formGroup.controls.direction.setValue(this.mappingModel.direction);
     self.formGroup.controls.inheritance.setValue(!!this.mappingModel.inheritance);
     self.formGroup.controls.sourceKind.setValue(this.fromSnomed && this.mode !== 'FORM.CREATE' && !this.mappingModel.sourceEcl ? 'CODES' : 'ECL');
-    self.formGroup.controls.inheritanceScope.setValue(this.mode === 'FORM.EDIT' && this.fromSnomed ? this.mappingModel.toScope : '');
-    self.formGroup.controls.inheritanceScope.valueChanges.subscribe((value) => {
-      // when editing, the inheritance scope is the map's toScope (the API drops the cached descendants)
-      if (self.mode === 'FORM.EDIT' && self.fromSnomed && value?.trim()) {
-        self.mappingModel.toScope = value.trim();
-      }
-    });
+    self.formGroup.controls.inheritanceMode.setValue(this.mappingModel.inheritanceMode ?? 'WITHIN_SOURCE');
+    // the API drops the cached descendants when an existing map's mode changes
+    self.formGroup.controls.inheritanceMode.valueChanges.subscribe((value) => self.mappingModel.inheritanceMode = value);
     self.formGroup.controls.inheritance.valueChanges.subscribe((value) => self.mappingModel.inheritance = !!value);
     if (this.fromSnomed && this.mappingModel.targetCodeSet) {
       self.formGroup.controls.sourceId.setValue(this.mappingModel.targetCodeSet.id);
@@ -501,7 +488,7 @@ export class MappingAddComponent implements OnInit {
         this.loading = false;
         this.mappingModel.source = source;
         this.mappingModel.sourceEcl = sourceEcl;
-        this.mappingModel.toScope = this.inheritanceScopeOr(sourceEcl);
+        this.mappingModel.toScope = sourceEcl;
         this.store.dispatch(new AddMapping({
           mapping: this.mappingModel,
           importFile: undefined,
@@ -520,7 +507,7 @@ export class MappingAddComponent implements OnInit {
 
   /**
    * A map from SNOMED CT whose source is an imported list of SNOMED CT codes (checked by the API against the
-   * chosen version); the inheritance scope defaults to every concept.
+   * chosen version); its scope is every concept.
    */
   private createFromSnomedCodes(): void {
     if (!this.mappingModel.targetCodeSet?.id) {
@@ -534,7 +521,7 @@ export class MappingAddComponent implements OnInit {
     }
     this.mappingModel.source = this.sources.find(s => s.id === sourceId) ?? {...new Source(), id: sourceId};
     this.mappingModel.sourceEcl = null;
-    this.mappingModel.toScope = this.inheritanceScopeOr('*');
+    this.mappingModel.toScope = '*';
     this.store.dispatch(new AddMapping({
       mapping: this.mappingModel,
       importFile: undefined,

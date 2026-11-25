@@ -28,7 +28,7 @@
           {{mapping.sourceEcl ?? (mapping.source.name + ', ' + mapping.source.version)}}
         </li>
         @if (hasInheritance) {
-          <li class="one-line-ellipse" [title]="mapping.toScope"><b>{{'MAP.INHERITANCE_SCOPE' | translate}}:</b>&nbsp;{{mapping.toScope}}</li>
+          <li class="one-line-ellipse"><b>{{'MAP.INHERITANCE_MODE' | translate}}:</b>&nbsp;{{'MAP.INHERITANCE_' + mapping.inheritanceMode | translate}}</li>
         }
       } @else {
       <li class="one-line-ellipse"><b>{{'MAP.SCOPE' | translate}}:</b>&nbsp;

@@ -282,10 +282,11 @@
     "SOURCE_CODES": "Codes SNOMED CT source",
     "SOURCE_CODES_HINT": "Une liste importée d'identifiants de concepts SNOMED CT (au plus {{max}}), tous actifs dans la version choisie",
     "SOURCE_CODES_REQUIRED": "Choisissez ou importez la liste de codes SNOMED CT",
-    "INHERITANCE_SCOPE": "Portée de l'héritage (ECL)",
-    "INHERITANCE_SCOPE_SAME_AS_SOURCE": "Identique à l'ECL source",
-    "INHERITANCE_SCOPE_HINT_CODES": "Où les descendants sont générés à l'export ; vide signifie tous les concepts",
-    "INHERITANCE_SCOPE_HINT_ECL": "Où les descendants sont générés à l'export ; vide signifie l'ECL source"
+    "INHERITANCE_MODE": "Héritage",
+    "INHERITANCE_WITHIN_SOURCE": "Dans la source",
+    "INHERITANCE_WITHIN_SOURCE_HINT": "Seuls les concepts de la source héritent entre eux ; rien n'est généré à l'export",
+    "INHERITANCE_BEYOND_SOURCE": "Au-delà de la source",
+    "INHERITANCE_BEYOND_SOURCE_HINT": "Aussi chaque descendant dans SNOMED CT absent de la source, généré à l'export"
   },
   "TABLE": {
     "SOURCE_CODE": "Code source",
@@ -787,10 +788,10 @@
     "POPOVER_CONFLICT_HINT": "Établissez une correspondance directe pour ce concept afin de résoudre le conflit.",
     "POPOVER_NO_MAP": "Aucun code local ne s'applique ; ses descendants n'héritent pas non plus.",
     "GENERATED_TITLE": "Générés à l'export",
-    "GENERATED_HINT": "Descendants de concepts avec correspondance ou arrêtant l'héritage, dans la portée, qui ne sont pas des lignes. Ils ne sont pas enregistrés : ils sont recalculés à chaque export.",
+    "GENERATED_HINT": "Descendants de concepts avec correspondance ou arrêtant l'héritage qui ne sont pas des lignes. Ils ne sont pas enregistrés : ils sont recalculés à chaque export.",
     "GENERATED_FAILED": "Impossible de charger les concepts générés",
     "GENERATED_COUNT": "Générés à l'export : {{count}}",
-    "GENERATED_TOO_LARGE": "Portée de l'héritage trop grande (plus de {{max}} concepts)",
+    "GENERATED_TOO_LARGE": "Un concept avec correspondance a trop de descendants (plus de {{max}} concepts)",
     "ALL": "Tous",
     "ACCEPT": "Accepter l'héritage",
     "ACCEPT_AGAIN": "Accepter à nouveau",

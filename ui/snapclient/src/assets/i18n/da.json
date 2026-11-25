@@ -282,10 +282,11 @@
     "SOURCE_CODES": "Kilde-SNOMED CT-koder",
     "SOURCE_CODES_HINT": "En importeret liste over SNOMED CT-begrebs-id'er (højst {{max}}), alle aktive i den valgte version",
     "SOURCE_CODES_REQUIRED": "Vælg eller importér listen over SNOMED CT-koder",
-    "INHERITANCE_SCOPE": "Nedarvningens omfang (ECL)",
-    "INHERITANCE_SCOPE_SAME_AS_SOURCE": "Samme som kilde-ECL",
-    "INHERITANCE_SCOPE_HINT_CODES": "Hvor efterkommere genereres ved eksport; tomt betyder alle begreber",
-    "INHERITANCE_SCOPE_HINT_ECL": "Hvor efterkommere genereres ved eksport; tomt betyder kilde-ECL"
+    "INHERITANCE_MODE": "Nedarvning",
+    "INHERITANCE_WITHIN_SOURCE": "Inden for kilden",
+    "INHERITANCE_WITHIN_SOURCE_HINT": "Kun kildens begreber arver fra hinanden; intet genereres ved eksport",
+    "INHERITANCE_BEYOND_SOURCE": "Ud over kilden",
+    "INHERITANCE_BEYOND_SOURCE_HINT": "Også alle efterkommere i SNOMED CT, der ikke er i kilden, genereret ved eksport"
   },
   "TABLE": {
     "SOURCE_CODE": "Kildekode",
@@ -787,10 +788,10 @@
     "POPOVER_CONFLICT_HINT": "Map dette begreb direkte for at løse konflikten.",
     "POPOVER_NO_MAP": "Ingen lokal kode gælder; dets efterkommere arver heller ikke.",
     "GENERATED_TITLE": "Genereres ved eksport",
-    "GENERATED_HINT": "Efterkommere af mappede eller stoppende begreber inden for omfanget, som ikke er rækker. De gemmes ikke: de beregnes igen ved hver eksport.",
+    "GENERATED_HINT": "Efterkommere af mappede eller stoppende begreber, som ikke er rækker. De gemmes ikke: de beregnes igen ved hver eksport.",
     "GENERATED_FAILED": "De genererede begreber kunne ikke indlæses",
     "GENERATED_COUNT": "Genereres ved eksport: {{count}}",
-    "GENERATED_TOO_LARGE": "Nedarvningens omfang er for stort (over {{max}} begreber)",
+    "GENERATED_TOO_LARGE": "Et mappet begreb har for mange efterkommere (over {{max}} begreber)",
     "ALL": "Alle",
     "ACCEPT": "Acceptér nedarvning",
     "ACCEPT_AGAIN": "Acceptér igen",

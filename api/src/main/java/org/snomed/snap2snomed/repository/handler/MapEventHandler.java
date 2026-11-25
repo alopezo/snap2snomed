@@ -106,6 +106,10 @@ public class MapEventHandler {
     if (map.isFromSnomed() && map.getSourceEcl() == null) {
       validateSnomedSourceCodes(map);
     }
+    if (map.isFromSnomed()) {
+      // The scope of a map from SNOMED CT describes its source: the ECL, or every concept for a list of codes
+      map.setToScope(map.getSourceEcl() != null ? map.getSourceEcl() : "*");
+    }
     if (map.isInheritance() && (!map.isFromSnomed() || map.getProject().getDualMapMode())) {
       throw new BadRequestDataProblem("Inheritance is only available for single author maps from SNOMED CT");
     }

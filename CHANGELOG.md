@@ -46,12 +46,12 @@ Maps from SNOMED CT (branch `from-snomed`).
   on, with the stop switch. Exports include inherited targets with "Mapping origin" and "Inherited
   from" columns (or a FHIR target comment), unless switched off in the export dialog.
 - The source of a map from SNOMED CT can also be an imported list of SNOMED CT codes (checked against
-  the chosen version when the map is created), and maps with inheritance have their own inheritance
-  scope (ECL, editable). Descendants of mapped or stopping concepts within that scope that are not
-  rows of the map are generated at export time ("GENERATED" lines, or FHIR elements with a comment),
-  never stored; the map details offer a paged preview of them, with filters by state. Generation is
-  refused when a concept, or all together, exceed 50,000 concepts
-  (`snap2snomed.inheritance.max-generated`).
+  the chosen version when the map is created). Inheritance always applies to every descendant, in one
+  of two modes (editable): within the source, where only the source's concepts inherit from each other,
+  or beyond the source, where the descendants of mapped or stopping concepts that are not rows of the
+  map are also generated at export time ("GENERATED" lines, or FHIR elements with a comment), never
+  stored; the map details offer a paged preview of them, with filters by state. Generation is refused
+  when a concept, or all together, exceed 50,000 concepts (`snap2snomed.inheritance.max-generated`).
 - Authors accept the inheritance of rows without targets of their own (inheriting, stopped or blocked),
   from the mapping detail or in bulk (bulk change, "Accept the inheritance of the selected rows"): they
   become MAPPED and go on through the workflow. What a row inherited when accepted is recorded; if it

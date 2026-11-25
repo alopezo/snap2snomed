@@ -120,14 +120,15 @@ public class MappingService {
       map.setDirection(e.getDirection());
       map.setTargetCodeSet(e.getTargetCodeSet());
       if (e.isFromSnomed()) {
-        // The version, the source and the display language are fixed; the inheritance scope (toScope)
-        // can change, and then the cached descendants (computed within it) are dropped
+        // The version, the source (and so the scope) and the display language are fixed; the inheritance
+        // mode can change, and then the cached descendants (filtered by it) are dropped
         map.setToVersion(e.getToVersion());
+        map.setToScope(e.getToScope());
         map.setDisplayLanguage(e.getDisplayLanguage());
         map.setSourceEcl(e.getSourceEcl());
-        if (map.getToScope() == null || map.getToScope().isBlank()) {
-          map.setToScope(e.getToScope());
-        } else if (!Objects.equals(map.getToScope(), e.getToScope())) {
+        if (map.getInheritanceMode() == null) {
+          map.setInheritanceMode(e.getInheritanceMode());
+        } else if (map.getInheritanceMode() != e.getInheritanceMode()) {
           inheritanceDescendantsRepository.deleteByMapId(e.getId());
         }
       }
@@ -680,6 +681,7 @@ public class MappingService {
       if (originalMap.getSourceEcl() != null && newSourceId == originalSourceId) {
         throw new BadRequestDataProblem("A new version of a map from SNOMED CT needs its source ECL expanded again");
       }
+      targetScope = originalMap.getSourceEcl() != null ? originalMap.getSourceEcl() : "*";
     }
 
     Map newMap = Map.builder()
@@ -692,6 +694,7 @@ public class MappingService {
         .direction(originalMap.getDirection())
         .targetCodeSet(originalMap.getTargetCodeSet())
         .inheritance(originalMap.isInheritance())
+        .inheritanceMode(originalMap.getInheritanceMode())
         .sourceEcl(originalMap.getSourceEcl())
         .build();
 

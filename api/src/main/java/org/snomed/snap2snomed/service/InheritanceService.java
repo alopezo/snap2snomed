@@ -33,6 +33,7 @@ import org.snomed.snap2snomed.security.AuthenticationFacade;
 import org.snomed.snap2snomed.repository.TaskRepository;
 import org.snomed.snap2snomed.repository.MapRowRepository;
 import org.snomed.snap2snomed.problem.auth.NotAuthorisedProblem;
+import org.snomed.snap2snomed.model.enumeration.InheritanceMode;
 import org.snomed.snap2snomed.model.User;
 import org.snomed.snap2snomed.model.Task;
 import org.snomed.snap2snomed.model.MapRow;
@@ -56,12 +57,14 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Computes inheritance for a map from SNOMED CT (see {@link InheritanceCalculator}) from its rows and
  * targets: for the rows of the map, and for the concepts generated at export time (descendants of mapped
- * or stopping concepts within the map's inheritance scope that are not rows).
+ * or stopping concepts that are not rows, when the inheritance reaches beyond the source).
  *
- * <p>The descendants of each mapped or stopping concept, {@code (< concept) AND (scope)} with their terms in
- * the map's display language, come from a lazily filled cache table: a concept missing from it costs one
- * ECL expansion. A concept with more descendants than the limit is cached as too large, and generation is
- * then refused until the scope is narrowed.
+ * <p>Inheritance always applies to every descendant; the map's {@link InheritanceMode} says whether only
+ * the source's concepts count. The descendants of each mapped or stopping concept, with their terms in the
+ * map's display language, come from a lazily filled cache table: a concept missing from it costs one ECL
+ * expansion, {@code < concept}, or {@code (< concept) AND (source ECL)} within a source from an ECL. A
+ * concept with more descendants than the limit is cached as too large, and inheritance is then refused for
+ * it until it is mapped differently.
  */
 @Service
 public class InheritanceService {
@@ -210,12 +213,18 @@ public class InheritanceService {
     final Map<String, Set<String>> codes = new HashMap<>();
     final Map<String, String> terms = new HashMap<>();
     loaded.forEach(l -> terms.put(l.row().code(), l.display()));
+    final Set<String> rowCodes = rows.stream().map(Row::code).collect(Collectors.toSet());
+    // Within the source only its concepts (the rows) inherit, so nothing is generated
+    final boolean withinSource = map.getInheritanceMode() != InheritanceMode.BEYOND_SOURCE;
     descendants.byAnchor().forEach((anchor, concepts) -> {
-      codes.put(anchor, concepts.keySet());
-      concepts.forEach(terms::putIfAbsent);
+      if (withinSource) {
+        codes.put(anchor, concepts.keySet().stream().filter(rowCodes::contains).collect(Collectors.toSet()));
+      } else {
+        codes.put(anchor, concepts.keySet());
+        concepts.forEach(terms::putIfAbsent);
+      }
     });
     final List<Result> results = InheritanceCalculator.compute(rows, code -> codes.getOrDefault(code, Set.of()));
-    final Set<String> rowCodes = rows.stream().map(Row::code).collect(Collectors.toSet());
     final long generatedCount = codes.values().stream().flatMap(Set::stream).filter(c -> !rowCodes.contains(c)).distinct().count();
     final boolean generatedTooLarge = generatedCount > maxGenerated;
     final List<Result> generated = descendants.tooLarge().isEmpty() && !generatedTooLarge
@@ -224,7 +233,10 @@ public class InheritanceService {
     return new Computation(loaded, results, generated, terms, descendants.tooLarge(), generatedTooLarge);
   }
 
-  /** The descendants of each concept within the map's scope, from the cache or expanded and stored. */
+  /**
+   * The descendants of each concept, from the cache or expanded and stored: within the source ECL when the
+   * inheritance stays within a source from an ECL (they can't be more than the source), all of them otherwise.
+   */
   Descendants descendants(org.snomed.snap2snomed.model.Map map, Set<String> anchors) {
     final Map<String, Map<String, String>> byAnchor = new HashMap<>();
     final Map<String, Integer> tooLarge = new LinkedHashMap<>();
@@ -242,8 +254,11 @@ public class InheritanceService {
       if (byAnchor.containsKey(code) || tooLarge.containsKey(code)) {
         continue;
       }
+      final String ecl = map.getInheritanceMode() != InheritanceMode.BEYOND_SOURCE && map.getSourceEcl() != null
+          ? "(< " + code + ") AND (" + map.getSourceEcl() + ")"
+          : "< " + code;
       final EclCodeSetService.Expansion expansion = eclCodeSetService.expandConcepts(map.getToVersion(),
-          "(< " + code + ") AND (" + map.getToScope() + ")", map.getDisplayLanguage(), maxGenerated);
+          ecl, map.getDisplayLanguage(), maxGenerated);
       if (expansion.tooLarge()) {
         tooLarge.put(code, expansion.total());
         cacheStore.store(map.getId(), code, TOO_LARGE + expansion.total());

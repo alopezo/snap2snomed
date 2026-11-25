@@ -282,10 +282,11 @@
     "SOURCE_CODES": "Käll-SNOMED CT-koder",
     "SOURCE_CODES_HINT": "En importerad lista med SNOMED CT-begrepps-id:n (högst {{max}}), alla aktiva i den valda versionen",
     "SOURCE_CODES_REQUIRED": "Välj eller importera listan med SNOMED CT-koder",
-    "INHERITANCE_SCOPE": "Arvets omfång (ECL)",
-    "INHERITANCE_SCOPE_SAME_AS_SOURCE": "Samma som käll-ECL",
-    "INHERITANCE_SCOPE_HINT_CODES": "Var ättlingar genereras vid export; tomt betyder alla begrepp",
-    "INHERITANCE_SCOPE_HINT_ECL": "Var ättlingar genereras vid export; tomt betyder käll-ECL"
+    "INHERITANCE_MODE": "Arv",
+    "INHERITANCE_WITHIN_SOURCE": "Inom källan",
+    "INHERITANCE_WITHIN_SOURCE_HINT": "Endast källans begrepp ärver från varandra; inget genereras vid export",
+    "INHERITANCE_BEYOND_SOURCE": "Utanför källan",
+    "INHERITANCE_BEYOND_SOURCE_HINT": "Även varje ättling i SNOMED CT som inte finns i källan, genererad vid export"
   },
   "TABLE": {
     "SOURCE_CODE": "Källkod",
@@ -787,10 +788,10 @@
     "POPOVER_CONFLICT_HINT": "Mappa detta begrepp direkt för att lösa konflikten.",
     "POPOVER_NO_MAP": "Ingen lokal kod gäller; dess ättlingar ärver inte heller.",
     "GENERATED_TITLE": "Genereras vid export",
-    "GENERATED_HINT": "Ättlingar till mappade eller stoppande begrepp inom omfånget som inte är rader. De sparas inte: de beräknas på nytt vid varje export.",
+    "GENERATED_HINT": "Ättlingar till mappade eller stoppande begrepp som inte är rader. De sparas inte: de beräknas på nytt vid varje export.",
     "GENERATED_FAILED": "De genererade begreppen kunde inte läsas in",
     "GENERATED_COUNT": "Genereras vid export: {{count}}",
-    "GENERATED_TOO_LARGE": "Arvets omfång är för stort (över {{max}} begrepp)",
+    "GENERATED_TOO_LARGE": "Ett mappat begrepp har för många ättlingar (över {{max}} begrepp)",
     "ALL": "Alla",
     "ACCEPT": "Acceptera arv",
     "ACCEPT_AGAIN": "Acceptera igen",

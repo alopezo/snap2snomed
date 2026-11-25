@@ -282,10 +282,11 @@
     "SOURCE_CODES": "Bron-SNOMED CT-codes",
     "SOURCE_CODES_HINT": "Een geïmporteerde lijst met SNOMED CT-concept-id's (maximaal {{max}}), allemaal actief in de gekozen versie",
     "SOURCE_CODES_REQUIRED": "Kies of importeer de lijst met SNOMED CT-codes",
-    "INHERITANCE_SCOPE": "Bereik van overerving (ECL)",
-    "INHERITANCE_SCOPE_SAME_AS_SOURCE": "Gelijk aan de bron-ECL",
-    "INHERITANCE_SCOPE_HINT_CODES": "Waar afstammelingen bij export worden gegenereerd; leeg betekent alle concepten",
-    "INHERITANCE_SCOPE_HINT_ECL": "Waar afstammelingen bij export worden gegenereerd; leeg betekent de bron-ECL"
+    "INHERITANCE_MODE": "Overerving",
+    "INHERITANCE_WITHIN_SOURCE": "Binnen de bron",
+    "INHERITANCE_WITHIN_SOURCE_HINT": "Alleen de concepten van de bron erven van elkaar; er wordt niets gegenereerd bij export",
+    "INHERITANCE_BEYOND_SOURCE": "Buiten de bron",
+    "INHERITANCE_BEYOND_SOURCE_HINT": "Ook elke afstammeling in SNOMED CT die niet in de bron zit, gegenereerd bij export"
   },
   "TABLE": {
     "SOURCE_CODE": "Broncode",
@@ -787,10 +788,10 @@
     "POPOVER_CONFLICT_HINT": "Map dit concept direct om het conflict op te lossen.",
     "POPOVER_NO_MAP": "Er is geen lokale code van toepassing; de afstammelingen erven ook niet.",
     "GENERATED_TITLE": "Gegenereerd bij export",
-    "GENERATED_HINT": "Afstammelingen van gemapte of stoppende concepten binnen het bereik die geen rijen zijn. Ze worden niet opgeslagen: ze worden bij elke export opnieuw berekend.",
+    "GENERATED_HINT": "Afstammelingen van gemapte of stoppende concepten die geen rijen zijn. Ze worden niet opgeslagen: ze worden bij elke export opnieuw berekend.",
     "GENERATED_FAILED": "De gegenereerde concepten konden niet worden geladen",
     "GENERATED_COUNT": "Gegenereerd bij export: {{count}}",
-    "GENERATED_TOO_LARGE": "Bereik van overerving te groot (meer dan {{max}} concepten)",
+    "GENERATED_TOO_LARGE": "Een gemapt concept heeft te veel afstammelingen (meer dan {{max}} concepten)",
     "ALL": "Alle",
     "ACCEPT": "Overerving accepteren",
     "ACCEPT_AGAIN": "Opnieuw accepteren",

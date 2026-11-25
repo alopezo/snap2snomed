@@ -282,10 +282,11 @@
     "SOURCE_CODES": "Códigos SNOMED CT de origen",
     "SOURCE_CODES_HINT": "Una lista importada de identificadores de conceptos SNOMED CT (como máximo {{max}}), todos activos en la versión elegida",
     "SOURCE_CODES_REQUIRED": "Elija o importe la lista de códigos SNOMED CT",
-    "INHERITANCE_SCOPE": "Alcance de la herencia (ECL)",
-    "INHERITANCE_SCOPE_SAME_AS_SOURCE": "Igual que la ECL de origen",
-    "INHERITANCE_SCOPE_HINT_CODES": "Dónde se generan descendientes al exportar; vacío significa todos los conceptos",
-    "INHERITANCE_SCOPE_HINT_ECL": "Dónde se generan descendientes al exportar; vacío significa la ECL de origen"
+    "INHERITANCE_MODE": "Herencia",
+    "INHERITANCE_WITHIN_SOURCE": "Dentro del origen",
+    "INHERITANCE_WITHIN_SOURCE_HINT": "Solo los conceptos del origen heredan entre sí; no se genera nada al exportar",
+    "INHERITANCE_BEYOND_SOURCE": "Más allá del origen",
+    "INHERITANCE_BEYOND_SOURCE_HINT": "También cada descendiente en SNOMED CT que no está en el origen, generado al exportar"
   },
   "TABLE": {
     "SOURCE_CODE": "Código de origen",
@@ -787,10 +788,10 @@
     "POPOVER_CONFLICT_HINT": "Mapee este concepto directamente para resolver el conflicto.",
     "POPOVER_NO_MAP": "No aplica ningún código local; sus descendientes tampoco heredan.",
     "GENERATED_TITLE": "Se generan al exportar",
-    "GENERATED_HINT": "Descendientes de conceptos mapeados o que frenan la herencia, dentro del alcance, que no son filas del mapa. No se guardan: se calculan de nuevo en cada exportación.",
+    "GENERATED_HINT": "Descendientes de conceptos mapeados o que frenan la herencia que no son filas del mapa. No se guardan: se calculan de nuevo en cada exportación.",
     "GENERATED_FAILED": "No se pudieron cargar los conceptos generados",
     "GENERATED_COUNT": "Se generan al exportar: {{count}}",
-    "GENERATED_TOO_LARGE": "Alcance de la herencia demasiado grande (más de {{max}} conceptos)",
+    "GENERATED_TOO_LARGE": "Un concepto mapeado tiene demasiados descendientes (más de {{max}} conceptos)",
     "ALL": "Todos",
     "ACCEPT": "Aceptar herencia",
     "ACCEPT_AGAIN": "Aceptar de nuevo",

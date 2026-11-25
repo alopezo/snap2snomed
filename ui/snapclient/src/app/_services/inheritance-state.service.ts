@@ -30,6 +30,8 @@ import {TargetChangedService} from './target-changed.service';
 export class InheritanceStateService {
 
   private mapId: string | null = null;
+  /** The mode the state was loaded with: a map edited to another mode is loaded again. */
+  private mode: string | null = null;
   private readonly subject = new BehaviorSubject<InheritanceResult | null>(null);
   readonly state$ = this.subject.asObservable();
   private byCode = new Map<string, InheritanceRow>();
@@ -42,10 +44,12 @@ export class InheritanceStateService {
   /** Follows a map: loads its inheritance if it has it switched on, clears the state otherwise. */
   watch(mapping: Mapping | null | undefined): void {
     const id = Mapping.hasInheritance(mapping) ? mapping?.id ?? null : null;
-    if (id === this.mapId) {
+    const mode = id ? mapping?.inheritanceMode ?? null : null;
+    if (id === this.mapId && mode === this.mode) {
       return;
     }
     this.mapId = id;
+    this.mode = mode;
     this.byCode = new Map();
     this.subject.next(null);
     this.refresh();

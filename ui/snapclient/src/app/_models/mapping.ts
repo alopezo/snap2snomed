@@ -24,6 +24,12 @@ import {Source} from './source';
 /** Which side of a map is SNOMED CT; see MapDirection in the API. */
 export type MapDirection = 'TO_SNOMED' | 'FROM_SNOMED';
 
+/**
+ * Where the inheritance of a map from SNOMED CT reaches (it always applies to every descendant): only the
+ * concepts of the source, or also the descendants beyond it, generated at export time.
+ */
+export type InheritanceMode = 'WITHIN_SOURCE' | 'BEYOND_SOURCE';
+
 export class Mapping {
 
   constructor() {
@@ -40,6 +46,7 @@ export class Mapping {
     this.direction = 'TO_SNOMED';
     this.targetCodeSet = null;
     this.inheritance = false;
+    this.inheritanceMode = 'WITHIN_SOURCE';
     this.sourceEcl = null;
   }
 
@@ -67,9 +74,11 @@ export class Mapping {
   targetCodeSet: Source | null;
   /** FROM_SNOMED single author maps: unmapped concepts take the targets of their nearest mapped ancestor. */
   inheritance: boolean;
+  /** Maps with inheritance: whether it reaches the descendants beyond the source. */
+  inheritanceMode: InheritanceMode;
   /**
    * FROM_SNOMED maps: the ECL expanded into the source, or null when the source is an imported list of
-   * SNOMED CT codes; toScope is then the scope inheritance can expand into.
+   * SNOMED CT codes; toScope then describes the source: this ECL, or every concept ('*').
    */
   sourceEcl: string | null;
 

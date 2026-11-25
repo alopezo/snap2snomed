@@ -59,7 +59,7 @@
                   {{ (isFromSnomed(m) ? 'MAP.DIRECTION_FROM_SNOMED' : 'MAP.DIRECTION_TO_SNOMED') | translate }}
                 </span>
                 @if (hasInheritance(m)) {
-                  <span class="inheritance-badge" [matTooltip]="'MAP.INHERITANCE_HINT' | translate">
+                  <span class="inheritance-badge" [matTooltip]="'MAP.INHERITANCE_' + m.inheritanceMode | translate">
                     <mat-icon class="type-icon">account_tree</mat-icon>{{ 'MAP.INHERITANCE_LABEL' | translate }}
                   </span>
                 }

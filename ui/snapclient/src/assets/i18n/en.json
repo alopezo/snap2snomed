@@ -282,10 +282,11 @@
     "SOURCE_CODES": "Source SNOMED CT codes",
     "SOURCE_CODES_HINT": "An imported list of SNOMED CT concept ids (at most {{max}}), all active in the chosen version",
     "SOURCE_CODES_REQUIRED": "Choose or import the list of SNOMED CT codes",
-    "INHERITANCE_SCOPE": "Inheritance scope (ECL)",
-    "INHERITANCE_SCOPE_SAME_AS_SOURCE": "Same as the source ECL",
-    "INHERITANCE_SCOPE_HINT_CODES": "Where descendants are generated at export time; empty means every concept",
-    "INHERITANCE_SCOPE_HINT_ECL": "Where descendants are generated at export time; empty means the source ECL"
+    "INHERITANCE_MODE": "Inheritance",
+    "INHERITANCE_WITHIN_SOURCE": "Within the source",
+    "INHERITANCE_WITHIN_SOURCE_HINT": "Only the concepts of the source inherit from each other; nothing is generated at export",
+    "INHERITANCE_BEYOND_SOURCE": "Beyond the source",
+    "INHERITANCE_BEYOND_SOURCE_HINT": "Also every descendant in SNOMED CT that is not in the source, generated at export"
   },
   "TABLE": {
     "SOURCE_CODE": "Source code",
@@ -787,10 +788,10 @@
     "POPOVER_CONFLICT_HINT": "Map this concept directly to resolve the conflict.",
     "POPOVER_NO_MAP": "No local code applies; its descendants do not inherit either.",
     "GENERATED_TITLE": "Generated at export",
-    "GENERATED_HINT": "Descendants of mapped or stopping concepts within the inheritance scope that are not rows of the map. They are not stored: they are computed again for each export.",
+    "GENERATED_HINT": "Descendants of mapped or stopping concepts that are not rows of the map. They are not stored: they are computed again for each export.",
     "GENERATED_FAILED": "The generated concepts could not be loaded",
     "GENERATED_COUNT": "Generated at export: {{count}}",
-    "GENERATED_TOO_LARGE": "Inheritance scope too large (over {{max}} concepts)",
+    "GENERATED_TOO_LARGE": "A mapped concept has too many descendants (over {{max}} concepts)",
     "ALL": "All",
     "ACCEPT": "Accept inheritance",
     "ACCEPT_AGAIN": "Accept again",
