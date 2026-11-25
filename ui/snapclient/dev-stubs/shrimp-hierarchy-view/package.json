@@ -1,0 +1,14 @@
+{
+  "name": "@csiro/shrimp-hierarchy-view",
+  "version": "0.0.8-devstub",
+  "description": "LOCAL DEV STUB of the private @csiro/shrimp-hierarchy-view package. Renders a placeholder instead of the shrimp hierarchy.",
+  "type": "module",
+  "module": "index.js",
+  "typings": "index.d.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": { "types": "./index.d.ts", "default": "./index.js" },
+    "./package.json": "./package.json"
+  },
+  "peerDependencies": { "@angular/core": ">=17" }
+}

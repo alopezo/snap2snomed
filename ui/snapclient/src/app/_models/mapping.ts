@@ -21,6 +21,9 @@
 import {Project} from './project';
 import {Source} from './source';
 
+/** Which side of a map is SNOMED CT; see MapDirection in the API. */
+export type MapDirection = 'TO_SNOMED' | 'FROM_SNOMED';
+
 export class Mapping {
 
   constructor() {
@@ -34,13 +37,19 @@ export class Mapping {
     this.created = new Date();
     this.modified = new Date();
     this.blindMapFlag = false;
+    this.direction = 'TO_SNOMED';
+    this.targetCodeSet = null;
   }
 
   id: string | null;
   project: Project;
   mapVersion: string;
   source: Source;
-  toSystem = 'http://snomed.info/sct';  // Always "to snomed" for the moment
+  toSystem = 'http://snomed.info/sct';
+  /**
+   * toVersion, toScope and displayLanguage always describe the SNOMED CT side: the target for
+   * TO_SNOMED maps, the source (an ECL frozen into the source code set) for FROM_SNOMED maps.
+   */
   toVersion: string | null;
   toScope: string;
   /**
@@ -51,14 +60,21 @@ export class Mapping {
   created: Date;
   modified: Date;
   blindMapFlag: Boolean;
+  direction: MapDirection;
+  /** FROM_SNOMED maps: the imported code set the targets are chosen from. */
+  targetCodeSet: Source | null;
 
   static replacer(key: string, value: any): any {
     if (value !== null && key === 'project') {
       return '/projects/' + value.id;
-    } else if (value !== null && key === 'source') {
+    } else if (value !== null && (key === 'source' || key === 'targetCodeSet')) {
       return '/importedCodeSets/' + value.id;
     }
     return value;
+  }
+
+  static isFromSnomed(mapping: Mapping | null | undefined): boolean {
+    return mapping?.direction === 'FROM_SNOMED';
   }
 
   static getStatus(mapping: Mapping): string {

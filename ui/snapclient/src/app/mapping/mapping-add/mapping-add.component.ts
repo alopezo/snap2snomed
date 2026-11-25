@@ -51,6 +51,7 @@ import { Project } from '../../_models/project';
 import { MatSelectChange } from '@angular/material/select';
 import { LanguageContext, LanguageMetadataService } from '../../_services/language-metadata.service';
 import { LanguageDialects } from '../../_utils/language-dialects';
+import { MAX_FROM_SNOMED_CONCEPTS, MapService } from '../../_services/map.service';
 
 @Component({
   selector: 'app-mapping-add',
@@ -92,8 +93,20 @@ export class MappingAddComponent implements OnInit {
     toScopeSelect: new UntypedFormControl(''),
     toScope: new UntypedFormControl('', [Validators.minLength(1)]),
     displayLanguage: new UntypedFormControl(''),
-    dualMapMode: new UntypedFormControl('')
+    dualMapMode: new UntypedFormControl(''),
+    direction: new UntypedFormControl('TO_SNOMED')
   });
+
+  readonly MAX_FROM_SNOMED_CONCEPTS = MAX_FROM_SNOMED_CONCEPTS;
+  /** Result of "count concepts" for a map from SNOMED CT; null until counted. */
+  eclCount: number | null = null;
+  eclCounting = false;
+  eclCountFailed = false;
+
+  /** A map from SNOMED CT: the ECL fields describe the source and the imported code set is the target. */
+  get fromSnomed(): boolean {
+    return Mapping.isFromSnomed(this.mappingModel);
+  }
 
   @Input() set mapping(value: Mapping | undefined) {
     if (value) {
@@ -139,6 +152,7 @@ export class MappingAddComponent implements OnInit {
     private store: Store<IAppState>,
     private translate: TranslateService,
     private fhirService: FhirService,
+    private mapService: MapService,
     private languageMetadataService: LanguageMetadataService,
     public dialog: MatDialog) {
   }
@@ -179,6 +193,10 @@ export class MappingAddComponent implements OnInit {
     self.formGroup.controls.displayLanguage.setValue(this.mappingModel.displayLanguage ?? null);
     self.loadLanguageContexts(this.mappingModel.toVersion);
     self.formGroup.controls.dualMapMode.setValue(this.mappingModel.project.dualMapMode);
+    self.formGroup.controls.direction.setValue(this.mappingModel.direction);
+    if (this.fromSnomed && this.mappingModel.targetCodeSet) {
+      self.formGroup.controls.sourceId.setValue(this.mappingModel.targetCodeSet.id);
+    }
 
     self.formGroup.controls.title.valueChanges.subscribe((value) => {
       if (self.mappingModel.project.title !== value) {
@@ -193,10 +211,16 @@ export class MappingAddComponent implements OnInit {
     self.formGroup.controls.description.valueChanges.subscribe((value) => {
       self.mappingModel.project.description = value;
     });
-    self.formGroup.controls.sourceId.valueChanges.subscribe((value) => {
-      if (self.mappingModel.source.id !== value) {
-        self.mappingModel.source.id = value;
+    // The imported code set field is the source of a map to SNOMED CT and the target of a map from it
+    self.formGroup.controls.sourceId.valueChanges.subscribe((value) => self.applyCodeSet(value));
+    self.formGroup.controls.direction.valueChanges.subscribe((value) => {
+      self.mappingModel.direction = value;
+      self.eclCount = null;
+      if (self.fromSnomed) {
+        // importing an existing map is not available for maps from SNOMED CT
+        self.mappingFile = undefined;
       }
+      self.applyCodeSet(self.formGroup.controls.sourceId.value);
     });
     self.formGroup.controls.toEdition.valueChanges.subscribe((value) => {
       self.selectedEdition = value;
@@ -204,6 +228,7 @@ export class MappingAddComponent implements OnInit {
     });
     self.formGroup.controls.toVersion.valueChanges.subscribe((value) => {
       self.mappingModel.toVersion = value;
+      self.eclCount = null;
       self.loadLanguageContexts(value);
     });
     self.formGroup.controls.displayLanguage.valueChanges.subscribe((value) => {
@@ -217,6 +242,7 @@ export class MappingAddComponent implements OnInit {
     });
     self.formGroup.controls.toScope.valueChanges.subscribe((value) => {
       self.mappingModel.toScope = value;
+      self.eclCount = null;
       if (value !== self.formGroup.controls.toScopeSelect.value) {
         self.formGroup.controls.toScopeSelect.setValue(value);
       }
@@ -247,12 +273,51 @@ export class MappingAddComponent implements OnInit {
   }
 
   private applyModeToDualMapMode(): void {
-    const control = this.formGroup.controls.dualMapMode;
-    if (this.mode !== 'FORM.CREATE') {
-      control.disable();
-    } else {
-      control.enable();
+    // The author mode and the direction are chosen when the map is created
+    for (const control of [this.formGroup.controls.dualMapMode, this.formGroup.controls.direction]) {
+      if (this.mode !== 'FORM.CREATE') {
+        control.disable();
+      } else {
+        control.enable();
+      }
     }
+  }
+
+  private applyCodeSet(id: string | null): void {
+    if (this.mode !== 'FORM.CREATE' && this.mode !== 'FORM.COPY') {
+      return;
+    }
+    if (this.fromSnomed) {
+      this.mappingModel.targetCodeSet = id ? (this.sources.find(s => s.id === id) ?? {...new Source(), id}) : null;
+      this.mappingModel.source = new Source();
+    } else {
+      this.mappingModel.targetCodeSet = null;
+      this.mappingModel.source.id = id;
+    }
+  }
+
+  /** Counts the active concepts the ECL returns, so the user sees whether it fits a map from SNOMED CT. */
+  countConcepts(): void {
+    if (!this.mappingModel.toVersion || !this.mappingModel.toScope) {
+      return;
+    }
+    this.eclCounting = true;
+    this.eclCountFailed = false;
+    this.fhirService.countEcl(this.mappingModel.toScope, this.mappingModel.toVersion).subscribe({
+      next: count => {
+        this.eclCount = count;
+        this.eclCounting = false;
+      },
+      error: () => {
+        this.eclCount = null;
+        this.eclCountFailed = true;
+        this.eclCounting = false;
+      }
+    });
+  }
+
+  get eclTooLarge(): boolean {
+    return this.eclCount !== null && this.eclCount > MAX_FROM_SNOMED_CONCEPTS;
   }
 
   private newMapping(): void {
@@ -319,7 +384,9 @@ export class MappingAddComponent implements OnInit {
     this.fhirService.validateEcl(this.mappingModel.toScope).subscribe(
       (result) => {
         if (result.valid) {
-          if (this.mode === 'FORM.CREATE') {
+          if (this.mode === 'FORM.CREATE' && this.fromSnomed) {
+            this.createFromSnomed();
+          } else if (this.mode === 'FORM.CREATE') {
             this.store.dispatch(new AddMapping({
               mapping: this.mappingModel,
               importFile: this.mappingFile,
@@ -350,6 +417,38 @@ export class MappingAddComponent implements OnInit {
         }
       }
     );
+  }
+
+  /**
+   * A map from SNOMED CT: the ECL is first expanded into the source code set (the API refuses more than
+   * MAX_FROM_SNOMED_CONCEPTS concepts), then the map is created with it.
+   */
+  private createFromSnomed(): void {
+    if (!this.mappingModel.targetCodeSet?.id) {
+      this.translate.get('MAP.TARGET_CODE_SET_REQUIRED').subscribe(res => this.error.message = res);
+      return;
+    }
+    const name = `${this.mappingModel.project.title} (SNOMED CT)`.substring(0, 100);
+    this.loading = true;
+    this.mapService.createSourceFromEcl(name, this.mappingModel.toVersion ?? '', this.mappingModel.toScope,
+      this.mappingModel.displayLanguage).subscribe({
+      next: source => {
+        this.loading = false;
+        this.mappingModel.source = source;
+        this.store.dispatch(new AddMapping({
+          mapping: this.mappingModel,
+          importFile: undefined,
+          dualMapMode: this.mappingModel.project.dualMapMode
+        }));
+      },
+      error: err => {
+        this.loading = false;
+        this.translate.get('MAP.FROM_SNOMED_SOURCE_ERROR').subscribe(res => {
+          this.error.message = res;
+          this.error.detail = err?.error;
+        });
+      }
+    });
   }
 
   onCancel($event: Event): void {

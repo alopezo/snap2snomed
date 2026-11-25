@@ -280,6 +280,8 @@ function toMapping(mapDto: any, project?: Project): Mapping {
   mapping.toVersion = mapDto.toVersion;
   mapping.toScope = mapDto.toScope;
   mapping.displayLanguage = mapDto.displayLanguage ?? null;
+  mapping.direction = mapDto.direction ?? 'TO_SNOMED';
+  mapping.targetCodeSet = (mapDto.targetCodeSet as Source) ?? null;
 
   if (project) {
     mapping.project = project;

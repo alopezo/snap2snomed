@@ -19,6 +19,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Mapping} from '../_models/mapping';
 import {Project} from '../_models/project';
+import {Source} from '../_models/source';
 import {ServiceUtils} from '../_utils/service_utils';
 import {AdditionalColumn, MappedRowDetailsDto, MapRow, MapRowRelationship, MapRowStatus, MapView} from '../_models/map_row';
 import {JSONTargetRow, TargetRow} from '../_models/target_row';
@@ -129,6 +130,16 @@ export interface CreateMappingParams {
   dualMapMode: boolean;
 }
 
+/** Most SNOMED CT concepts a map from SNOMED CT accepts as its source (see EclCodeSetService in the API). */
+export const MAX_FROM_SNOMED_CONCEPTS = 10000;
+
+/** A code of the target code set of a map from SNOMED CT. */
+export interface TargetCode {
+  code: string;
+  display: string;
+  additionalColumns: {name: string, value: string}[];
+}
+
 /** Outcome of POST /map/{id}/refreshTargetDisplays. */
 export interface TargetDisplayRefreshResult {
   codeCount: number;
@@ -161,6 +172,28 @@ export class MapService {
     mapping.project.dualMapMode = dualMapMode;
     const body = JSON.stringify(mapping, Mapping.replacer);
     return this.http.post(url, body, header);
+  }
+
+  /**
+   * Creates the source code set of a map from SNOMED CT: the active concepts of the ECL (at most
+   * MAX_FROM_SNOMED_CONCEPTS), with terms in the display language.
+   */
+  createSourceFromEcl(name: string, version: string, ecl: string, displayLanguage: string | null): Observable<Source> {
+    const url = `${this.config.apiBaseUrl}/importedCodeSets/fromEcl`;
+    return this.http.post<Source>(url, {name, version, ecl, displayLanguage}, ServiceUtils.getHTTPHeaders());
+  }
+
+  /** Codes of the target code set of a map from SNOMED CT matching the text, or the one with this exact code. */
+  searchTargetCodes(mapId: string, query: {text?: string, code?: string}, size = 50): Observable<TargetCode[]> {
+    const url = `${this.config.apiBaseUrl}/map/${mapId}/targetCodes`;
+    const options = ServiceUtils.getHTTPHeaders();
+    let params = new HttpParams().set('size', String(size));
+    if (query.code) {
+      params = params.set('code', query.code);
+    } else {
+      params = params.set('text', query.text ?? '');
+    }
+    return this.http.get<TargetCode[]>(url, {...options, params});
   }
 
   copyMapping(mapping: Mapping): Observable<any> {

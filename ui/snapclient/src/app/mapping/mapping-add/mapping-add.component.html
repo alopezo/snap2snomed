@@ -23,6 +23,18 @@
             </mat-button-toggle>
           </mat-button-toggle-group>
         </div>
+        @if (mode === 'FORM.CREATE') {
+          <div>
+            <mat-button-toggle-group class="author-mode-toggle-group" id="direction" name="direction"
+              formControlName="direction" ngDefaultControl [attr.aria-label]="'MAP.DIRECTION' | translate">
+              <mat-button-toggle value="TO_SNOMED">{{'MAP.DIRECTION_TO_SNOMED' | translate}}</mat-button-toggle>
+              <mat-button-toggle value="FROM_SNOMED">{{'MAP.DIRECTION_FROM_SNOMED' | translate}}</mat-button-toggle>
+            </mat-button-toggle-group>
+            @if (fromSnomed) {
+              <p class="direction-hint">{{'MAP.DIRECTION_FROM_SNOMED_HINT' | translate: {max: MAX_FROM_SNOMED_CONCEPTS | number} }}</p>
+            }
+          </div>
+        }
         <mat-form-field class="field-full-width" hintLabel="{{'FORM.MAX_CHARS' | translate}} {{MAX_TITLE}}">
           <mat-label>{{ 'MAP.TITLE' | translate }}</mat-label>
           <input matInput
@@ -62,7 +74,7 @@
               <div>
                 <div class="source-field">
                   <mat-form-field class="field-withbutton-width">
-                    <mat-label>{{ 'MAP.SOURCE' | translate }}</mat-label>
+                    <mat-label>{{ (fromSnomed ? 'MAP.TARGET_CODE_SET' : 'MAP.SOURCE') | translate }}</mat-label>
                     <mat-select id="sourceId" formControlName="sourceId" required>
                       <mat-option disabled value=""><i>{{ 'MAP.SOURCE_SELECT' | translate }}</i></mat-option>
                       @for (src of sources; track src) {
@@ -72,7 +84,7 @@
                       }
                     </mat-select>
                     @if (formGroup.controls.sourceId.invalid) {
-                      <mat-error>{{ 'MAP.SOURCE_REQUIRED' | translate }}</mat-error>
+                      <mat-error>{{ (fromSnomed ? 'MAP.TARGET_CODE_SET_REQUIRED' : 'MAP.SOURCE_REQUIRED') | translate }}</mat-error>
                     }
                   </mat-form-field>
                   <button mat-mini-fab class="btn-accent" type="button" title="{{ 'MAP.SOURCE_IMPORT' | translate }}"
@@ -82,7 +94,7 @@
                 </div>
                 <div class="source-field">
                   <mat-form-field class="field-withbutton-width multi-field-row-field">
-                    <mat-label>{{ 'MAP.TARGET_EDITION' | translate }}</mat-label>
+                    <mat-label>{{ (fromSnomed ? 'MAP.SOURCE_EDITION' : 'MAP.TARGET_EDITION') | translate }}</mat-label>
                     <mat-select id="toEdition" formControlName="toEdition"
                       required>
                       @for (elem of editionToVersionsMap | keyvalue; track elem) {
@@ -99,7 +111,7 @@
                     }
                   </mat-form-field>
                   <mat-form-field class="field-withbutton-width multi-field-row-field">
-                    <mat-label>{{ 'MAP.TARGET_VERSION' | translate }}</mat-label>
+                    <mat-label>{{ (fromSnomed ? 'MAP.SOURCE_SNOMED_VERSION' : 'MAP.TARGET_VERSION') | translate }}</mat-label>
                     <mat-select id="toVersion" formControlName="toVersion"
                       required>
                       @for (vers of editionVersions; track vers) {
@@ -126,7 +138,7 @@
                   </app-display-language-picker>
                 </div>
                 <mat-form-field class="field-full-width" hintLabel="{{'FORM.MAX_CHARS' | translate}} {{MAX_TARGETSCOPE}}">
-                  <mat-label for="toScopeSelect">{{ 'MAP.TARGET_SCOPE_COMMON' | translate }}</mat-label>
+                  <mat-label for="toScopeSelect">{{ (fromSnomed ? 'MAP.SOURCE_SCOPE_COMMON' : 'MAP.TARGET_SCOPE_COMMON') | translate }}</mat-label>
                   <mat-select id="toScopeSelect" formControlName="toScopeSelect">
                     <mat-option value="*">{{ 'MAP.ECL_ANY' | translate }}</mat-option>
                     <mat-option value="<< 404684003|Clinical finding|">{{ 'MAP.ECL_FINDINGS' | translate }}</mat-option>
@@ -137,7 +149,7 @@
                   </mat-select>
                 </mat-form-field>
                 <mat-form-field class="field-full-width" hintLabel="{{'FORM.MAX_CHARS' | translate}} {{MAX_TARGETSCOPE}}">
-                  <mat-label for="toScope">{{ 'MAP.TARGET_SCOPE' | translate }}</mat-label>
+                  <mat-label for="toScope">{{ (fromSnomed ? 'MAP.SOURCE_SCOPE' : 'MAP.TARGET_SCOPE') | translate }}</mat-label>
                   <textarea id="toScope" class="ecl" matNativeControl
                     cdkTextareaAutosize
                     cdkAutosizeMinRows="2"
@@ -154,7 +166,27 @@
                     {{mappingModel.toScope.length || 0}}/{{MAX_TARGETSCOPE}}
                   </mat-hint>
                 </mat-form-field>
-                @if (mode === 'FORM.CREATE' && !formGroup.controls.dualMapMode.value) {
+                @if (fromSnomed) {
+                  <div class="ecl-count">
+                    <button mat-stroked-button type="button" id="countConcepts" (click)="countConcepts()"
+                      [disabled]="eclCounting || !mappingModel.toVersion || !mappingModel.toScope">
+                      {{ 'MAP.COUNT_CONCEPTS' | translate }}
+                    </button>
+                    @if (eclCounting) {
+                      <mat-progress-spinner diameter="20" mode="indeterminate"></mat-progress-spinner>
+                    } @else if (eclCountFailed) {
+                      <span class="ecl-count-error">{{ 'MAP.COUNT_CONCEPTS_FAILED' | translate }}</span>
+                    } @else if (eclCount !== null) {
+                      <span [class.ecl-count-error]="eclTooLarge || eclCount === 0">
+                        {{ 'MAP.CONCEPT_COUNT' | translate: {count: eclCount | number} }}
+                        @if (eclTooLarge) {
+                          {{ 'MAP.CONCEPT_COUNT_TOO_LARGE' | translate: {max: MAX_FROM_SNOMED_CONCEPTS | number} }}
+                        }
+                      </span>
+                    }
+                  </div>
+                }
+                @if (mode === 'FORM.CREATE' && !formGroup.controls.dualMapMode.value && !fromSnomed) {
                   <div class="import-existing-map">
                     <button mat-flat-button title="{{ 'FORM.IMPORT_EXISTING_MAP' | translate }}"
                       type="button" (click)="onImportMapping($event)">
@@ -178,42 +210,69 @@
                 <br/>
                 <div class="info">
                   <h3>{{'MAP.CODE_SYSTEMS' | translate}}</h3>
-                  <table class="table details-table">
-                    <tr>
-                      <th><b>{{ 'MAP.SOURCE_LABEL' | translate }}:</b></th>
-                      <td>{{mappingModel.source.name}}</td>
-                    </tr>
-                    <tr>
-                      <th><b>{{ 'MAP.SOURCE_VERSION_LABEL' | translate }}:</b></th>
-                      <td>{{mappingModel.source.version}}</td>
-                    </tr>
-                    <tr>
-                      <th><b>{{ 'MAP.TARGET' | translate }}:</b></th>
-                      <td>
-                        <app-source-version [version]="mappingModel.toVersion"></app-source-version>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th><b>{{ 'MAP.DISPLAY_LANGUAGE' | translate }}:</b></th>
-                      @if (mode === 'FORM.EDIT') {
-                        <!-- The display language only changes how targets are shown, so it stays editable;
-                             saving re-resolves the stored target terms -->
+                  @if (fromSnomed) {
+                    <table class="table details-table">
+                      <tr>
+                        <th><b>{{ 'MAP.DIRECTION' | translate }}:</b></th>
+                        <td>{{ 'MAP.DIRECTION_FROM_SNOMED' | translate }}</td>
+                      </tr>
+                      <tr>
+                        <th><b>{{ 'MAP.SOURCE_LABEL' | translate }}:</b></th>
                         <td>
-                          <app-display-language-picker id="displayLanguageEdit" formControlName="displayLanguage"
-                            [versionUri]="mappingModel.toVersion"
-                            [scope]="mappingModel.toScope"
-                            [hint]="'MAP.DISPLAY_LANGUAGE_EDIT_HINT' | translate">
-                          </app-display-language-picker>
+                          <app-source-version [version]="mappingModel.toVersion"></app-source-version>
                         </td>
-                      } @else {
+                      </tr>
+                      <tr>
+                        <th><b>{{ 'MAP.SOURCE_SCOPE_LABEL' | translate }}:</b></th>
+                        <td>{{mappingModel.toScope}}</td>
+                      </tr>
+                      <tr>
+                        <th><b>{{ 'MAP.DISPLAY_LANGUAGE' | translate }}:</b></th>
                         <td [title]="mappingModel.displayLanguage ?? ''">{{ displayLanguageLabel ?? ('MAP.DISPLAY_LANGUAGE_ENGLISH_FSN' | translate) }}</td>
-                      }
-                    </tr>
-                    <tr>
-                      <th><b>{{ 'MAP.TARGET_SCOPE_LABEL' | translate }}:</b></th>
-                      <td>{{mappingModel.toScope}}</td>
-                    </tr>
-                  </table>
+                      </tr>
+                      <tr>
+                        <th><b>{{ 'MAP.TARGET' | translate }}:</b></th>
+                        <td>{{mappingModel.targetCodeSet?.name}}: {{mappingModel.targetCodeSet?.version}}</td>
+                      </tr>
+                    </table>
+                  } @else {
+                    <table class="table details-table">
+                      <tr>
+                        <th><b>{{ 'MAP.SOURCE_LABEL' | translate }}:</b></th>
+                        <td>{{mappingModel.source.name}}</td>
+                      </tr>
+                      <tr>
+                        <th><b>{{ 'MAP.SOURCE_VERSION_LABEL' | translate }}:</b></th>
+                        <td>{{mappingModel.source.version}}</td>
+                      </tr>
+                      <tr>
+                        <th><b>{{ 'MAP.TARGET' | translate }}:</b></th>
+                        <td>
+                          <app-source-version [version]="mappingModel.toVersion"></app-source-version>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th><b>{{ 'MAP.DISPLAY_LANGUAGE' | translate }}:</b></th>
+                        @if (mode === 'FORM.EDIT') {
+                          <!-- The display language only changes how targets are shown, so it stays editable;
+                               saving re-resolves the stored target terms -->
+                          <td>
+                            <app-display-language-picker id="displayLanguageEdit" formControlName="displayLanguage"
+                              [versionUri]="mappingModel.toVersion"
+                              [scope]="mappingModel.toScope"
+                              [hint]="'MAP.DISPLAY_LANGUAGE_EDIT_HINT' | translate">
+                            </app-display-language-picker>
+                          </td>
+                        } @else {
+                          <td [title]="mappingModel.displayLanguage ?? ''">{{ displayLanguageLabel ?? ('MAP.DISPLAY_LANGUAGE_ENGLISH_FSN' | translate) }}</td>
+                        }
+                      </tr>
+                      <tr>
+                        <th><b>{{ 'MAP.TARGET_SCOPE_LABEL' | translate }}:</b></th>
+                        <td>{{mappingModel.toScope}}</td>
+                      </tr>
+                    </table>
+                  }
                 </div>
               </div>
             }
@@ -224,7 +283,7 @@
               </div>
             }
           </mat-card-content>
-          @if (!formGroup.controls.dualMapMode.value) {
+          @if (!formGroup.controls.dualMapMode.value && !fromSnomed) {
             <div class="alert-warning warning-message">
               <mat-icon class="mat-icon-warning">info</mat-icon>
               <div [innerHtml]="'IMPORT.IMPORT_LARGE_MAP' | translate" class="infotext"></div>

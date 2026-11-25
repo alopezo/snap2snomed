@@ -144,3 +144,20 @@ button#cancel {
 .display-language-field {
   margin-bottom: 16px;
 }
+
+.direction-hint {
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.9em;
+  margin: 4px 0 8px;
+}
+
+.ecl-count {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 4px 0 12px;
+}
+
+.ecl-count-error {
+  color: #c62828;
+}

@@ -320,6 +320,16 @@ export class FhirService {
     );
   }
 
+  /** How many active concepts the ECL expression returns in the version. */
+  countEcl(ecl: string, version: string): Observable<number> {
+    const url = `${this.config.fhirBaseUrl}/ValueSet/$expand`;
+    const options = ServiceUtils.getHTTPHeaders();
+    options.headers = options.headers.set('Accept', ['application/fhir+json', 'application/json']);
+    // Snowstorm fails on count=0, so ask for one concept
+    options.params = {...options.params, url: FhirService.toValueSet(version, ecl), count: 1, activeOnly: true};
+    return this.http.get<R4.IValueSet>(url, options).pipe(map(valueSet => valueSet.expansion?.total ?? 0));
+  }
+
   /** True when the ECL expression returns at least one concept. */
   private eclMatches(ecl: string, version: string): Observable<boolean> {
     const url = `${this.config.fhirBaseUrl}/ValueSet/$expand`;
