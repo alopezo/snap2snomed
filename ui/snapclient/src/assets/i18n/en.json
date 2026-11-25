@@ -595,7 +595,8 @@
     "RECONCILE_STATUS_INFO": "To update any rows in a MAPPED, ACCEPTED or REJECTED state, change the row status to RECONCILE, then alter the row via the RECONCILE TASK",
     "NO_ROWS_SELECTED": "NO ROWS SELECTED",
     "ACCEPT_INHERITANCE": "Accept the inheritance of the selected rows",
-    "ACCEPT_INHERITANCE_HINT": "Rows that inherit, are stopped or blocked become MAPPED with no targets of their own; rows in conflict, uncovered or mapped are left as they are."
+    "ACCEPT_INHERITANCE_HINT": "Rows that inherit, are stopped or blocked become MAPPED with no targets of their own; rows in conflict, uncovered or mapped are left as they are.",
+    "ACCEPTED_INHERITANCE_MESSAGE": "Inheritance accepted for {{accepted}} rows; {{skipped}} left as they were (with targets of their own, in conflict, uncovered or not editable)."
   },
   "NOTESDIALOG": {
     "HEADING": "Notes for Source Code:"

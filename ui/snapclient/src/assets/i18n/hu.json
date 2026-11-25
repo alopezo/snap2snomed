@@ -595,7 +595,8 @@
     "RECONCILE_STATUS_INFO": "LEKÉPEZETT, ELFOGADVA vagy ELUTASÍTVA állapotú sorok módosításához állítsa a sor állapotát EGYEZTETÉS értékre, majd módosítsa a sort az EGYEZTETÉS FELADATBAN",
     "NO_ROWS_SELECTED": "NINCS KIVÁLASZTOTT SOR",
     "ACCEPT_INHERITANCE": "A kijelölt sorok öröklésének elfogadása",
-    "ACCEPT_INHERITANCE_HINT": "Az öröklő, leállító vagy leállított sorok MAPPED állapotba kerülnek saját célok nélkül; az ütköző, nem lefedett vagy megfeleltetett sorok változatlanok maradnak."
+    "ACCEPT_INHERITANCE_HINT": "Az öröklő, leállító vagy leállított sorok MAPPED állapotba kerülnek saját célok nélkül; az ütköző, nem lefedett vagy megfeleltetett sorok változatlanok maradnak.",
+    "ACCEPTED_INHERITANCE_MESSAGE": "{{accepted}} sor öröklése elfogadva; {{skipped}} változatlan maradt (saját célokkal, ütközésben, nem lefedett vagy nem szerkeszthető)."
   },
   "NOTESDIALOG": {
     "HEADING": "A forráskód megjegyzései:"

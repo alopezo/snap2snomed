@@ -595,7 +595,8 @@
     "RECONCILE_STATUS_INFO": "Para actualizar filas en estado MAPEADO, ACEPTADO o RECHAZADO, cambie el estado de la fila a CONCILIAR y luego modifíquela mediante la TAREA DE CONCILIACIÓN",
     "NO_ROWS_SELECTED": "NO HAY FILAS SELECCIONADAS",
     "ACCEPT_INHERITANCE": "Aceptar la herencia de las filas seleccionadas",
-    "ACCEPT_INHERITANCE_HINT": "Las filas que heredan, frenan o están frenadas pasan a MAPPED sin destinos propios; las que están en conflicto, sin cubrir o mapeadas quedan como están."
+    "ACCEPT_INHERITANCE_HINT": "Las filas que heredan, frenan o están frenadas pasan a MAPPED sin destinos propios; las que están en conflicto, sin cubrir o mapeadas quedan como están.",
+    "ACCEPTED_INHERITANCE_MESSAGE": "Se aceptó la herencia de {{accepted}} filas; {{skipped}} quedaron como estaban (con destinos propios, en conflicto, sin cubrir o no editables)."
   },
   "NOTESDIALOG": {
     "HEADING": "Notas del código de origen:"

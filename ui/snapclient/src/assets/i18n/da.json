@@ -595,7 +595,8 @@
     "RECONCILE_STATUS_INFO": "For at opdatere rækker med status MAPPET, GODKENDT eller AFVIST skal du ændre rækkens status til AFSTEMNING og derefter ændre rækken via AFSTEMNING-opgaven",
     "NO_ROWS_SELECTED": "INGEN RÆKKER VALGT",
     "ACCEPT_INHERITANCE": "Acceptér nedarvningen for de valgte rækker",
-    "ACCEPT_INHERITANCE_HINT": "Rækker, der arver, stopper eller er stoppet, bliver MAPPED uden egne mål; rækker i konflikt, ikke dækkede eller mappede forbliver uændrede."
+    "ACCEPT_INHERITANCE_HINT": "Rækker, der arver, stopper eller er stoppet, bliver MAPPED uden egne mål; rækker i konflikt, ikke dækkede eller mappede forbliver uændrede.",
+    "ACCEPTED_INHERITANCE_MESSAGE": "Nedarvning accepteret for {{accepted}} rækker; {{skipped}} blev efterladt uændret (med egne mål, i konflikt, ikke dækket eller ikke redigerbare)."
   },
   "NOTESDIALOG": {
     "HEADING": "Noter for kildekode:"

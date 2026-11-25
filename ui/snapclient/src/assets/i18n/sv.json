@@ -595,7 +595,8 @@
     "RECONCILE_STATUS_INFO": "Om du vill uppdatera rader med status MAPPAD, GODKÄND eller AVVISAD ändrar du radens status till AVSTÄM och ändrar sedan raden via uppgiften AVSTÄM",
     "NO_ROWS_SELECTED": "INGA RADER VALDA",
     "ACCEPT_INHERITANCE": "Acceptera arvet för de markerade raderna",
-    "ACCEPT_INHERITANCE_HINT": "Rader som ärver, stoppar eller är stoppade blir MAPPED utan egna mål; rader i konflikt, ej täckta eller mappade lämnas som de är."
+    "ACCEPT_INHERITANCE_HINT": "Rader som ärver, stoppar eller är stoppade blir MAPPED utan egna mål; rader i konflikt, ej täckta eller mappade lämnas som de är.",
+    "ACCEPTED_INHERITANCE_MESSAGE": "Arv accepterat för {{accepted}} rader; {{skipped}} lämnades oförändrade (med egna mål, i konflikt, ej täckta eller ej redigerbara)."
   },
   "NOTESDIALOG": {
     "HEADING": "Anteckningar för källkod:"

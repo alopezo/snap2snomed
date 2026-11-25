@@ -52,6 +52,12 @@ Maps from SNOMED CT (branch `from-snomed`).
   never stored; the map details offer a paged preview of them, with filters by state. Generation is
   refused when a concept, or all together, exceed 50,000 concepts
   (`snap2snomed.inheritance.max-generated`).
+- Authors accept the inheritance of rows without targets of their own (inheriting, stopped or blocked),
+  from the mapping detail or in bulk (bulk change, "Accept the inheritance of the selected rows"): they
+  become MAPPED and go on through the workflow. What a row inherited when accepted is recorded; if it
+  changes later the row is flagged ("inheritance changed since accepted") and can be accepted again.
+  The coverage shows accepted rows, rows pending acceptance and changed ones (migration V26,
+  `POST /map/{mapId}/inheritance/accept`).
 - The map list has a "Type" column showing each map's direction and whether it uses inheritance.
 - An "Inheritance" column in the mapping tables summarises each row (mapped and how many inherit it,
   inherits from, stopped, in conflict, uncovered) and opens a popover with the details.

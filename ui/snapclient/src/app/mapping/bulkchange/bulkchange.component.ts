@@ -48,6 +48,10 @@ export function getResultMessage(translateService: TranslateService, result: any
   let msg = '';
   if (result.error) {
     msg = getErrorMessage(translateService, result);
+  } else if (result.acceptInheritance) {
+    translateService.get('BULKCHANGEDIALOG.ACCEPTED_INHERITANCE_MESSAGE',
+      {accepted: result.updatedRowCount, skipped: result.rowCount - result.updatedRowCount})
+      .subscribe(res => msg = res);
   } else {
     const diff = result.rowCount - result.updatedRowCount;
     if (diff > 0) {
@@ -243,7 +247,7 @@ export class BulkchangeComponent implements OnInit {
       next: result => {
         this.processing = false;
         const skipped = Object.values(result.skipped ?? {}).reduce((a, b) => a + b, 0);
-        this.dialogRef.close({rowCount: result.accepted + skipped, updatedRowCount: result.accepted});
+        this.dialogRef.close({rowCount: result.accepted + skipped, updatedRowCount: result.accepted, acceptInheritance: true});
       },
       error: err => {
         this.processing = false;

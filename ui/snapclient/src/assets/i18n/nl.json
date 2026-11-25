@@ -595,7 +595,8 @@
     "RECONCILE_STATUS_INFO": "Om rijen met de status GEMAPT, GEACCEPTEERD of AFGEWEZEN bij te werken, wijzig je de rijstatus naar AFSTEMMEN en pas je de rij daarna aan via de AFSTEMMEN-TAAK",
     "NO_ROWS_SELECTED": "GEEN RIJEN GESELECTEERD",
     "ACCEPT_INHERITANCE": "Overerving van de geselecteerde rijen accepteren",
-    "ACCEPT_INHERITANCE_HINT": "Rijen die erven, stoppen of gestopt zijn worden MAPPED zonder eigen doelen; rijen in conflict, niet gedekt of gemapt blijven ongewijzigd."
+    "ACCEPT_INHERITANCE_HINT": "Rijen die erven, stoppen of gestopt zijn worden MAPPED zonder eigen doelen; rijen in conflict, niet gedekt of gemapt blijven ongewijzigd.",
+    "ACCEPTED_INHERITANCE_MESSAGE": "Overerving geaccepteerd voor {{accepted}} rijen; {{skipped}} ongewijzigd gelaten (met eigen doelen, in conflict, niet gedekt of niet bewerkbaar)."
   },
   "NOTESDIALOG": {
     "HEADING": "Notities voor broncode:"

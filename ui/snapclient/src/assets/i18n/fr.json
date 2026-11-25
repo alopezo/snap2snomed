@@ -595,7 +595,8 @@
     "RECONCILE_STATUS_INFO": "Pour mettre à jour des lignes au statut MAPPÉ, ACCEPTÉ ou REJETÉ, passez le statut de la ligne à À RAPPROCHER, puis modifiez la ligne via la tâche de RAPPROCHEMENT",
     "NO_ROWS_SELECTED": "AUCUNE LIGNE SÉLECTIONNÉE",
     "ACCEPT_INHERITANCE": "Accepter l'héritage des lignes sélectionnées",
-    "ACCEPT_INHERITANCE_HINT": "Les lignes qui héritent, arrêtent ou sont arrêtées passent à MAPPED sans cibles propres ; celles en conflit, non couvertes ou avec correspondance restent inchangées."
+    "ACCEPT_INHERITANCE_HINT": "Les lignes qui héritent, arrêtent ou sont arrêtées passent à MAPPED sans cibles propres ; celles en conflit, non couvertes ou avec correspondance restent inchangées.",
+    "ACCEPTED_INHERITANCE_MESSAGE": "Héritage accepté pour {{accepted}} lignes ; {{skipped}} laissées telles quelles (avec leurs propres cibles, en conflit, non couvertes ou non modifiables)."
   },
   "NOTESDIALOG": {
     "HEADING": "Notes du code source :"
