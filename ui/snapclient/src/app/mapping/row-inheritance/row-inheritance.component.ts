@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {MatCheckboxChange} from '@angular/material/checkbox';
 import {Subscription} from 'rxjs';
-import {InheritanceRow, MapService} from '../../_services/map.service';
+import {ACCEPTABLE_INHERITANCE, InheritanceRow, MapService} from '../../_services/map.service';
 import {InheritanceStateService} from '../../_services/inheritance-state.service';
 
 /**
@@ -34,6 +34,14 @@ export class RowInheritanceComponent implements OnInit, OnDestroy {
   @Input() code: string | null | undefined;
   @Input() rowId: string | null | undefined;
   @Input() disabled = false;
+  @Input() mapId: string | null | undefined;
+  /** The author task the user works in (accepting outside a task is for project owners). */
+  @Input() taskId: string | null | undefined;
+  /** The inheritance of the row was accepted: it is now MAPPED. */
+  @Output() accepted = new EventEmitter<void>();
+
+  accepting = false;
+  acceptFailed = false;
 
   saving = false;
   failed = false;
@@ -53,6 +61,35 @@ export class RowInheritanceComponent implements OnInit, OnDestroy {
 
   get row(): InheritanceRow | undefined {
     return this.inheritanceState.rowFor(this.code);
+  }
+
+  /** Its inheritance can be accepted (again, if it changed since). */
+  get canAccept(): boolean {
+    const r = this.row;
+    return !!r && ACCEPTABLE_INHERITANCE.includes(r.state) && (!r.accepted || !!r.inheritanceChanged);
+  }
+
+  accept(): void {
+    if (!this.mapId || !this.rowId) {
+      return;
+    }
+    this.accepting = true;
+    this.acceptFailed = false;
+    this.mapService.acceptInheritance(this.mapId, [Number(this.rowId)], this.taskId ?? null).subscribe({
+      next: result => {
+        this.accepting = false;
+        if (result.accepted > 0) {
+          this.inheritanceState.refresh();
+          this.accepted.emit();
+        } else {
+          this.acceptFailed = true;
+        }
+      },
+      error: () => {
+        this.accepting = false;
+        this.acceptFailed = true;
+      }
+    });
   }
 
   get inheritedTargets(): string {

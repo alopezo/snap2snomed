@@ -593,7 +593,9 @@
     "UPDATED_ROWS_ERROR_MESSAGE": "{{updated}} out of {{selected}} rows have been updated. {{diff}} row(s) unable to be changed due to invalid status or relationship changes.",
     "REDO_DUAL_MAPPING": "Clears targets and enables row to be dual mapped again",
     "RECONCILE_STATUS_INFO": "To update any rows in a MAPPED, ACCEPTED or REJECTED state, change the row status to RECONCILE, then alter the row via the RECONCILE TASK",
-    "NO_ROWS_SELECTED": "NO ROWS SELECTED"
+    "NO_ROWS_SELECTED": "NO ROWS SELECTED",
+    "ACCEPT_INHERITANCE": "Accept the inheritance of the selected rows",
+    "ACCEPT_INHERITANCE_HINT": "Rows that inherit, are stopped or blocked become MAPPED with no targets of their own; rows in conflict, uncovered or mapped are left as they are."
   },
   "NOTESDIALOG": {
     "HEADING": "Notes for Source Code:"
@@ -788,6 +790,15 @@
     "GENERATED_FAILED": "The generated concepts could not be loaded",
     "GENERATED_COUNT": "Generated at export: {{count}}",
     "GENERATED_TOO_LARGE": "Inheritance scope too large (over {{max}} concepts)",
-    "ALL": "All"
+    "ALL": "All",
+    "ACCEPT": "Accept inheritance",
+    "ACCEPT_AGAIN": "Accept again",
+    "ACCEPT_TOOLTIP": "Mark this row as mapped by what it inherits, with no targets of its own",
+    "ACCEPT_FAILED": "The inheritance could not be accepted",
+    "ACCEPTED": "Accepted",
+    "CHANGED_SINCE_ACCEPTED": "Inheritance changed since accepted",
+    "CHANGED_SINCE_ACCEPTED_HINT": "It inherits something else now than when it was accepted: check it and accept it again.",
+    "PENDING": "Pending acceptance",
+    "PENDING_HINT": "Inherits (or is stopped) but its inheritance was not accepted yet; it stays unmapped until then."
   }
 }

@@ -593,7 +593,9 @@
     "UPDATED_ROWS_ERROR_MESSAGE": "{{updated}} af {{selected}} rækker er opdateret. {{diff}} række(r) kunne ikke ændres på grund af ugyldig status eller ugyldige relationsændringer.",
     "REDO_DUAL_MAPPING": "Rydder mål, så rækken kan dobbeltmappes igen",
     "RECONCILE_STATUS_INFO": "For at opdatere rækker med status MAPPET, GODKENDT eller AFVIST skal du ændre rækkens status til AFSTEMNING og derefter ændre rækken via AFSTEMNING-opgaven",
-    "NO_ROWS_SELECTED": "INGEN RÆKKER VALGT"
+    "NO_ROWS_SELECTED": "INGEN RÆKKER VALGT",
+    "ACCEPT_INHERITANCE": "Acceptér nedarvningen for de valgte rækker",
+    "ACCEPT_INHERITANCE_HINT": "Rækker, der arver, stopper eller er stoppet, bliver MAPPED uden egne mål; rækker i konflikt, ikke dækkede eller mappede forbliver uændrede."
   },
   "NOTESDIALOG": {
     "HEADING": "Noter for kildekode:"
@@ -788,6 +790,15 @@
     "GENERATED_FAILED": "De genererede begreber kunne ikke indlæses",
     "GENERATED_COUNT": "Genereres ved eksport: {{count}}",
     "GENERATED_TOO_LARGE": "Nedarvningens omfang er for stort (over {{max}} begreber)",
-    "ALL": "Alle"
+    "ALL": "Alle",
+    "ACCEPT": "Acceptér nedarvning",
+    "ACCEPT_AGAIN": "Acceptér igen",
+    "ACCEPT_TOOLTIP": "Markér denne række som mappet via det, den arver, uden egne mål",
+    "ACCEPT_FAILED": "Nedarvningen kunne ikke accepteres",
+    "ACCEPTED": "Accepteret",
+    "CHANGED_SINCE_ACCEPTED": "Nedarvningen er ændret siden accept",
+    "CHANGED_SINCE_ACCEPTED_HINT": "Den arver nu noget andet end da den blev accepteret: kontrollér og acceptér igen.",
+    "PENDING": "Afventer accept",
+    "PENDING_HINT": "Arver (eller er stoppet), men nedarvningen er ikke accepteret endnu; den forbliver umappet indtil da."
   }
 }

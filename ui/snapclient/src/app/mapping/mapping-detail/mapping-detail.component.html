@@ -134,7 +134,9 @@
           </mat-card-header>
           <mat-card-content>
             @if (hasInheritance) {
-              <app-row-inheritance [code]="source.code" [rowId]="rowId" [disabled]="isEditDisabled()"></app-row-inheritance>
+              <app-row-inheritance [code]="source.code" [rowId]="rowId" [disabled]="isEditDisabled()"
+                [mapId]="task.mapping.id" [taskId]="task.type === 'AUTHOR' ? task.id : null"
+                (accepted)="onInheritanceAccepted()"></app-row-inheritance>
             }
             <app-target-relationship [task]="task" [targetRows]="mapRows" [source]="getSource()" [sourceNavSet]="selectedRowset"
               (newTargetEvent)="saveTarget($event)"

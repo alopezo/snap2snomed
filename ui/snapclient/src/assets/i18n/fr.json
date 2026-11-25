@@ -593,7 +593,9 @@
     "UPDATED_ROWS_ERROR_MESSAGE": "{{updated}} lignes sur {{selected}} ont été mises à jour. {{diff}} ligne(s) n'ont pas pu être modifiées en raison de changements de statut ou de relation non valides.",
     "REDO_DUAL_MAPPING": "Efface les cibles et permet une nouvelle double correspondance de la ligne",
     "RECONCILE_STATUS_INFO": "Pour mettre à jour des lignes au statut MAPPÉ, ACCEPTÉ ou REJETÉ, passez le statut de la ligne à À RAPPROCHER, puis modifiez la ligne via la tâche de RAPPROCHEMENT",
-    "NO_ROWS_SELECTED": "AUCUNE LIGNE SÉLECTIONNÉE"
+    "NO_ROWS_SELECTED": "AUCUNE LIGNE SÉLECTIONNÉE",
+    "ACCEPT_INHERITANCE": "Accepter l'héritage des lignes sélectionnées",
+    "ACCEPT_INHERITANCE_HINT": "Les lignes qui héritent, arrêtent ou sont arrêtées passent à MAPPED sans cibles propres ; celles en conflit, non couvertes ou avec correspondance restent inchangées."
   },
   "NOTESDIALOG": {
     "HEADING": "Notes du code source :"
@@ -788,6 +790,15 @@
     "GENERATED_FAILED": "Impossible de charger les concepts générés",
     "GENERATED_COUNT": "Générés à l'export : {{count}}",
     "GENERATED_TOO_LARGE": "Portée de l'héritage trop grande (plus de {{max}} concepts)",
-    "ALL": "Tous"
+    "ALL": "Tous",
+    "ACCEPT": "Accepter l'héritage",
+    "ACCEPT_AGAIN": "Accepter à nouveau",
+    "ACCEPT_TOOLTIP": "Marque cette ligne comme ayant une correspondance par héritage, sans cibles propres",
+    "ACCEPT_FAILED": "Impossible d'accepter l'héritage",
+    "ACCEPTED": "Accepté",
+    "CHANGED_SINCE_ACCEPTED": "L'héritage a changé depuis son acceptation",
+    "CHANGED_SINCE_ACCEPTED_HINT": "Elle hérite désormais d'autre chose qu'au moment de l'acceptation : vérifiez et acceptez à nouveau.",
+    "PENDING": "En attente d'acceptation",
+    "PENDING_HINT": "Hérite (ou est arrêtée) mais son héritage n'a pas encore été accepté ; elle reste sans correspondance d'ici là."
   }
 }

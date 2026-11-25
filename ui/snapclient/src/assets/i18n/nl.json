@@ -593,7 +593,9 @@
     "UPDATED_ROWS_ERROR_MESSAGE": "{{updated}} van {{selected}} rijen zijn bijgewerkt. {{diff}} rij(en) konden niet worden gewijzigd vanwege ongeldige status- of relatiewijzigingen.",
     "REDO_DUAL_MAPPING": "Wist de doelen zodat de rij opnieuw dubbel kan worden gemapt",
     "RECONCILE_STATUS_INFO": "Om rijen met de status GEMAPT, GEACCEPTEERD of AFGEWEZEN bij te werken, wijzig je de rijstatus naar AFSTEMMEN en pas je de rij daarna aan via de AFSTEMMEN-TAAK",
-    "NO_ROWS_SELECTED": "GEEN RIJEN GESELECTEERD"
+    "NO_ROWS_SELECTED": "GEEN RIJEN GESELECTEERD",
+    "ACCEPT_INHERITANCE": "Overerving van de geselecteerde rijen accepteren",
+    "ACCEPT_INHERITANCE_HINT": "Rijen die erven, stoppen of gestopt zijn worden MAPPED zonder eigen doelen; rijen in conflict, niet gedekt of gemapt blijven ongewijzigd."
   },
   "NOTESDIALOG": {
     "HEADING": "Notities voor broncode:"
@@ -788,6 +790,15 @@
     "GENERATED_FAILED": "De gegenereerde concepten konden niet worden geladen",
     "GENERATED_COUNT": "Gegenereerd bij export: {{count}}",
     "GENERATED_TOO_LARGE": "Bereik van overerving te groot (meer dan {{max}} concepten)",
-    "ALL": "Alle"
+    "ALL": "Alle",
+    "ACCEPT": "Overerving accepteren",
+    "ACCEPT_AGAIN": "Opnieuw accepteren",
+    "ACCEPT_TOOLTIP": "Markeert deze rij als gemapt via wat ze erft, zonder eigen doelen",
+    "ACCEPT_FAILED": "De overerving kon niet worden geaccepteerd",
+    "ACCEPTED": "Geaccepteerd",
+    "CHANGED_SINCE_ACCEPTED": "Overerving gewijzigd sinds acceptatie",
+    "CHANGED_SINCE_ACCEPTED_HINT": "Ze erft nu iets anders dan bij acceptatie: controleer en accepteer opnieuw.",
+    "PENDING": "Wacht op acceptatie",
+    "PENDING_HINT": "Erft (of is gestopt) maar de overerving is nog niet geaccepteerd; tot dan blijft ze ongemapt."
   }
 }

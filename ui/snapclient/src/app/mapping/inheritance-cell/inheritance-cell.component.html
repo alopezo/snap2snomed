@@ -27,11 +27,23 @@
         <mat-icon class="icon">help_outline</mat-icon><span>{{'INHERITANCE.UNCOVERED' | translate}}</span>
       }
     }
+    @if (r.inheritanceChanged) {
+      <mat-icon class="icon attention-icon" [title]="'INHERITANCE.CHANGED_SINCE_ACCEPTED' | translate">sync_problem</mat-icon>
+    } @else if (r.accepted) {
+      <mat-icon class="icon accepted-icon" [title]="'INHERITANCE.ACCEPTED' | translate">task_alt</mat-icon>
+    }
   </button>
   <mat-menu #details="matMenu" class="inheritance-popover" xPosition="before">
     <div class="popover" (click)="$event.stopPropagation()">
       <div class="popover-title">{{'INHERITANCE.STATE_' + r.state | translate}}</div>
       <div class="popover-concept"><span class="code">{{r.code}}</span> {{r.display}}</div>
+      @if (r.inheritanceChanged) {
+        <p class="attention">{{'INHERITANCE.CHANGED_SINCE_ACCEPTED_HINT' | translate}}</p>
+      } @else if (r.accepted) {
+        <p class="accepted">{{'INHERITANCE.ACCEPTED' | translate}}</p>
+      } @else if (pending) {
+        <p class="hint">{{'INHERITANCE.PENDING_HINT' | translate}}</p>
+      }
       @switch (r.state) {
         @case ('ASSERTED') {
           <p>{{'INHERITANCE.POPOVER_PASSES_ON' | translate: {rows: r.inheritedBy, generated: r.generatedBy ?? 0} }}</p>

@@ -15,6 +15,20 @@
         }
       }
     }
+    @if (result.acceptedCount) {
+      <span class="count accepted">{{'INHERITANCE.ACCEPTED' | translate}}: {{result.acceptedCount}}</span>
+    }
+    @if (pendingRows.length) {
+      <button type="button" class="count" id="pendingAcceptance" (click)="openRows(pendingRows, 'INHERITANCE.PENDING')"
+        [matTooltip]="'INHERITANCE.PENDING_HINT' | translate">
+        {{'INHERITANCE.PENDING' | translate}}: {{pendingRows.length}}
+      </button>
+    }
+    @if (changedRows.length) {
+      <button type="button" class="count attention" id="changedSinceAccepted" (click)="openRows(changedRows, 'INHERITANCE.CHANGED_SINCE_ACCEPTED')">
+        {{'INHERITANCE.CHANGED_SINCE_ACCEPTED' | translate}}: {{changedRows.length}}
+      </button>
+    }
     @if (tooLarge) {
       <span class="count attention" [title]="tooLargeConcepts">
         {{'INHERITANCE.GENERATED_TOO_LARGE' | translate: {max: result.maxGenerated} }}

@@ -15,7 +15,7 @@
  */
 
 import {Component, Input} from '@angular/core';
-import {InheritanceRow} from '../../_services/map.service';
+import {ACCEPTABLE_INHERITANCE, InheritanceRow} from '../../_services/map.service';
 
 /**
  * The inheritance column of the mapping tables: a short summary of a row's inheritance that opens a popover
@@ -31,7 +31,12 @@ export class InheritanceCellComponent {
   @Input() row: InheritanceRow | undefined;
 
   get attention(): boolean {
-    return this.row?.state === 'CONFLICT' || this.row?.state === 'UNCOVERED';
+    return this.row?.state === 'CONFLICT' || this.row?.state === 'UNCOVERED' || !!this.row?.inheritanceChanged;
+  }
+
+  /** Inherits (or is stopped) and was not accepted yet. */
+  get pending(): boolean {
+    return !!this.row && ACCEPTABLE_INHERITANCE.includes(this.row.state) && !this.row.accepted;
   }
 
   get passesOn(): number {

@@ -593,7 +593,9 @@
     "UPDATED_ROWS_ERROR_MESSAGE": "{{updated}} av {{selected}} rader har uppdaterats. {{diff}} rad(er) kunde inte ändras på grund av ogiltig status eller ogiltiga relationsändringar.",
     "REDO_DUAL_MAPPING": "Rensar målen och gör att raden kan dubbelmappas igen",
     "RECONCILE_STATUS_INFO": "Om du vill uppdatera rader med status MAPPAD, GODKÄND eller AVVISAD ändrar du radens status till AVSTÄM och ändrar sedan raden via uppgiften AVSTÄM",
-    "NO_ROWS_SELECTED": "INGA RADER VALDA"
+    "NO_ROWS_SELECTED": "INGA RADER VALDA",
+    "ACCEPT_INHERITANCE": "Acceptera arvet för de markerade raderna",
+    "ACCEPT_INHERITANCE_HINT": "Rader som ärver, stoppar eller är stoppade blir MAPPED utan egna mål; rader i konflikt, ej täckta eller mappade lämnas som de är."
   },
   "NOTESDIALOG": {
     "HEADING": "Anteckningar för källkod:"
@@ -788,6 +790,15 @@
     "GENERATED_FAILED": "De genererade begreppen kunde inte läsas in",
     "GENERATED_COUNT": "Genereras vid export: {{count}}",
     "GENERATED_TOO_LARGE": "Arvets omfång är för stort (över {{max}} begrepp)",
-    "ALL": "Alla"
+    "ALL": "Alla",
+    "ACCEPT": "Acceptera arv",
+    "ACCEPT_AGAIN": "Acceptera igen",
+    "ACCEPT_TOOLTIP": "Markerar raden som mappad genom det den ärver, utan egna mål",
+    "ACCEPT_FAILED": "Arvet kunde inte accepteras",
+    "ACCEPTED": "Accepterat",
+    "CHANGED_SINCE_ACCEPTED": "Arvet har ändrats sedan det accepterades",
+    "CHANGED_SINCE_ACCEPTED_HINT": "Den ärver nu något annat än när det accepterades: kontrollera och acceptera igen.",
+    "PENDING": "Väntar på godkännande",
+    "PENDING_HINT": "Ärver (eller är stoppad) men arvet har inte accepterats ännu; den förblir omappad tills dess."
   }
 }

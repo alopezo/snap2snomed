@@ -159,7 +159,21 @@ export interface InheritanceRow {
   inheritedBy: number;
   /** ASSERTED: how many concepts generated at export time inherit its targets. */
   generatedBy?: number;
+  status?: string;
+  /** Its inheritance was accepted (no targets of its own). */
+  accepted?: boolean;
+  /** Accepted, but it inherits something else now. */
+  inheritanceChanged?: boolean;
 }
+
+export interface AcceptInheritanceResult {
+  accepted: number;
+  /** Rows left as they were, by reason (an inheritance state, NOT_IN_TASK or NOT_EDITABLE). */
+  skipped: Record<string, number>;
+}
+
+/** Inheritance states whose rows an author can accept. */
+export const ACCEPTABLE_INHERITANCE: InheritanceState[] = ['INHERITED', 'BLOCKED', 'STOPPED'];
 
 export interface InheritanceResult {
   counts: Record<InheritanceState, number>;
@@ -171,6 +185,8 @@ export interface InheritanceResult {
   tooLarge?: {code: string, display: string | null, descendants: number}[];
   generatedTooLarge?: boolean;
   maxGenerated?: number;
+  acceptedCount?: number;
+  changedCount?: number;
 }
 
 export interface GeneratedPage {
@@ -253,6 +269,15 @@ export class MapService {
     }
     return this.http.get<GeneratedPage>(`${this.config.apiBaseUrl}/map/${mapId}/inheritance/generated`,
       {...ServiceUtils.getHTTPHeaders(), params});
+  }
+
+  /**
+   * Accepts the inheritance of rows without targets (inheriting, blocked or stopped): they become MAPPED.
+   * rowIds null accepts every row that can be; taskId is the author task (without it, only an owner can).
+   */
+  acceptInheritance(mapId: string, rowIds: number[] | null, taskId: string | null): Observable<AcceptInheritanceResult> {
+    return this.http.post<AcceptInheritanceResult>(`${this.config.apiBaseUrl}/map/${mapId}/inheritance/accept`,
+      {rowIds, taskId: taskId ? Number(taskId) : null}, ServiceUtils.getHTTPHeaders());
   }
 
   /** In a map with inheritance: this concept and its descendants stop inheriting from mapped ancestors. */

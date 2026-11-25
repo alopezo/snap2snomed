@@ -27,6 +27,24 @@
         }
       }
     </div>
+    <span class="actions">
+      @if (r.accepted && r.inheritanceChanged) {
+        <span class="attention" id="inheritanceChanged">
+          <mat-icon class="state-icon attention">sync_problem</mat-icon>{{'INHERITANCE.CHANGED_SINCE_ACCEPTED' | translate}}
+        </span>
+      } @else if (r.accepted) {
+        <span class="accepted"><mat-icon class="state-icon">task_alt</mat-icon>{{'INHERITANCE.ACCEPTED' | translate}}</span>
+      }
+      @if (canAccept && !disabled) {
+        <button mat-stroked-button type="button" id="acceptInheritance" [disabled]="accepting || !rowId || !mapId"
+          (click)="accept()" [matTooltip]="'INHERITANCE.ACCEPT_TOOLTIP' | translate">
+          {{ (r.accepted ? 'INHERITANCE.ACCEPT_AGAIN' : 'INHERITANCE.ACCEPT') | translate }}
+        </button>
+      }
+      @if (acceptFailed) {
+        <span class="attention">{{'INHERITANCE.ACCEPT_FAILED' | translate}}</span>
+      }
+    </span>
     <mat-checkbox id="stopInheritance" [checked]="r.stopInheritance" [disabled]="disabled || saving || !rowId"
       (change)="toggleStop($event)" [matTooltip]="'INHERITANCE.STOP_TOOLTIP' | translate">
       {{'INHERITANCE.STOP' | translate}}

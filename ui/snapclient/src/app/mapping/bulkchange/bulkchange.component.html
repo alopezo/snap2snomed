@@ -105,10 +105,21 @@
         </div>
       </mat-card>
     }
+    @if (canAcceptInheritance && !clearTarget && changedStatus == null && changedRelationship == null && noMapValue == null && !hasSearchValue) {
+      <mat-card appearance="outlined">
+        <div class="box">
+          <mat-checkbox id="acceptInheritance" [(ngModel)]="acceptInheritance" ngDefaultControl></mat-checkbox>
+          <span>{{'BULKCHANGEDIALOG.ACCEPT_INHERITANCE' | translate}}</span>
+        </div>
+        @if (acceptInheritance) {
+          <div class="alert-warning">{{'BULKCHANGEDIALOG.ACCEPT_INHERITANCE_HINT' | translate}}</div>
+        }
+      </mat-card>
+    }
     <mat-divider class="divider"></mat-divider>
     <div class="box spaced">
       <button mat-flat-button
-        [disabled]="!resetDualMap && !changedRelationship && !changedStatus && noMapValue == null && !clearTarget"
+        [disabled]="!acceptInheritance && !resetDualMap && !changedRelationship && !changedStatus && noMapValue == null && !clearTarget"
       (click)="onOk()">{{'DIALOG.OK' | translate}}</button>
       <button mat-raised-button
         [disabled]="processing"

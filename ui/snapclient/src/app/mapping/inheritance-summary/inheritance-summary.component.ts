@@ -18,7 +18,7 @@ import {Component, Input, OnChanges, OnDestroy, OnInit} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {Subscription} from 'rxjs';
 import {Mapping} from '../../_models/mapping';
-import {InheritanceResult, InheritanceState} from '../../_services/map.service';
+import {ACCEPTABLE_INHERITANCE, InheritanceResult, InheritanceRow, InheritanceState} from '../../_services/map.service';
 import {InheritanceStateService} from '../../_services/inheritance-state.service';
 import {InheritanceListDialogComponent} from '../inheritance-list-dialog/inheritance-list-dialog.component';
 import {GeneratedPreviewDialogComponent} from '../generated-preview-dialog/generated-preview-dialog.component';
@@ -64,6 +64,21 @@ export class InheritanceSummaryComponent implements OnInit, OnChanges, OnDestroy
 
   count(state: InheritanceState): number {
     return this.result?.counts?.[state] ?? 0;
+  }
+
+  /** Rows that inherit (or are stopped) and whose inheritance was not accepted yet. */
+  get pendingRows(): InheritanceRow[] {
+    return this.result?.rows.filter(r => ACCEPTABLE_INHERITANCE.includes(r.state) && !r.accepted) ?? [];
+  }
+
+  get changedRows(): InheritanceRow[] {
+    return this.result?.rows.filter(r => r.inheritanceChanged) ?? [];
+  }
+
+  openRows(rows: InheritanceRow[], key: string): void {
+    if (rows.length) {
+      this.dialog.open(InheritanceListDialogComponent, {width: '640px', data: {titleKey: key, rows}});
+    }
   }
 
   get generatedTotal(): number {

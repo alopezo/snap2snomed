@@ -95,6 +95,14 @@ export class BulkchangeComponent implements OnInit {
   error: ErrorInfo = {};
   hasSearchValue: boolean;
 
+  /** Maps with inheritance: accept what the selected rows inherit instead of changing them. */
+  acceptInheritance = false;
+
+  get canAcceptInheritance(): boolean {
+    return Mapping.hasInheritance(this.data.map ?? this.data.task?.mapping)
+      && (!this.data.task || this.data.task.type === 'AUTHOR');
+  }
+
   get fromSnomed(): boolean {
     return Mapping.isFromSnomed(this.data.map ?? this.data.task?.mapping);
   }
@@ -183,6 +191,10 @@ export class BulkchangeComponent implements OnInit {
 
   onOk(): void {
     this.processing = true;
+    if (this.acceptInheritance) {
+      this.doAcceptInheritance();
+      return;
+    }
     if (this.noMap == false && this.clearNoMap == false) {
       this.noMapValue = null;
     }
@@ -216,6 +228,28 @@ export class BulkchangeComponent implements OnInit {
     else {
       this.doBulkChange(this.mapService.bulkUpdate(mappingUpdateDto));
     }
+  }
+
+  /** Accepts the inheritance of the selected rows (or all); the result is shown like a bulk change's. */
+  private doAcceptInheritance(): void {
+    const mapId = this.data.map?.id ?? this.data.task?.mapping?.id;
+    if (!mapId) {
+      this.processing = false;
+      return;
+    }
+    const rowIds = this.allSelected ? null
+      : [...new Set((this.data.selectedRows ?? []).map(row => row.mapRowId))];
+    this.mapService.acceptInheritance(mapId, rowIds, this.data.task?.id ?? null).subscribe({
+      next: result => {
+        this.processing = false;
+        const skipped = Object.values(result.skipped ?? {}).reduce((a, b) => a + b, 0);
+        this.dialogRef.close({rowCount: result.accepted + skipped, updatedRowCount: result.accepted});
+      },
+      error: err => {
+        this.processing = false;
+        this.dialogRef.close(err);
+      }
+    });
   }
 
   doBulkChange(serviceFunction: any): void {

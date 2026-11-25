@@ -104,6 +104,14 @@ export class MappingDetailComponent implements OnInit, OnDestroy {
     return Mapping.isFromSnomed(this.task?.mapping);
   }
 
+  /** The row's inheritance was accepted: the API set it to MAPPED; refresh the tables. */
+  onInheritanceAccepted(): void {
+    if (this.source) {
+      this.source.status = MapRowStatus.MAPPED;
+    }
+    this.targetChangedService.changeTarget({});
+  }
+
   get hasInheritance(): boolean {
     return Mapping.hasInheritance(this.task?.mapping);
   }

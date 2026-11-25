@@ -593,7 +593,9 @@
     "UPDATED_ROWS_ERROR_MESSAGE": "Se actualizaron {{updated}} de {{selected}} filas. {{diff}} fila(s) no se pudieron cambiar por un estado o un cambio de relación no válidos.",
     "REDO_DUAL_MAPPING": "Borra los destinos y permite volver a mapear la fila de forma dual",
     "RECONCILE_STATUS_INFO": "Para actualizar filas en estado MAPEADO, ACEPTADO o RECHAZADO, cambie el estado de la fila a CONCILIAR y luego modifíquela mediante la TAREA DE CONCILIACIÓN",
-    "NO_ROWS_SELECTED": "NO HAY FILAS SELECCIONADAS"
+    "NO_ROWS_SELECTED": "NO HAY FILAS SELECCIONADAS",
+    "ACCEPT_INHERITANCE": "Aceptar la herencia de las filas seleccionadas",
+    "ACCEPT_INHERITANCE_HINT": "Las filas que heredan, frenan o están frenadas pasan a MAPPED sin destinos propios; las que están en conflicto, sin cubrir o mapeadas quedan como están."
   },
   "NOTESDIALOG": {
     "HEADING": "Notas del código de origen:"
@@ -788,6 +790,15 @@
     "GENERATED_FAILED": "No se pudieron cargar los conceptos generados",
     "GENERATED_COUNT": "Se generan al exportar: {{count}}",
     "GENERATED_TOO_LARGE": "Alcance de la herencia demasiado grande (más de {{max}} conceptos)",
-    "ALL": "Todos"
+    "ALL": "Todos",
+    "ACCEPT": "Aceptar herencia",
+    "ACCEPT_AGAIN": "Aceptar de nuevo",
+    "ACCEPT_TOOLTIP": "Marca esta fila como mapeada por lo que hereda, sin destinos propios",
+    "ACCEPT_FAILED": "No se pudo aceptar la herencia",
+    "ACCEPTED": "Aceptada",
+    "CHANGED_SINCE_ACCEPTED": "La herencia cambió desde que se aceptó",
+    "CHANGED_SINCE_ACCEPTED_HINT": "Ahora hereda algo distinto de lo que heredaba al aceptarla: revísela y vuelva a aceptarla.",
+    "PENDING": "Pendientes de aceptar",
+    "PENDING_HINT": "Hereda (o está frenada) pero su herencia todavía no se aceptó; queda sin mapear hasta entonces."
   }
 }

@@ -28,3 +28,16 @@
 .attention {
   color: #b26a00;
 }
+
+.actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.accepted {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  color: #1b5e20;
+}

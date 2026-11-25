@@ -593,7 +593,9 @@
     "UPDATED_ROWS_ERROR_MESSAGE": "{{selected}} sorból {{updated}} frissült. {{diff}} sor nem módosítható érvénytelen állapot- vagy kapcsolatváltozás miatt.",
     "REDO_DUAL_MAPPING": "Törli a célokat, és lehetővé teszi a sor ismételt kettős leképezését",
     "RECONCILE_STATUS_INFO": "LEKÉPEZETT, ELFOGADVA vagy ELUTASÍTVA állapotú sorok módosításához állítsa a sor állapotát EGYEZTETÉS értékre, majd módosítsa a sort az EGYEZTETÉS FELADATBAN",
-    "NO_ROWS_SELECTED": "NINCS KIVÁLASZTOTT SOR"
+    "NO_ROWS_SELECTED": "NINCS KIVÁLASZTOTT SOR",
+    "ACCEPT_INHERITANCE": "A kijelölt sorok öröklésének elfogadása",
+    "ACCEPT_INHERITANCE_HINT": "Az öröklő, leállító vagy leállított sorok MAPPED állapotba kerülnek saját célok nélkül; az ütköző, nem lefedett vagy megfeleltetett sorok változatlanok maradnak."
   },
   "NOTESDIALOG": {
     "HEADING": "A forráskód megjegyzései:"
@@ -788,6 +790,15 @@
     "GENERATED_FAILED": "A generált fogalmakat nem sikerült betölteni",
     "GENERATED_COUNT": "Exportáláskor generált: {{count}}",
     "GENERATED_TOO_LARGE": "Az öröklés hatóköre túl nagy (több mint {{max}} fogalom)",
-    "ALL": "Mind"
+    "ALL": "Mind",
+    "ACCEPT": "Öröklés elfogadása",
+    "ACCEPT_AGAIN": "Újbóli elfogadás",
+    "ACCEPT_TOOLTIP": "A sort a megöröklöttek alapján megfeleltetettnek jelöli, saját célok nélkül",
+    "ACCEPT_FAILED": "Az öröklést nem sikerült elfogadni",
+    "ACCEPTED": "Elfogadva",
+    "CHANGED_SINCE_ACCEPTED": "Az öröklés megváltozott az elfogadás óta",
+    "CHANGED_SINCE_ACCEPTED_HINT": "Most mást örököl, mint az elfogadáskor: ellenőrizze, és fogadja el újra.",
+    "PENDING": "Elfogadásra vár",
+    "PENDING_HINT": "Örököl (vagy leállított), de az öröklése még nincs elfogadva; addig megfeleltetés nélkül marad."
   }
 }

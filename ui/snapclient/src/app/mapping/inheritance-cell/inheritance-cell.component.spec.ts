@@ -53,4 +53,16 @@ describe('InheritanceCellComponent', () => {
     fixture.detectChanges();
     expect(fixture.nativeElement.textContent.trim()).toBe('');
   });
+
+  it('tells pending, accepted and changed inheritance apart', () => {
+    const base = {rowId: 1, code: 'A', display: 'A', state: 'INHERITED' as const, stopInheritance: false, fromCode: 'R',
+      fromDisplay: 'Root', candidates: [], inheritedBy: 0, targets: []};
+    fixture.componentInstance.row = {...base};
+    expect(fixture.componentInstance.pending).toBe(true);
+    fixture.componentInstance.row = {...base, accepted: true};
+    expect(fixture.componentInstance.pending).toBe(false);
+    expect(fixture.componentInstance.attention).toBe(false);
+    fixture.componentInstance.row = {...base, accepted: true, inheritanceChanged: true};
+    expect(fixture.componentInstance.attention).toBe(true);
+  });
 });

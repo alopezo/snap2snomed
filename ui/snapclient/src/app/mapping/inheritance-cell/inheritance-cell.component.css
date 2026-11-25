@@ -69,3 +69,16 @@
   color: rgba(0, 0, 0, 0.6);
   font-size: 0.9em;
 }
+
+.accepted-icon,
+.accepted {
+  color: #1b5e20;
+}
+
+.attention-icon {
+  color: #b26a00;
+}
+
+.popover .attention {
+  color: #b26a00;
+}
