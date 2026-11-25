@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import ca.uhn.fhir.rest.server.exceptions.BaseServerResponseException;
 import org.hl7.fhir.r4.model.BooleanType;
 import org.hl7.fhir.r4.model.IntegerType;
 import org.hl7.fhir.r4.model.Parameters;
@@ -111,13 +112,21 @@ public class EclCodeSetService {
     parameters.addParameter("count", new IntegerType(count));
     parameters.addParameter("activeOnly", new BooleanType(true));
     parameters.addParameter("includeDesignations", new BooleanType(includeDesignations));
-    return terminologyProvider.getGenericClient().operation()
-        .onType(ValueSet.class)
-        .named("$expand")
-        .withParameters(parameters)
-        .returnResourceType(ValueSet.class)
-        .withAdditionalHeader("Accept-Language", acceptLanguage)
-        .execute();
+    try {
+      // GET, like the user interface: Snowstorm does not read the url parameter of a POST $expand
+      return terminologyProvider.getGenericClient().operation()
+          .onType(ValueSet.class)
+          .named("$expand")
+          .withParameters(parameters)
+          .useHttpGet()
+          .returnResourceType(ValueSet.class)
+          .withAdditionalHeader("Accept-Language", acceptLanguage)
+          .execute();
+    } catch (final BaseServerResponseException e) {
+      log.warn("ECL expansion failed for {}: {}", valueSetUrl, e.getMessage());
+      throw new CodeSetImportProblem("ecl-expansion-failed", "The terminology server could not expand the ECL expression",
+          e.getMessage());
+    }
   }
 
   /** The code set version: the effective time of the SNOMED CT version (code set versions are short). */
