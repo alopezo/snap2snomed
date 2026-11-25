@@ -112,6 +112,17 @@ public class MappingService {
   @Transactional
   public void updateMap(Map map) {
     final Optional<Map> existing = mapRepository.findById(map.getId());
+    // The direction and the code sets are fixed when the map is created; so is the SNOMED CT source
+    // of a map from SNOMED CT, which was expanded into the source code set
+    existing.ifPresent(e -> {
+      map.setDirection(e.getDirection());
+      map.setTargetCodeSet(e.getTargetCodeSet());
+      if (e.isFromSnomed()) {
+        map.setToVersion(e.getToVersion());
+        map.setToScope(e.getToScope());
+        map.setDisplayLanguage(e.getDisplayLanguage());
+      }
+    });
     final boolean termsChanged = existing.isPresent()
         && (!Objects.equals(LanguageDialects.normalize(existing.get().getDisplayLanguage()), LanguageDialects.normalize(map.getDisplayLanguage()))
             || !Objects.equals(existing.get().getToVersion(), map.getToVersion()));

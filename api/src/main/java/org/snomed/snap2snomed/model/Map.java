@@ -27,6 +27,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.envers.Audited;
 import org.snomed.snap2snomed.model.Project.ListView;
+import org.snomed.snap2snomed.model.enumeration.MapDirection;
 import org.snomed.snap2snomed.util.LanguageDialects;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.annotation.CreatedBy;
@@ -105,6 +106,22 @@ public class Map implements Snap2SnomedEntity {
   @ManyToOne
   private ImportedCodeSet source;
 
+  /** Which side is SNOMED CT; set when the map is created and never changed. */
+  @ReadOnlyProperty
+  @NotNull
+  @Enumerated(EnumType.STRING)
+  @Builder.Default
+  private MapDirection direction = MapDirection.TO_SNOMED;
+
+  /** For {@link MapDirection#FROM_SNOMED} maps: the imported code set the targets are chosen from. */
+  @ReadOnlyProperty
+  @ManyToOne
+  private ImportedCodeSet targetCodeSet;
+
+  public boolean isFromSnomed() {
+    return direction == MapDirection.FROM_SNOMED;
+  }
+
   @Projection(name = "listView", types = {Map.class})
   public interface ListViewWithSource {
 
@@ -123,6 +140,10 @@ public class Map implements Snap2SnomedEntity {
     Instant getModified();
 
     ImportedCodeSet getSource();
+
+    MapDirection getDirection();
+
+    ImportedCodeSet getTargetCodeSet();
 
     ListView getProject();
 

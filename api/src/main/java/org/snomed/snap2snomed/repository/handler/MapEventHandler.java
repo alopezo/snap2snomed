@@ -19,6 +19,7 @@ package org.snomed.snap2snomed.repository.handler;
 import java.time.Instant;
 import lombok.extern.slf4j.Slf4j;
 import org.snomed.snap2snomed.model.Map;
+import org.snomed.snap2snomed.model.enumeration.MapDirection;
 import org.snomed.snap2snomed.problem.BadRequestDataProblem;
 import org.snomed.snap2snomed.problem.auth.NotAuthorisedProblem;
 import org.snomed.snap2snomed.repository.ImportedCodeSetRepository;
@@ -70,6 +71,21 @@ public class MapEventHandler {
     if (!webSecurity.isAuthorisedForImportedCodeSet(map.getSource().getId()) && !webSecurity.isAdminUser()) {
       throw new NotAuthorisedProblem("User is not authorised to create a map using this code set, "
           + "the user must have uploaded the code set or be a member of a project that uses this code set");
+    }
+
+    if (map.getDirection() == null) {
+      map.setDirection(MapDirection.TO_SNOMED);
+    }
+    if (map.isFromSnomed()) {
+      if (map.getTargetCodeSet() == null || map.getTargetCodeSet().getId() == null) {
+        throw new BadRequestDataProblem("No target code set specified to create a map from SNOMED CT");
+      }
+      if (!webSecurity.isAuthorisedForImportedCodeSet(map.getTargetCodeSet().getId()) && !webSecurity.isAdminUser()) {
+        throw new NotAuthorisedProblem("User is not authorised to create a map using this target code set, "
+            + "the user must have uploaded the code set or be a member of a project that uses this code set");
+      }
+    } else if (map.getTargetCodeSet() != null) {
+      throw new BadRequestDataProblem("A target code set can only be specified for a map from SNOMED CT");
     }
 
   }
