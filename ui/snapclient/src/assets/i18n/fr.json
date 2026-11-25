@@ -251,7 +251,24 @@
     "REFRESH_TARGET_DISPLAYS_ERROR": "Les termes cibles n'ont pas pu être actualisés",
     "SINGLE_AUTHOR_MODE": "Mode rédacteur unique",
     "DUAL_AUTHOR_MODE": "Mode double rédaction",
-    "CLEARED_AND_REBLINDED_WARN": "Toutes les lignes en cours de double correspondance seront effacées et remises en aveugle dans la nouvelle version d'une table à correspondance double"
+    "CLEARED_AND_REBLINDED_WARN": "Toutes les lignes en cours de double correspondance seront effacées et remises en aveugle dans la nouvelle version d'une table à correspondance double",
+    "DIRECTION": "Sens",
+    "DIRECTION_TO_SNOMED": "Vers SNOMED CT",
+    "DIRECTION_FROM_SNOMED": "Depuis SNOMED CT",
+    "DIRECTION_FROM_SNOMED_HINT": "La source est constituée des concepts actifs d'une expression ECL (au plus {{max}}), figés à la création de la correspondance ; les cibles sont choisies dans un ensemble de codes importé.",
+    "TARGET_CODE_SET": "Ensemble de codes cible",
+    "TARGET_CODE_SET_REQUIRED": "Un ensemble de codes cible est requis",
+    "SOURCE_EDITION": "Édition SNOMED CT source",
+    "SOURCE_SNOMED_VERSION": "Version SNOMED CT source",
+    "SOURCE_SCOPE_COMMON": "Concepts source (liste courante)",
+    "SOURCE_SCOPE": "Concepts source (ECL)",
+    "SOURCE_SCOPE_LABEL": "Concepts source (ECL)",
+    "COUNT_CONCEPTS": "Compter les concepts",
+    "COUNT_CONCEPTS_FAILED": "Impossible de compter les concepts",
+    "CONCEPT_COUNT": "{{count}} concepts actifs",
+    "CONCEPT_COUNT_TOO_LARGE": "(plus que les {{max}} autorisés)",
+    "FROM_SNOMED_SOURCE_ERROR": "Les concepts source n'ont pas pu être créés à partir de l'expression ECL",
+    "SOURCE_DISPLAY_LANGUAGE": "Langue d'affichage de la source"
   },
   "TABLE": {
     "SOURCE_CODE": "Code source",
@@ -694,5 +711,17 @@
     "TARGET_FORM_FOCUS_NOTE": "Le concept focal est plus large que la cible affinée : une relation équivalente est exportée comme plus large, une plus étroite comme inexacte. Les cibles affinées d'une même source partageant le concept focal ne sont exportées qu'une fois.",
     "TARGET_FORM_BOTH_TABULAR_ONLY": "Uniquement pour les fichiers séparés par des virgules, par des tabulations et Excel ; FHIR exporte l'expression.",
     "EXPORT": "Exporter"
+  },
+  "TARGET_CODES": {
+    "SEARCH_TITLE": "Rechercher un code cible",
+    "SEARCH_LABEL": "Code ou texte",
+    "SEARCH_FAILED": "Impossible de rechercher les codes cibles",
+    "NO_MATCHES": "Aucun code correspondant",
+    "FIRST_RESULTS": "{{count}} premiers codes",
+    "RESULTS": "{{count}} codes",
+    "DETAILS_TITLE": "Code cible",
+    "DISPLAY": "Libellé",
+    "NOT_FOUND": "Le code ne figure pas dans l'ensemble de codes cible",
+    "SELECT_CODE": "Sélectionnez un code cible pour voir ses détails"
   }
 }

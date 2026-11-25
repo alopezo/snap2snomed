@@ -251,7 +251,24 @@
     "REFRESH_TARGET_DISPLAYS_ERROR": "De doeltermen konden niet worden ververst",
     "SINGLE_AUTHOR_MODE": "Modus enkele auteur",
     "DUAL_AUTHOR_MODE": "Modus dubbele auteur",
-    "CLEARED_AND_REBLINDED_WARN": "Rijen die dubbel worden gemapt, worden in de nieuwe versie van een dubbele mapping gewist en opnieuw geblindeerd"
+    "CLEARED_AND_REBLINDED_WARN": "Rijen die dubbel worden gemapt, worden in de nieuwe versie van een dubbele mapping gewist en opnieuw geblindeerd",
+    "DIRECTION": "Richting",
+    "DIRECTION_TO_SNOMED": "Naar SNOMED CT",
+    "DIRECTION_FROM_SNOMED": "Vanuit SNOMED CT",
+    "DIRECTION_FROM_SNOMED_HINT": "De bron bestaat uit de actieve concepten van een ECL-expressie (maximaal {{max}}), vastgelegd bij het aanmaken van de mapping; doelen worden gekozen uit een geïmporteerde codeset.",
+    "TARGET_CODE_SET": "Doelcodeset",
+    "TARGET_CODE_SET_REQUIRED": "Een doelcodeset is verplicht",
+    "SOURCE_EDITION": "Bron-SNOMED CT-editie",
+    "SOURCE_SNOMED_VERSION": "Bron-SNOMED CT-versie",
+    "SOURCE_SCOPE_COMMON": "Bronconcepten (gangbare lijst)",
+    "SOURCE_SCOPE": "Bronconcepten (ECL)",
+    "SOURCE_SCOPE_LABEL": "Bronconcepten (ECL)",
+    "COUNT_CONCEPTS": "Concepten tellen",
+    "COUNT_CONCEPTS_FAILED": "Kon de concepten niet tellen",
+    "CONCEPT_COUNT": "{{count}} actieve concepten",
+    "CONCEPT_COUNT_TOO_LARGE": "(meer dan de toegestane {{max}})",
+    "FROM_SNOMED_SOURCE_ERROR": "De bronconcepten konden niet worden aangemaakt uit de ECL-expressie",
+    "SOURCE_DISPLAY_LANGUAGE": "Weergavetaal van de bron"
   },
   "TABLE": {
     "SOURCE_CODE": "Broncode",
@@ -694,5 +711,17 @@
     "TARGET_FORM_FOCUS_NOTE": "Het focusconcept is breder dan het verfijnde doel: een equivalente relatie wordt als breder geëxporteerd, een nauwere als inexact. Verfijnde doelen van dezelfde bron met hetzelfde focusconcept worden één keer geëxporteerd.",
     "TARGET_FORM_BOTH_TABULAR_ONLY": "Alleen voor kommagescheiden, tabgescheiden en Excel-bestanden; FHIR exporteert de expressie.",
     "EXPORT": "Exporteren"
+  },
+  "TARGET_CODES": {
+    "SEARCH_TITLE": "Doelcode zoeken",
+    "SEARCH_LABEL": "Code of tekst",
+    "SEARCH_FAILED": "De doelcodes konden niet worden doorzocht",
+    "NO_MATCHES": "Geen overeenkomende codes",
+    "FIRST_RESULTS": "Eerste {{count}} codes",
+    "RESULTS": "{{count}} codes",
+    "DETAILS_TITLE": "Doelcode",
+    "DISPLAY": "Weergave",
+    "NOT_FOUND": "De code staat niet in de doelcodeset",
+    "SELECT_CODE": "Selecteer een doelcode om de details te zien"
   }
 }

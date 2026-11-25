@@ -251,7 +251,24 @@
     "REFRESH_TARGET_DISPLAYS_ERROR": "Det gick inte att uppdatera måltermerna",
     "SINGLE_AUTHOR_MODE": "Läge med en författare",
     "DUAL_AUTHOR_MODE": "Läge med två författare",
-    "CLEARED_AND_REBLINDED_WARN": "Alla rader som håller på att dubbelmappas rensas och blindas på nytt i den nya versionen av en dubbel mappning"
+    "CLEARED_AND_REBLINDED_WARN": "Alla rader som håller på att dubbelmappas rensas och blindas på nytt i den nya versionen av en dubbel mappning",
+    "DIRECTION": "Riktning",
+    "DIRECTION_TO_SNOMED": "Till SNOMED CT",
+    "DIRECTION_FROM_SNOMED": "Från SNOMED CT",
+    "DIRECTION_FROM_SNOMED_HINT": "Källan är de aktiva begreppen i ett ECL-uttryck (högst {{max}}), låsta när mappningen skapas; målen väljs från en importerad koduppsättning.",
+    "TARGET_CODE_SET": "Målkoduppsättning",
+    "TARGET_CODE_SET_REQUIRED": "En målkoduppsättning krävs",
+    "SOURCE_EDITION": "Käll-SNOMED CT-utgåva",
+    "SOURCE_SNOMED_VERSION": "Käll-SNOMED CT-version",
+    "SOURCE_SCOPE_COMMON": "Källbegrepp (vanlig lista)",
+    "SOURCE_SCOPE": "Källbegrepp (ECL)",
+    "SOURCE_SCOPE_LABEL": "Källbegrepp (ECL)",
+    "COUNT_CONCEPTS": "Räkna begrepp",
+    "COUNT_CONCEPTS_FAILED": "Det gick inte att räkna begreppen",
+    "CONCEPT_COUNT": "{{count}} aktiva begrepp",
+    "CONCEPT_COUNT_TOO_LARGE": "(fler än tillåtna {{max}})",
+    "FROM_SNOMED_SOURCE_ERROR": "Källbegreppen kunde inte skapas från ECL-uttrycket",
+    "SOURCE_DISPLAY_LANGUAGE": "Visningsspråk för källan"
   },
   "TABLE": {
     "SOURCE_CODE": "Källkod",
@@ -694,5 +711,17 @@
     "TARGET_FORM_FOCUS_NOTE": "Fokusbegreppet är bredare än det förfinade målet: en ekvivalent relation exporteras som bredare, en snävare som inexakt. Förfinade mål för samma källa med samma fokusbegrepp exporteras en gång.",
     "TARGET_FORM_BOTH_TABULAR_ONLY": "Endast för kommaseparerade, tabbseparerade och Excel-filer; FHIR exporterar uttrycket.",
     "EXPORT": "Exportera"
+  },
+  "TARGET_CODES": {
+    "SEARCH_TITLE": "Sök målkod",
+    "SEARCH_LABEL": "Kod eller text",
+    "SEARCH_FAILED": "Det gick inte att söka bland målkoderna",
+    "NO_MATCHES": "Inga matchande koder",
+    "FIRST_RESULTS": "Första {{count}} koderna",
+    "RESULTS": "{{count}} koder",
+    "DETAILS_TITLE": "Målkod",
+    "DISPLAY": "Visning",
+    "NOT_FOUND": "Koden finns inte i målkoduppsättningen",
+    "SELECT_CODE": "Välj en målkod för att se detaljerna"
   }
 }

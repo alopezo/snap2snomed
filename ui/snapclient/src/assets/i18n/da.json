@@ -251,7 +251,24 @@
     "REFRESH_TARGET_DISPLAYS_ERROR": "Måltermerne kunne ikke opdateres",
     "SINGLE_AUTHOR_MODE": "Tilstand med én redaktør",
     "DUAL_AUTHOR_MODE": "Tilstand med to redaktører",
-    "CLEARED_AND_REBLINDED_WARN": "Rækker under dobbelt mapning ryddes og blindes igen i den nye version af en dobbelt mapning"
+    "CLEARED_AND_REBLINDED_WARN": "Rækker under dobbelt mapning ryddes og blindes igen i den nye version af en dobbelt mapning",
+    "DIRECTION": "Retning",
+    "DIRECTION_TO_SNOMED": "Til SNOMED CT",
+    "DIRECTION_FROM_SNOMED": "Fra SNOMED CT",
+    "DIRECTION_FROM_SNOMED_HINT": "Kilden er de aktive begreber i et ECL-udtryk (højst {{max}}), fastlåst når mappingen oprettes; målene vælges fra et importeret kodesæt.",
+    "TARGET_CODE_SET": "Målkodesæt",
+    "TARGET_CODE_SET_REQUIRED": "Et målkodesæt er påkrævet",
+    "SOURCE_EDITION": "Kilde-SNOMED CT-udgave",
+    "SOURCE_SNOMED_VERSION": "Kilde-SNOMED CT-version",
+    "SOURCE_SCOPE_COMMON": "Kildebegreber (almindelig liste)",
+    "SOURCE_SCOPE": "Kildebegreber (ECL)",
+    "SOURCE_SCOPE_LABEL": "Kildebegreber (ECL)",
+    "COUNT_CONCEPTS": "Tæl begreber",
+    "COUNT_CONCEPTS_FAILED": "Kunne ikke tælle begreberne",
+    "CONCEPT_COUNT": "{{count}} aktive begreber",
+    "CONCEPT_COUNT_TOO_LARGE": "(flere end de tilladte {{max}})",
+    "FROM_SNOMED_SOURCE_ERROR": "Kildebegreberne kunne ikke oprettes ud fra ECL-udtrykket",
+    "SOURCE_DISPLAY_LANGUAGE": "Visningssprog for kilden"
   },
   "TABLE": {
     "SOURCE_CODE": "Kildekode",
@@ -694,5 +711,17 @@
     "TARGET_FORM_FOCUS_NOTE": "Fokusbegrebet er bredere end det præciserede mål: en ækvivalent relation eksporteres som bredere, en snævrere som upræcis. Præciserede mål for samme kilde med samme fokusbegreb eksporteres én gang.",
     "TARGET_FORM_BOTH_TABULAR_ONLY": "Kun for kommaseparerede, tabulatorseparerede og Excel-filer; FHIR eksporterer udtrykket.",
     "EXPORT": "Eksportér"
+  },
+  "TARGET_CODES": {
+    "SEARCH_TITLE": "Søg målkode",
+    "SEARCH_LABEL": "Kode eller tekst",
+    "SEARCH_FAILED": "Målkoderne kunne ikke søges",
+    "NO_MATCHES": "Ingen matchende koder",
+    "FIRST_RESULTS": "Første {{count}} koder",
+    "RESULTS": "{{count}} koder",
+    "DETAILS_TITLE": "Målkode",
+    "DISPLAY": "Visning",
+    "NOT_FOUND": "Koden findes ikke i målkodesættet",
+    "SELECT_CODE": "Vælg en målkode for at se detaljerne"
   }
 }

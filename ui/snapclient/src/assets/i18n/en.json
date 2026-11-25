@@ -251,7 +251,24 @@
     "REFRESH_TARGET_DISPLAYS_ERROR": "The target terms could not be refreshed",
     "SINGLE_AUTHOR_MODE": "Single Author Mode",
     "DUAL_AUTHOR_MODE": "Dual Author Mode",
-    "CLEARED_AND_REBLINDED_WARN": "Any rows undergoing dual mapping will be cleared and reblinded in the new version of a dual map"
+    "CLEARED_AND_REBLINDED_WARN": "Any rows undergoing dual mapping will be cleared and reblinded in the new version of a dual map",
+    "DIRECTION": "Direction",
+    "DIRECTION_TO_SNOMED": "To SNOMED CT",
+    "DIRECTION_FROM_SNOMED": "From SNOMED CT",
+    "DIRECTION_FROM_SNOMED_HINT": "The source is the active concepts of an ECL expression (at most {{max}}), frozen when the map is created; targets are chosen from an imported code set.",
+    "TARGET_CODE_SET": "Target code set",
+    "TARGET_CODE_SET_REQUIRED": "A target code set is required",
+    "SOURCE_EDITION": "Source SNOMED CT edition",
+    "SOURCE_SNOMED_VERSION": "Source SNOMED CT version",
+    "SOURCE_SCOPE_COMMON": "Source concepts (Common list)",
+    "SOURCE_SCOPE": "Source concepts (ECL)",
+    "SOURCE_SCOPE_LABEL": "Source concepts (ECL)",
+    "COUNT_CONCEPTS": "Count concepts",
+    "COUNT_CONCEPTS_FAILED": "Could not count the concepts",
+    "CONCEPT_COUNT": "{{count}} active concepts",
+    "CONCEPT_COUNT_TOO_LARGE": "(more than the {{max}} allowed)",
+    "FROM_SNOMED_SOURCE_ERROR": "The source concepts could not be created from the ECL expression",
+    "SOURCE_DISPLAY_LANGUAGE": "Source display language"
   },
   "TABLE": {
     "SOURCE_CODE": "Source code",
@@ -694,5 +711,17 @@
     "TARGET_FORM_FOCUS_NOTE": "The focus concept is broader than the refined target: an equivalent relationship is exported as broader, a narrower one as inexact. Refined targets of the same source that share the focus concept are exported once.",
     "TARGET_FORM_BOTH_TABULAR_ONLY": "Only for comma separated, tab separated and Excel files; FHIR exports the expression.",
     "EXPORT": "Export"
+  },
+  "TARGET_CODES": {
+    "SEARCH_TITLE": "Search target code",
+    "SEARCH_LABEL": "Code or text",
+    "SEARCH_FAILED": "The target codes could not be searched",
+    "NO_MATCHES": "No matching codes",
+    "FIRST_RESULTS": "First {{count}} codes",
+    "RESULTS": "{{count}} codes",
+    "DETAILS_TITLE": "Target code",
+    "DISPLAY": "Display",
+    "NOT_FOUND": "The code is not in the target code set",
+    "SELECT_CODE": "Select a target code to see its details"
   }
 }

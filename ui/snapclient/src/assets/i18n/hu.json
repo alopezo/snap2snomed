@@ -251,7 +251,24 @@
     "REFRESH_TARGET_DISPLAYS_ERROR": "Nem sikerült frissíteni a célkifejezéseket",
     "SINGLE_AUTHOR_MODE": "Egyszerzős mód",
     "DUAL_AUTHOR_MODE": "Kétszerzős mód",
-    "CLEARED_AND_REBLINDED_WARN": "Kettős leképezés új verziójában a kettős leképezés alatt álló sorok törlődnek, és ismét vakon kerülnek feldolgozásra"
+    "CLEARED_AND_REBLINDED_WARN": "Kettős leképezés új verziójában a kettős leképezés alatt álló sorok törlődnek, és ismét vakon kerülnek feldolgozásra",
+    "DIRECTION": "Irány",
+    "DIRECTION_TO_SNOMED": "SNOMED CT felé",
+    "DIRECTION_FROM_SNOMED": "SNOMED CT-ből",
+    "DIRECTION_FROM_SNOMED_HINT": "A forrás egy ECL-kifejezés aktív fogalmai (legfeljebb {{max}}), a megfeleltetés létrehozásakor rögzítve; a célok egy importált kódkészletből választhatók.",
+    "TARGET_CODE_SET": "Cél kódkészlet",
+    "TARGET_CODE_SET_REQUIRED": "Cél kódkészlet megadása kötelező",
+    "SOURCE_EDITION": "Forrás SNOMED CT kiadás",
+    "SOURCE_SNOMED_VERSION": "Forrás SNOMED CT verzió",
+    "SOURCE_SCOPE_COMMON": "Forrásfogalmak (gyakori lista)",
+    "SOURCE_SCOPE": "Forrásfogalmak (ECL)",
+    "SOURCE_SCOPE_LABEL": "Forrásfogalmak (ECL)",
+    "COUNT_CONCEPTS": "Fogalmak megszámolása",
+    "COUNT_CONCEPTS_FAILED": "Nem sikerült megszámolni a fogalmakat",
+    "CONCEPT_COUNT": "{{count}} aktív fogalom",
+    "CONCEPT_COUNT_TOO_LARGE": "(több, mint a megengedett {{max}})",
+    "FROM_SNOMED_SOURCE_ERROR": "A forrásfogalmakat nem sikerült létrehozni az ECL-kifejezésből",
+    "SOURCE_DISPLAY_LANGUAGE": "A forrás megjelenítési nyelve"
   },
   "TABLE": {
     "SOURCE_CODE": "Forráskód",
@@ -694,5 +711,17 @@
     "TARGET_FORM_FOCUS_NOTE": "A fókuszfogalom tágabb, mint a pontosított cél: az egyenértékű kapcsolat tágabbként, a szűkebb pontatlanként kerül exportálásra. Ugyanazon forrás azonos fókuszfogalmú pontosított céljai egyszer kerülnek exportálásra.",
     "TARGET_FORM_BOTH_TABULAR_ONLY": "Csak vesszővel, tabulátorral tagolt és Excel fájlokhoz; a FHIR a kifejezést exportálja.",
     "EXPORT": "Exportálás"
+  },
+  "TARGET_CODES": {
+    "SEARCH_TITLE": "Célkód keresése",
+    "SEARCH_LABEL": "Kód vagy szöveg",
+    "SEARCH_FAILED": "Nem sikerült keresni a célkódok között",
+    "NO_MATCHES": "Nincs egyező kód",
+    "FIRST_RESULTS": "Első {{count}} kód",
+    "RESULTS": "{{count}} kód",
+    "DETAILS_TITLE": "Célkód",
+    "DISPLAY": "Megjelenítés",
+    "NOT_FOUND": "A kód nincs a cél kódkészletben",
+    "SELECT_CODE": "Válasszon egy célkódot a részletek megtekintéséhez"
   }
 }
