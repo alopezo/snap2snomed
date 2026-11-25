@@ -268,7 +268,8 @@
     "CONCEPT_COUNT": "{{count}} active concepts",
     "CONCEPT_COUNT_TOO_LARGE": "(more than the {{max}} allowed)",
     "FROM_SNOMED_SOURCE_ERROR": "The source concepts could not be created from the ECL expression",
-    "SOURCE_DISPLAY_LANGUAGE": "Source display language"
+    "SOURCE_DISPLAY_LANGUAGE": "Source display language",
+    "SOURCE_DISPLAY_LANGUAGE_HINT": "Language of the source concept terms, frozen when the map is created"
   },
   "TABLE": {
     "SOURCE_CODE": "Source code",

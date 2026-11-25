@@ -268,7 +268,8 @@
     "CONCEPT_COUNT": "{{count}} aktive begreber",
     "CONCEPT_COUNT_TOO_LARGE": "(flere end de tilladte {{max}})",
     "FROM_SNOMED_SOURCE_ERROR": "Kildebegreberne kunne ikke oprettes ud fra ECL-udtrykket",
-    "SOURCE_DISPLAY_LANGUAGE": "Visningssprog for kilden"
+    "SOURCE_DISPLAY_LANGUAGE": "Visningssprog for kilden",
+    "SOURCE_DISPLAY_LANGUAGE_HINT": "Sprog for kildebegrebernes termer, fastlåst når mappingen oprettes"
   },
   "TABLE": {
     "SOURCE_CODE": "Kildekode",

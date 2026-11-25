@@ -268,7 +268,8 @@
     "CONCEPT_COUNT": "{{count}} actieve concepten",
     "CONCEPT_COUNT_TOO_LARGE": "(meer dan de toegestane {{max}})",
     "FROM_SNOMED_SOURCE_ERROR": "De bronconcepten konden niet worden aangemaakt uit de ECL-expressie",
-    "SOURCE_DISPLAY_LANGUAGE": "Weergavetaal van de bron"
+    "SOURCE_DISPLAY_LANGUAGE": "Weergavetaal van de bron",
+    "SOURCE_DISPLAY_LANGUAGE_HINT": "Taal van de termen van de bronconcepten, vastgelegd bij het aanmaken van de mapping"
   },
   "TABLE": {
     "SOURCE_CODE": "Broncode",

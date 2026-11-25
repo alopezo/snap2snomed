@@ -38,7 +38,9 @@ public interface ImportedCodeSetRepository
   // ---------------------------------
 
   @Override
-  @Query("select distinct ics from ImportedCodeSet ics left join Map m on m.source.id = ics.id where exists (select 1 from User u where u.id = ?#{@authenticationFacadeImpl.principalSubject} and (u member of m.project.owners or u member of m.project.members or u member of m.project.guests)) ")
+  // Code sets the user uploaded are listed too (findAuthorisedImportedCodeSets already authorises the
+  // creator), so one can be picked as the target code set of a map from SNOMED CT before any map uses it
+  @Query("select distinct ics from ImportedCodeSet ics left join Map m on m.source.id = ics.id where ics.createdBy = ?#{@authenticationFacadeImpl.principalSubject} or exists (select 1 from User u where u.id = ?#{@authenticationFacadeImpl.principalSubject} and (u member of m.project.owners or u member of m.project.members or u member of m.project.guests)) ")
   Page<ImportedCodeSet> findAll(Pageable pageable);
 
   @RestResource(path = "byIdForOwner", rel = "byIdForOwner")

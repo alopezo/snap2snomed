@@ -268,7 +268,8 @@
     "CONCEPT_COUNT": "{{count}} conceptos activos",
     "CONCEPT_COUNT_TOO_LARGE": "(más de los {{max}} permitidos)",
     "FROM_SNOMED_SOURCE_ERROR": "No se pudieron crear los conceptos de origen a partir de la expresión ECL",
-    "SOURCE_DISPLAY_LANGUAGE": "Idioma de visualización del origen"
+    "SOURCE_DISPLAY_LANGUAGE": "Idioma de visualización del origen",
+    "SOURCE_DISPLAY_LANGUAGE_HINT": "Idioma de los términos de los conceptos de origen, fijados al crear el mapa"
   },
   "TABLE": {
     "SOURCE_CODE": "Código de origen",

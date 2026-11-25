@@ -134,7 +134,7 @@
                     [versionUri]="mappingModel.toVersion"
                     [scope]="mappingModel.toScope"
                     [label]="(fromSnomed ? 'MAP.SOURCE_DISPLAY_LANGUAGE' : 'MAP.DISPLAY_LANGUAGE') | translate"
-                    [hint]="'MAP.DISPLAY_LANGUAGE_HINT' | translate">
+                    [hint]="(fromSnomed ? 'MAP.SOURCE_DISPLAY_LANGUAGE_HINT' : 'MAP.DISPLAY_LANGUAGE_HINT') | translate">
                   </app-display-language-picker>
                 </div>
                 <mat-form-field class="field-full-width" hintLabel="{{'FORM.MAX_CHARS' | translate}} {{MAX_TARGETSCOPE}}">

@@ -268,7 +268,8 @@
     "CONCEPT_COUNT": "{{count}} aktiva begrepp",
     "CONCEPT_COUNT_TOO_LARGE": "(fler än tillåtna {{max}})",
     "FROM_SNOMED_SOURCE_ERROR": "Källbegreppen kunde inte skapas från ECL-uttrycket",
-    "SOURCE_DISPLAY_LANGUAGE": "Visningsspråk för källan"
+    "SOURCE_DISPLAY_LANGUAGE": "Visningsspråk för källan",
+    "SOURCE_DISPLAY_LANGUAGE_HINT": "Språk för källbegreppens termer, låsta när mappningen skapas"
   },
   "TABLE": {
     "SOURCE_CODE": "Källkod",

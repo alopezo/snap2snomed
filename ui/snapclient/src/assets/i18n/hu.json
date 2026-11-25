@@ -268,7 +268,8 @@
     "CONCEPT_COUNT": "{{count}} aktív fogalom",
     "CONCEPT_COUNT_TOO_LARGE": "(több, mint a megengedett {{max}})",
     "FROM_SNOMED_SOURCE_ERROR": "A forrásfogalmakat nem sikerült létrehozni az ECL-kifejezésből",
-    "SOURCE_DISPLAY_LANGUAGE": "A forrás megjelenítési nyelve"
+    "SOURCE_DISPLAY_LANGUAGE": "A forrás megjelenítési nyelve",
+    "SOURCE_DISPLAY_LANGUAGE_HINT": "A forrásfogalmak kifejezéseinek nyelve, a megfeleltetés létrehozásakor rögzítve"
   },
   "TABLE": {
     "SOURCE_CODE": "Forráskód",

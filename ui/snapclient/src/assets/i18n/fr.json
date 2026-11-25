@@ -268,7 +268,8 @@
     "CONCEPT_COUNT": "{{count}} concepts actifs",
     "CONCEPT_COUNT_TOO_LARGE": "(plus que les {{max}} autorisés)",
     "FROM_SNOMED_SOURCE_ERROR": "Les concepts source n'ont pas pu être créés à partir de l'expression ECL",
-    "SOURCE_DISPLAY_LANGUAGE": "Langue d'affichage de la source"
+    "SOURCE_DISPLAY_LANGUAGE": "Langue d'affichage de la source",
+    "SOURCE_DISPLAY_LANGUAGE_HINT": "Langue des libellés des concepts source, figés à la création de la correspondance"
   },
   "TABLE": {
     "SOURCE_CODE": "Code source",
