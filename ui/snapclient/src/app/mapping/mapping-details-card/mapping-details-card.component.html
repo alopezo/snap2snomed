@@ -4,16 +4,25 @@
       <div class="col-project">
         <h2 id="map-title" class="one-line-ellipse">{{mapping.project.title}} <span class="dual-map-text">- ({{(mapping.project.dualMapMode ? 'MAP.DUAL_MAP' : 'MAP.SINGLE_MAP') | translate}})</span></h2>
         <ul class="sources-list">
+          @if (fromSnomed) {
+            <li class="one-line-ellipse"><b>{{'SOURCE.SOURCE' | translate}}:</b>&nbsp;
+              <app-source-version [version]="mapping.toVersion"></app-source-version>
+            </li>
+            <li class="one-line-ellipse"><b>{{'MAP.TARGET' | translate}}:</b>&nbsp;{{mapping.targetCodeSet?.name}},
+              <i>{{'MAP.VERSION' | translate}}</i> {{mapping.targetCodeSet?.version}}
+            </li>
+          } @else {
           <li class="one-line-ellipse"><b>{{'SOURCE.SOURCE' | translate}}:</b>&nbsp;{{mapping.source.name}},
           <i>{{'MAP.VERSION' | translate}}</i> {{mapping.source.version}}
         </li>
         <li class="one-line-ellipse"><b>{{'MAP.TARGET' | translate}}:</b>&nbsp;
         <app-source-version [version]="mapping.toVersion"></app-source-version>
       </li>
-      <li class="one-line-ellipse" [title]="mapping.displayLanguage ?? ''"><b>{{'MAP.DISPLAY_LANGUAGE' | translate}}:</b>&nbsp;
+          }
+      <li class="one-line-ellipse" [title]="mapping.displayLanguage ?? ''"><b>{{(fromSnomed ? 'MAP.SOURCE_DISPLAY_LANGUAGE' : 'MAP.DISPLAY_LANGUAGE') | translate}}:</b>&nbsp;
       {{displayLanguageName ?? ('MAP.DISPLAY_LANGUAGE_ENGLISH_FSN' | translate)}}
     </li>
-      <li class="one-line-ellipse"><b>{{'MAP.SCOPE' | translate}}:</b>&nbsp;
+      <li class="one-line-ellipse"><b>{{(fromSnomed ? 'MAP.SOURCE_SCOPE_LABEL' : 'MAP.SCOPE') | translate}}:</b>&nbsp;
       {{mapping.toScope}}
     </li>
   </ul>

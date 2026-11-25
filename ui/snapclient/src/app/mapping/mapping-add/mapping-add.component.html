@@ -133,7 +133,7 @@
                   <app-display-language-picker id="displayLanguage" formControlName="displayLanguage"
                     [versionUri]="mappingModel.toVersion"
                     [scope]="mappingModel.toScope"
-                    [label]="'MAP.DISPLAY_LANGUAGE' | translate"
+                    [label]="(fromSnomed ? 'MAP.SOURCE_DISPLAY_LANGUAGE' : 'MAP.DISPLAY_LANGUAGE') | translate"
                     [hint]="'MAP.DISPLAY_LANGUAGE_HINT' | translate">
                   </app-display-language-picker>
                 </div>
@@ -227,7 +227,7 @@
                         <td>{{mappingModel.toScope}}</td>
                       </tr>
                       <tr>
-                        <th><b>{{ 'MAP.DISPLAY_LANGUAGE' | translate }}:</b></th>
+                        <th><b>{{ 'MAP.SOURCE_DISPLAY_LANGUAGE' | translate }}:</b></th>
                         <td [title]="mappingModel.displayLanguage ?? ''">{{ displayLanguageLabel ?? ('MAP.DISPLAY_LANGUAGE_ENGLISH_FSN' | translate) }}</td>
                       </tr>
                       <tr>

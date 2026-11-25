@@ -35,20 +35,20 @@
                 <button class="mat-primary" mat-stroked-button id="export-button"
                 (click)="openExportDialog()">{{'MAP.EXPORT' | translate}}</button>
               </span>
-              @if (isOwner() && !isDualMapMode()) {
+              @if (isOwner() && !isDualMapMode() && !fromSnomed) {
                 <button class="mat-primary" mat-stroked-button
                 (click)="clickImport()">{{'MAP.IMPORT' | translate}}</button>
               }
               <span class="space-fill">&nbsp;</span>
               <span class="space-fill">&nbsp;</span>
-              @if (isOwner()) {
+              @if (isOwner() && !fromSnomed) {
                 <button id="validate-targets" mat-stroked-button (click)="clickValidateTargets()"
                   matTooltip="{{'MAP.VALIDATE_TARGETS_TOOLTIP' | translate}}"
                   matTooltipShowDelay="1000">
                   {{'MAP.VALIDATE_TARGETS' | translate}}
                 </button>
               }
-              @if (isOwner()) {
+              @if (isOwner() && !fromSnomed) {
                 <button id="refresh-target-displays" mat-stroked-button (click)="clickRefreshTargetDisplays()"
                   matTooltip="{{'MAP.REFRESH_TARGET_DISPLAYS_TOOLTIP' | translate}}"
                   matTooltipShowDelay="1000">

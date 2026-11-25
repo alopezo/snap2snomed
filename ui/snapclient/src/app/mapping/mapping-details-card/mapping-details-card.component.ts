@@ -35,6 +35,10 @@ export class MappingDetailsCardComponent {
   @Input() mapping!: Mapping;
   @Input() editable: boolean = false;
 
+  get fromSnomed(): boolean {
+    return Mapping.isFromSnomed(this.mapping);
+  }
+
   @Output() clicked = new EventEmitter();
 
   outOfScopeTargetCount: number = 0;

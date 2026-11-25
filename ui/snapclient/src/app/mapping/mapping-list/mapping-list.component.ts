@@ -223,6 +223,11 @@ export class MappingListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.opened = false;
   }
 
+  /** Maps from SNOMED CT have no new versions (their source is frozen when they are created). */
+  isFromSnomed(project: Project): boolean {
+    return Mapping.isFromSnomed(this.selectedMapping[project.id]);
+  }
+
   newVersion(project: Project): void {
     if (project.mapcount === 0) {
       this.translate.get('MAP.NO_MAPS_FOUND').subscribe((res) => this.error.message = `${project.title}: ${res}`);

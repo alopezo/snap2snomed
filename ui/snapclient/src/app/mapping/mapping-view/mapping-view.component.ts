@@ -88,6 +88,11 @@ export class MappingViewComponent implements OnInit, AfterViewInit, OnDestroy {
   private import_dialog_width = '1000px';
 
   mapping: Mapping | null | undefined;
+
+  /** Maps from SNOMED CT have no target validation, term refresh or mapping file import. */
+  get fromSnomed(): boolean {
+    return Mapping.isFromSnomed(this.mapping);
+  }
   error: ErrorInfo = {};
   sort: MatSort | null | undefined;
   componentLoaded = false;
@@ -540,7 +545,9 @@ export class MappingViewComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
     const mapId = this.mapping.id;
-    this.mapService.getRefinedTargetCount(mapId).pipe(catchError(() => of(0))).subscribe(refinedTargetCount => {
+    // Refined targets are SNOMED CT expressions, which maps from SNOMED CT do not have
+    const refinedTargetCount$ = this.fromSnomed ? of(0) : this.mapService.getRefinedTargetCount(mapId).pipe(catchError(() => of(0)));
+    refinedTargetCount$.subscribe(refinedTargetCount => {
       this.dialog.open<ExportDialogComponent, ExportDialogData, ExportOptions>(ExportDialogComponent,
         {width: '520px', data: {refinedTargetCount}})
         .afterClosed().subscribe(options => {

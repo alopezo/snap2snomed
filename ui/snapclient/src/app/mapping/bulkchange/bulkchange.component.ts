@@ -94,6 +94,10 @@ export class BulkchangeComponent implements OnInit {
   currentSelection: any;
   error: ErrorInfo = {};
   hasSearchValue: boolean;
+
+  get fromSnomed(): boolean {
+    return Mapping.isFromSnomed(this.data.map ?? this.data.task?.mapping);
+  }
   isMapView: boolean;
   processing: boolean;
   resetDualMap: boolean;

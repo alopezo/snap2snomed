@@ -23,7 +23,8 @@
     <mat-divider class="divider"></mat-divider>
     <app-errormessage [error]="error"></app-errormessage>
     <div>
-      @if (((data.task &&  data.task.type !== 'REVIEW') || data.task === null) && !clearTarget && noMapValue == null && changedStatus == null && !isDualMapView()) {
+      <!-- Maps from SNOMED CT: targets are set in the mapping screens, bulk change only edits relationship and status -->
+      @if (((data.task &&  data.task.type !== 'REVIEW') || data.task === null) && !clearTarget && noMapValue == null && changedStatus == null && !isDualMapView() && !fromSnomed) {
         <app-concept-search #searchComponent [scope]="data.map?.toScope || data.task?.mapping?.toScope || ''"
           [version]="data.map?.toVersion || data.task?.mapping?.toVersion || ''"
           [displayLanguage]="data.map?.displayLanguage ?? data.task?.mapping?.displayLanguage"
