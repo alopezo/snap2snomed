@@ -105,6 +105,22 @@ public class EclCodeSetService {
     return codeSetImportService.saveCodeSet(codeSet, new ArrayList<>(concepts.entrySet()));
   }
 
+  /** The codes of the active concepts an ECL expression returns in a SNOMED CT version (no terms). */
+  public List<String> expandCodes(String version, String ecl) {
+    final String valueSetUrl = version + "?fhir_vs=ecl/" + ecl.trim();
+    final List<String> codes = new ArrayList<>();
+    int total = Integer.MAX_VALUE;
+    for (int offset = 0; offset < total; offset += PAGE_SIZE) {
+      final ValueSet page = expand(valueSetUrl, offset, PAGE_SIZE, false, "en");
+      total = page.getExpansion().getTotal();
+      page.getExpansion().getContains().forEach(concept -> codes.add(concept.getCode()));
+      if (page.getExpansion().getContains().isEmpty()) {
+        break;
+      }
+    }
+    return codes;
+  }
+
   private ValueSet expand(String valueSetUrl, int offset, int count, boolean includeDesignations, String acceptLanguage) {
     final Parameters parameters = new Parameters();
     parameters.addParameter("url", new UriType(valueSetUrl));
