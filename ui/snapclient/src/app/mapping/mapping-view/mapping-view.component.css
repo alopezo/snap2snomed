@@ -365,6 +365,12 @@ td.mat-mdc-cell {
   justify-content: flex-end;
   background-color: white;
   padding: 10px;
+  /* each switch stays next to its label; controls are kept apart */
+  gap: 24px;
+}
+
+.table-actions mat-slide-toggle {
+  margin: 0;
 }
 
 .button-row {
