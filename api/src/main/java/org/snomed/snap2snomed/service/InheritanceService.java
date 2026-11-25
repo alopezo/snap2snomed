@@ -27,6 +27,16 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.snomed.snap2snomed.controller.dto.InheritanceDto;
+import org.snomed.snap2snomed.util.EntityUtils;
+import org.snomed.snap2snomed.security.WebSecurity;
+import org.snomed.snap2snomed.security.AuthenticationFacade;
+import org.snomed.snap2snomed.repository.TaskRepository;
+import org.snomed.snap2snomed.repository.MapRowRepository;
+import org.snomed.snap2snomed.problem.auth.NotAuthorisedProblem;
+import org.snomed.snap2snomed.model.User;
+import org.snomed.snap2snomed.model.Task;
+import org.snomed.snap2snomed.model.MapRow;
+import org.snomed.snap2snomed.model.enumeration.MapStatus;
 import org.snomed.snap2snomed.model.enumeration.MappingRelationship;
 import org.snomed.snap2snomed.problem.BadRequestDataProblem;
 import org.snomed.snap2snomed.problem.Snap2SnomedProblem;
@@ -74,11 +84,23 @@ public class InheritanceService {
   @Autowired
   InheritanceCacheStore cacheStore;
 
+  @Autowired
+  MapRowRepository mapRowRepository;
+
+  @Autowired
+  TaskRepository taskRepository;
+
+  @Autowired
+  AuthenticationFacade authenticationFacade;
+
+  @Autowired
+  WebSecurity webSecurity;
+
   @Value("${snap2snomed.inheritance.max-generated:50000}")
   int maxGenerated;
 
   /** Rows of a map with their own targets, in source order. */
-  record LoadedRow(Long rowId, String display, Row row) {
+  record LoadedRow(Long rowId, String display, Row row, MapStatus status, String acceptedInheritance) {
   }
 
   /** Descendants of the anchors (code to term), and the anchors over the limit (code to total). */
@@ -123,6 +145,56 @@ public class InheritanceService {
     final int to = Math.min(from + size, filtered.size());
     return new InheritanceDto.GeneratedPage(filtered.size(),
         filtered.subList(from, to).stream().map(r -> toRowDto(null, r, computation.terms(), Map.of(), false)).toList());
+  }
+
+  /**
+   * Accepts the inheritance of rows without targets (inheriting, blocked or stopped): they become MAPPED and
+   * record what they inherit. With a task, only its author's rows in an author state; without one, only a
+   * project owner. Rows that cannot be accepted are counted by reason.
+   */
+  @Transactional
+  public InheritanceDto.AcceptResult accept(Long mapId, InheritanceDto.AcceptRequest request) {
+    final User user = authenticationFacade.getAuthenticatedUser();
+    final Task task = request.getTaskId() == null ? null : taskRepository.findById(request.getTaskId())
+        .orElseThrow(() -> Snap2SnomedProblem.of(HttpStatus.NOT_FOUND, "No task found with id " + request.getTaskId()));
+    if (task != null) {
+      if (!task.getMap().getId().equals(mapId) || !EntityUtils.isTaskAssignee(user, task)) {
+        throw new NotAuthorisedProblem("Inheritance can only be accepted in an author task of this map assigned to the user");
+      }
+    } else if (!webSecurity.isAdminUser() && !webSecurity.isProjectOwnerForMapId(mapId)) {
+      throw new NotAuthorisedProblem("Only a project owner can accept inheritance outside of a task");
+    }
+    final Computation computation = compute(mapId);
+    final Set<Long> wanted = request.getRowIds() == null || request.getRowIds().isEmpty()
+        ? null : new java.util.HashSet<>(request.getRowIds());
+    final Map<String, Integer> skipped = new LinkedHashMap<>();
+    int accepted = 0;
+    for (int i = 0; i < computation.rows().size(); i++) {
+      final LoadedRow loaded = computation.loaded().get(i);
+      final Result result = computation.rows().get(i);
+      if (wanted != null && !wanted.contains(loaded.rowId())) {
+        continue;
+      }
+      if (!ACCEPTABLE.contains(result.state())) {
+        skipped.merge(result.state().name(), 1, Integer::sum);
+        continue;
+      }
+      final MapRow row = mapRowRepository.findById(loaded.rowId()).orElseThrow();
+      if (task != null && (row.getAuthorTask() == null || !task.getId().equals(row.getAuthorTask().getId()))) {
+        skipped.merge("NOT_IN_TASK", 1, Integer::sum);
+        continue;
+      }
+      if (!row.getStatus().isAuthorState() && row.getStatus() != MapStatus.REJECTED) {
+        skipped.merge("NOT_EDITABLE", 1, Integer::sum);
+        continue;
+      }
+      row.setAcceptedInheritance(fingerprint(result));
+      row.setStatus(MapStatus.MAPPED);
+      row.setLastAuthor(user);
+      mapRowRepository.save(row);
+      accepted++;
+    }
+    return new InheritanceDto.AcceptResult(accepted, skipped);
   }
 
   @Transactional(readOnly = true)
@@ -183,6 +255,33 @@ public class InheritanceService {
     return new Descendants(byAnchor, tooLarge);
   }
 
+  /** States whose inheritance an author can accept (the row then needs no targets of its own). */
+  public static final Set<State> ACCEPTABLE = Set.of(State.INHERITED, State.BLOCKED, State.STOPPED);
+
+  /**
+   * What a row inherits, recorded when its inheritance is accepted: the ancestor and target codes, the
+   * blocking row, or the stop. Compared later to warn when the inheritance changed since.
+   */
+  public static String fingerprint(Result result) {
+    switch (result.state()) {
+      case INHERITED:
+        return "INHERITED " + result.from() + " " + result.targets().stream().map(Target::code).sorted()
+            .collect(Collectors.joining(","));
+      case BLOCKED:
+        return "BLOCKED " + result.from();
+      case STOPPED:
+        return "STOPPED";
+      default:
+        return null;
+    }
+  }
+
+  /** An accepted row whose inheritance is no longer what was accepted. */
+  static boolean inheritanceChanged(LoadedRow row, Result result) {
+    return row.acceptedInheritance() != null && row.row().targets().isEmpty()
+        && !row.acceptedInheritance().equals(fingerprint(result));
+  }
+
   static String format(Map<String, String> concepts) {
     return concepts.entrySet().stream()
         .map(e -> e.getKey() + "\t" + (e.getValue() == null ? "" : e.getValue().replace('\n', ' ').replace('\t', ' ')))
@@ -206,7 +305,7 @@ public class InheritanceService {
 
   private List<LoadedRow> loadRows(Long mapId) {
     final List<Object[]> rowData = entityManager.createQuery(
-            "select r.id, c.code, c.display, r.noMap, r.stopInheritance from MapRow r join r.sourceCode c "
+            "select r.id, c.code, c.display, r.noMap, r.stopInheritance, r.status, r.acceptedInheritance from MapRow r join r.sourceCode c "
                 + "where r.map.id = :mapId order by c.index", Object[].class)
         .setParameter("mapId", mapId).getResultList();
     final Map<Long, List<Target>> targets = new HashMap<>();
@@ -217,7 +316,8 @@ public class InheritanceService {
         .forEach(t -> targets.computeIfAbsent((Long) t[0], k -> new ArrayList<>())
             .add(new Target((String) t[1], (String) t[2], (MappingRelationship) t[3])));
     return rowData.stream().map(r -> new LoadedRow((Long) r[0], (String) r[2],
-            new Row((String) r[1], (Boolean) r[3], (Boolean) r[4], targets.getOrDefault((Long) r[0], List.of()))))
+            new Row((String) r[1], (Boolean) r[3], (Boolean) r[4], targets.getOrDefault((Long) r[0], List.of())),
+            (MapStatus) r[5], (String) r[6]))
         .toList();
   }
 
@@ -233,12 +333,23 @@ public class InheritanceService {
       counts.put(state.name(), 0);
     }
     final List<InheritanceDto.RowDto> rows = new ArrayList<>(computation.rows().size());
+    int acceptedCount = 0;
+    int changedCount = 0;
     for (int i = 0; i < computation.rows().size(); i++) {
       final Result result = computation.rows().get(i);
       final LoadedRow row = computation.loaded().get(i);
       counts.merge(result.state().name(), 1, Integer::sum);
       final InheritanceDto.RowDto dto = toRowDto(row.rowId(), result, computation.terms(), inheritedBy, row.row().stopInheritance());
       dto.setGeneratedBy(generatedBy.getOrDefault(result.code(), 0));
+      dto.setStatus(row.status() == null ? null : row.status().name());
+      dto.setAccepted(row.acceptedInheritance() != null && row.row().targets().isEmpty());
+      dto.setInheritanceChanged(inheritanceChanged(row, result));
+      if (dto.isAccepted()) {
+        acceptedCount++;
+      }
+      if (dto.isInheritanceChanged()) {
+        changedCount++;
+      }
       rows.add(dto);
     }
     final Map<String, Integer> generatedCounts = new LinkedHashMap<>();
@@ -252,6 +363,8 @@ public class InheritanceService {
     dto.setTooLarge(tooLarge);
     dto.setGeneratedTooLarge(computation.generatedTooLarge());
     dto.setMaxGenerated(maxGenerated);
+    dto.setAcceptedCount(acceptedCount);
+    dto.setChangedCount(changedCount);
     return dto;
   }
 
@@ -261,6 +374,6 @@ public class InheritanceService {
         stopInheritance, result.from(), result.from() == null ? null : terms.get(result.from()),
         result.targets().stream().map(t -> new InheritanceDto.TargetDto(t.code(), t.display(),
             t.relationship() == null ? null : t.relationship().name())).toList(),
-        result.candidates(), inheritedBy.getOrDefault(result.code(), 0), 0);
+        result.candidates(), inheritedBy.getOrDefault(result.code(), 0), 0, null, false, false);
   }
 }

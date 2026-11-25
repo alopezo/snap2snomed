@@ -43,6 +43,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
@@ -147,6 +149,19 @@ public class TargetCodeRestController {
       throw new NotAuthorisedProblem("Not authorised to view this map");
     }
     return inheritanceService.computeForMap(mapId);
+  }
+
+  @Operation(description = "Accepts the inheritance of rows without targets of their own (inheriting, blocked or "
+      + "stopped) in a map with inheritance: they become MAPPED. Given rows, or all that can be accepted; within an "
+      + "author task, or as a project owner.")
+  @PostMapping(path = "/map/{mapId}/inheritance/accept", consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public InheritanceDto.AcceptResult acceptInheritance(@PathVariable("mapId") Long mapId,
+      @RequestBody InheritanceDto.AcceptRequest request) {
+    if (!webSecurity.isValidUser()) {
+      throw new NoSuchUserProblem();
+    }
+    return inheritanceService.accept(mapId, request);
   }
 
   @Operation(description = "A page of the concepts inheritance generates at export time in a map from SNOMED CT "

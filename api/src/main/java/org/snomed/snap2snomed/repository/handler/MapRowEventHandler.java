@@ -78,6 +78,10 @@ public class MapRowEventHandler {
       em.merge(mapRow);
     }
 
+    // back to unmapped: the accepted inheritance no longer applies
+    if (MapStatus.UNMAPPED.equals(mapRow.getStatus())) {
+      mapRow.setAcceptedInheritance(null);
+    }
     performAutomaticUpdates(mapRow);
   }
 
@@ -332,7 +336,8 @@ public class MapRowEventHandler {
           }
         } 
       }
-      else {
+      else if (mapRow.getAcceptedInheritance() == null || !mapRow.getMap().isInheritance()) {
+        // a row whose inheritance was accepted (maps with inheritance) moves through the workflow without targets
         throw new InvalidMappingProblem("Cannot change state from UNMAPPED for row with no mappings and 'no map' not set");
       }
     } else if (MapStatus.UNMAPPED.equals(mapRow.getStatus()) && (mapRow.isNoMap() || !mapRow.getMapRowTargets().isEmpty())) {

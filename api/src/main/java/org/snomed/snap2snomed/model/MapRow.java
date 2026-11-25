@@ -40,6 +40,7 @@ import jakarta.persistence.PostLoad;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -54,6 +55,7 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.data.rest.core.config.Projection;
 
@@ -109,6 +111,15 @@ public class MapRow implements Snap2SnomedEntity, Serializable {
   @Column(columnDefinition = "boolean default false")
   @Builder.Default
   private boolean stopInheritance = false;
+
+  /**
+   * In a map with inheritance: set when the author accepts what this row (without targets of its own)
+   * inherits, so it can move through the workflow; holds what it inherited then (see
+   * InheritanceService#fingerprint). Only set by the accept inheritance endpoint.
+   */
+  @ReadOnlyProperty
+  @Size(max = 1024)
+  private String acceptedInheritance;
 
   @JsonIgnore
   @Transient

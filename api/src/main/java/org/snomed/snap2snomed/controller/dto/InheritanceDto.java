@@ -39,6 +39,9 @@ public class InheritanceDto {
   /** All generated concepts together are more than {@link #maxGenerated}. */
   private boolean generatedTooLarge;
   private int maxGenerated;
+  /** Rows without targets whose inheritance was accepted, and those whose inheritance changed since. */
+  private int acceptedCount;
+  private int changedCount;
 
   public InheritanceDto(Map<String, Integer> counts, List<RowDto> rows) {
     this.counts = counts;
@@ -64,6 +67,31 @@ public class InheritanceDto {
     private int inheritedBy;
     /** ASSERTED: how many generated concepts inherit its targets. */
     private int generatedBy;
+    /** The row's workflow status. */
+    private String status;
+    /** Its inheritance was accepted (no targets of its own). */
+    private boolean accepted;
+    /** Accepted, but it inherits something else now. */
+    private boolean inheritanceChanged;
+  }
+
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  public static class AcceptRequest {
+    /** Rows to accept; empty or null means every row that can be accepted (within the task, if one is given). */
+    private List<Long> rowIds;
+    /** The author task the user works in; without one, only a project owner can accept. */
+    private Long taskId;
+  }
+
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  public static class AcceptResult {
+    private int accepted;
+    /** Rows left as they were, by reason: an inheritance state, NOT_IN_TASK or NOT_EDITABLE. */
+    private Map<String, Integer> skipped;
   }
 
   @Data

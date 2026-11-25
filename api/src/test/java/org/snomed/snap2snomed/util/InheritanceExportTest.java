@@ -35,7 +35,7 @@ class InheritanceExportTest {
 
   private static InheritanceDto.RowDto row(String code, String state, String from, List<InheritanceDto.TargetDto> targets,
       List<String> candidates) {
-    return new InheritanceDto.RowDto(1L, code, code + " display", state, false, from, null, targets, candidates, 0, 0);
+    return new InheritanceDto.RowDto(1L, code, code + " display", state, false, from, null, targets, candidates, 0, 0, null, false, false);
   }
 
   @Test
