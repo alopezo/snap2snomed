@@ -234,7 +234,6 @@
     "EXPORT_TSV": "Tabbseparerad",
     "EXPORT_XLSX": "Excel (xlsx)",
     "EXPORT_FHIR_JSON": "FHIR (json)",
-    "EXPORT_XLSX_EXTENDED": "Excel (xlsx) utökad",
     "CODE_SYSTEMS": "Kodverk",
     "LAST_UPDATED": "Senast uppdaterad",
     "UNSAVED_CHANGES": "Varning: du har osparade ändringar",
@@ -628,9 +627,7 @@
   "MAPPING_ADD": {
     "SELECTED_MAPPING_FILE": "Vald mappningsfil:"
   },
-  "MAPPING_VIEW": {
-    "EXPORT_XLSX_EXTENDED_TOOLTIP": "Utökad export innehåller även författare, granskare och anteckningar"
-  },
+  "MAPPING_VIEW": {},
   "LOGIN": {
     "ICON_ALT": "ikon",
     "SUMMARY": "Ett webbaserat verktyg där SNOMED Internationals medlemmar tillsammans kan skapa och underhålla enkla mappningar till SNOMED CT.",
@@ -665,5 +662,37 @@
   "SHELL_TARGET_VERSION": {
     "UNKNOWN_EDITION": "Okänd SNOMED CT-utgåva",
     "LATEST_AVAILABLE": "Senaste tillgängliga"
+  },
+  "REFINEMENT": {
+    "TITLE": "Förfina mål",
+    "SELECT_CONCEPT": "Välj ett kliniskt fynd eller en åtgärd för att förfina det med lateralitet eller svårighetsgrad.",
+    "OPTIONS_FAILED": "Det gick inte att kontrollera vilka förfiningar detta begrepp accepterar.",
+    "NOT_REFINABLE": "Detta begrepp kan inte förfinas: lateralitet gäller fynd och åtgärder med en lateraliserbar lokalisation, svårighetsgrad gäller fynd.",
+    "LATERALITY": "Lateralitet",
+    "SEVERITY": "Svårighetsgrad",
+    "NOT_LATERALIZABLE": "Ej tillämpligt",
+    "NOT_LATERALIZABLE_TOOLTIP": "Begreppet har ingen fynd- eller åtgärdslokalisation som kan lateraliseras, eller det har redan en sida",
+    "SEVERITY_FINDINGS_ONLY": "Endast kliniska fynd",
+    "DRAG_TOOLTIP": "Dra till en relation för att lägga till detta förfinade mål",
+    "LEFT": "Vänster",
+    "RIGHT": "Höger",
+    "RIGHT_AND_LEFT": "Båda sidor",
+    "MILD": "Lindrig",
+    "MODERATE": "Måttlig",
+    "SEVERE": "Svår"
+  },
+  "EXPORT": {
+    "TITLE": "Exportera mappning",
+    "FORMAT": "Format",
+    "EXTENDED": "Inkludera anteckningar, författare och granskare",
+    "EXTENDED_TABULAR_ONLY": "Endast för kommaseparerade, tabbseparerade och Excel-filer.",
+    "REFINED_TARGETS": "Förfinade mål",
+    "REFINED_TARGETS_COUNT": "Denna mappning har {{count}} mål förfinade med lateralitet eller svårighetsgrad.",
+    "TARGET_FORM_EXPRESSION": "Uttryck (användarnära form)",
+    "TARGET_FORM_FOCUS": "Endast fokusbegrepp",
+    "TARGET_FORM_BOTH": "Uttryck plus kolumner med fokusbegreppet",
+    "TARGET_FORM_FOCUS_NOTE": "Fokusbegreppet är bredare än det förfinade målet: en ekvivalent relation exporteras som bredare, en snävare som inexakt. Förfinade mål för samma källa med samma fokusbegrepp exporteras en gång.",
+    "TARGET_FORM_BOTH_TABULAR_ONLY": "Endast för kommaseparerade, tabbseparerade och Excel-filer; FHIR exporterar uttrycket.",
+    "EXPORT": "Exportera"
   }
 }

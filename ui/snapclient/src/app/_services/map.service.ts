@@ -429,16 +429,27 @@ export class MapService {
     return this.http.get<MapRowTargetResults>(url, header);
   }
 
-  exportMapView(mapping: string, contentType: string, extraColumns: string[]): Observable<Blob> {
-    let url = `${this.config.apiBaseUrl}/mapView/${mapping}`;
+  exportMapView(mapping: string, contentType: string, extraColumns: string[], targetForm: string = 'expression'): Observable<Blob> {
+    const url = `${this.config.apiBaseUrl}/mapView/${mapping}`;
+    let params = new HttpParams();
     if (extraColumns.length > 0) {
-      url += `?extraColumns=` + extraColumns.join(",");
+      params = params.set('extraColumns', extraColumns.join(','));
+    }
+    if (targetForm !== 'expression') {
+      params = params.set('targetForm', targetForm);
     }
     return this.http.get(url,
       {
         headers: {Accept: contentType},
+        params,
         responseType: 'blob'
       });
+  }
+
+  /** How many targets of the map are refined targets (expressions). */
+  getRefinedTargetCount(mapping: string): Observable<number> {
+    return this.http.get<number>(`${this.config.apiBaseUrl}/mapView/${mapping}/$refinedTargetCount`,
+      ServiceUtils.getHTTPHeaders());
   }
 
   /**

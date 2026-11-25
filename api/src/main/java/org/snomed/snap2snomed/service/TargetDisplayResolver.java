@@ -19,7 +19,9 @@ package org.snomed.snap2snomed.service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -36,6 +38,7 @@ import org.snomed.snap2snomed.model.MapRowTarget;
 import org.snomed.snap2snomed.problem.Snap2SnomedProblem;
 import org.snomed.snap2snomed.repository.MapRepository;
 import org.snomed.snap2snomed.util.LanguageDialects;
+import org.snomed.snap2snomed.util.TargetExpression;
 import org.snomed.snap2snomed.repository.MapRowTargetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -107,13 +110,21 @@ public class TargetDisplayResolver {
         .orElseThrow(() -> Snap2SnomedProblem.of(HttpStatus.NOT_FOUND, "No Map found with id " + mapId));
     final Set<String> codes = mapRowTargetRepository.findByMapId(mapId).stream()
         .map(MapRowTarget::getTargetCode)
-        .filter(code -> code != null && FhirService.isValidSctId(code, RF2SchemaConstants.PartionIdentifier.CONCEPT))
+        .filter(code -> code != null && (FhirService.isValidSctId(code, RF2SchemaConstants.PartionIdentifier.CONCEPT)
+            || TargetExpression.parse(code).isPresent()))
         .collect(Collectors.toSet());
     if (codes.isEmpty()) {
       return new TargetDisplayRefreshResult(0, 0, 0);
     }
+    // A refined target needs the terms of its focus concept and of its refinement values
+    final Set<String> concepts = new HashSet<>();
+    codes.forEach(code -> TargetExpression.parse(code).ifPresentOrElse(expression -> {
+      concepts.add(expression.getFocus());
+      concepts.addAll(expression.getValues());
+    }, () -> concepts.add(code)));
     // Fetch everything first: if the server fails, nothing has been updated yet
-    final java.util.Map<String, String> displays = fetchDisplays(codes, map.getToVersion(), map.getDisplayLanguage());
+    final java.util.Map<String, String> conceptDisplays = fetchDisplays(concepts, map.getToVersion(), map.getDisplayLanguage());
+    final java.util.Map<String, String> displays = targetDisplays(codes, conceptDisplays);
     int updated = 0;
     for (final java.util.Map.Entry<String, String> entry : displays.entrySet()) {
       updated += mapRowTargetRepository.updateTargetDisplayForMap(mapId, entry.getKey(), entry.getValue());
@@ -122,6 +133,36 @@ public class TargetDisplayResolver {
     log.info("Resolved target displays for map {} ({}, display language {})",
         mapId, result, map.getDisplayLanguage() == null ? "English FSN" : map.getDisplayLanguage());
     return result;
+  }
+
+  /**
+   * The display of each target code: the concept's term, or for a refined target the focus term followed
+   * by the value terms (without semantic tag). Targets missing any term are left out.
+   */
+  static java.util.Map<String, String> targetDisplays(Collection<String> codes, java.util.Map<String, String> conceptDisplays) {
+    final java.util.Map<String, String> displays = new HashMap<>();
+    for (final String code : codes) {
+      final Optional<TargetExpression> expression = TargetExpression.parse(code);
+      if (expression.isEmpty()) {
+        if (conceptDisplays.containsKey(code)) {
+          displays.put(code, conceptDisplays.get(code));
+        }
+        continue;
+      }
+      final String focusDisplay = conceptDisplays.get(expression.get().getFocus());
+      final List<String> valueDisplays = expression.get().getValues().stream()
+          .map(conceptDisplays::get)
+          .map(TargetDisplayResolver::withoutSemanticTag)
+          .collect(Collectors.toList());
+      if (focusDisplay != null && !valueDisplays.contains(null)) {
+        displays.put(code, TargetExpression.composeDisplay(focusDisplay, valueDisplays));
+      }
+    }
+    return displays;
+  }
+
+  static String withoutSemanticTag(String display) {
+    return display == null ? null : display.replaceFirst("\\s*\\([^()]*\\)$", "");
   }
 
   /** Fetches the display term of each code, in batches of {@code expandBatchSize} codes. */

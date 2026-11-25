@@ -97,6 +97,17 @@ h2 {
 .tab-view {
   flex: 1;
 }
+
+.target-info-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 20%;
+}
+
+.target-info-col app-concept-properties {
+  display: block;
+  margin: 10px;
+}
 .properties-view {
   flex: 1;
 }

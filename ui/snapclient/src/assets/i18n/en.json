@@ -234,7 +234,6 @@
     "EXPORT_TSV": "Tab separated",
     "EXPORT_XLSX": "Excel (xlsx)",
     "EXPORT_FHIR_JSON": "FHIR (json)",
-    "EXPORT_XLSX_EXTENDED": "Excel (xlsx) extended",
     "CODE_SYSTEMS": "Code systems",
     "LAST_UPDATED": "Last updated",
     "UNSAVED_CHANGES": "Warning: you have unsaved changes",
@@ -628,9 +627,7 @@
   "MAPPING_ADD": {
     "SELECTED_MAPPING_FILE": "Selected Mapping File:"
   },
-  "MAPPING_VIEW": {
-    "EXPORT_XLSX_EXTENDED_TOOLTIP": "Extended export also includes Author, Reviewer, and Notes"
-  },
+  "MAPPING_VIEW": {},
   "LOGIN": {
     "ICON_ALT": "icon",
     "SUMMARY": "A hosted tool for SNOMED International Members to collaboratively create and maintain simple maps to SNOMED CT.",
@@ -665,5 +662,37 @@
   "SHELL_TARGET_VERSION": {
     "UNKNOWN_EDITION": "Unknown SNOMED CT Edition",
     "LATEST_AVAILABLE": "Latest available"
+  },
+  "REFINEMENT": {
+    "TITLE": "Refine target",
+    "SELECT_CONCEPT": "Select a clinical finding or procedure to refine it with laterality or severity.",
+    "OPTIONS_FAILED": "Could not check which refinements this concept accepts.",
+    "NOT_REFINABLE": "This concept cannot be refined: laterality applies to findings and procedures with a lateralizable site, severity to findings.",
+    "LATERALITY": "Laterality",
+    "SEVERITY": "Severity",
+    "NOT_LATERALIZABLE": "Not applicable",
+    "NOT_LATERALIZABLE_TOOLTIP": "The concept has no finding or procedure site that can be lateralized, or it already has a side",
+    "SEVERITY_FINDINGS_ONLY": "Clinical findings only",
+    "DRAG_TOOLTIP": "Drag onto a relationship to add this refined target",
+    "LEFT": "Left",
+    "RIGHT": "Right",
+    "RIGHT_AND_LEFT": "Both sides",
+    "MILD": "Mild",
+    "MODERATE": "Moderate",
+    "SEVERE": "Severe"
+  },
+  "EXPORT": {
+    "TITLE": "Export map",
+    "FORMAT": "Format",
+    "EXTENDED": "Include notes, authors and reviewers",
+    "EXTENDED_TABULAR_ONLY": "Only for comma separated, tab separated and Excel files.",
+    "REFINED_TARGETS": "Refined targets",
+    "REFINED_TARGETS_COUNT": "This map has {{count}} target(s) refined with laterality or severity.",
+    "TARGET_FORM_EXPRESSION": "Expression (close-to-user form)",
+    "TARGET_FORM_FOCUS": "Focus concept only",
+    "TARGET_FORM_BOTH": "Expression plus focus concept columns",
+    "TARGET_FORM_FOCUS_NOTE": "The focus concept is broader than the refined target: an equivalent relationship is exported as broader, a narrower one as inexact. Refined targets of the same source that share the focus concept are exported once.",
+    "TARGET_FORM_BOTH_TABULAR_ONLY": "Only for comma separated, tab separated and Excel files; FHIR exports the expression.",
+    "EXPORT": "Export"
   }
 }

@@ -25,6 +25,7 @@ import {ErrorDetail} from '../_models/error_detail';
 import {BundleTypeKind, Bundle_RequestMethodKind} from '@ahryman40k/ts-fhir-types/lib/R4';
 import {Coding, ConceptNode, Match} from '../store/fhir-feature/fhir.reducer';
 import {LanguageDialects, TerminologyServerKind} from '../_utils/language-dialects';
+import {composeDisplay, parseTargetExpression, valuesOf, withoutSemanticTag} from '../_utils/target-expression';
 
 export const SEQUENCE = 'http://ontoserver.csiro.au/fhir/ConceptMap/automapstrategy-seq;automapstrategy-default;automapstrategy-MML'
 export const DEFAULT = 'http://ontoserver.csiro.au/fhir/ConceptMap/automapstrategy-default';
@@ -35,6 +36,18 @@ export const MML = 'http://ontoserver.csiro.au/fhir/ConceptMap/automapstrategy-M
  * HTTP 500 that carries no CORS headers, which the browser reports as a network error.
  */
 export const MIN_SEARCH_LENGTH = 3;
+
+const CLINICAL_FINDING = '404684003';
+const PROCEDURE = '71388002';
+const FINDING_SITE = '363698007';
+const PROCEDURE_SITE = '363704007';
+const LATERALIZABLE_REFSET = '723264001';
+
+/** Refinements a target concept can take (see FhirService.getRefinementOptions). */
+export interface RefinementOptions {
+  laterality: boolean;
+  severity: boolean;
+}
 
 export interface Release {
   edition: string; // edition is often a country
@@ -269,12 +282,53 @@ export class FhirService {
    * English FSN when the map has no display language. Empty string if the server returns none.
    */
   getTargetDisplay(code: string, system: string, version: string, displayLanguage: string | null | undefined): Observable<string> {
+    const expression = parseTargetExpression(code);
+    if (expression) {
+      // A refined target: the focus term, then the value terms without semantic tag
+      const codes = [expression.focus, ...valuesOf(expression)];
+      return forkJoin(codes.map(c => this.getTargetDisplay(c, system, version, displayLanguage))).pipe(
+        map(([focusDisplay, ...valueDisplays]) => focusDisplay && valueDisplays.every(d => !!d)
+          ? composeDisplay(focusDisplay, valueDisplays.map(withoutSemanticTag))
+          : '')
+      );
+    }
     if (!LanguageDialects.normalize(displayLanguage)) {
       return this.getEnglishFsn(code, system, version);
     }
     return this.acceptLanguageForMap(displayLanguage).pipe(
       mergeMap(acceptLanguage => this.lookupConcept(code, system, version, [], acceptLanguage)),
       map(parameters => parameters.parameter?.find(parameter => parameter.name === 'display')?.valueString ?? '')
+    );
+  }
+
+  /**
+   * Which refinements a target concept can take: laterality when it is a clinical finding or procedure
+   * with a finding or procedure site in the lateralizable body structure reference set (a site that
+   * already has a side is not a member), and severity when it is a clinical finding.
+   */
+  getRefinementOptions(code: string, version: string): Observable<RefinementOptions> {
+    const lateralizableSite = (attribute: string) => `(${code} : << ${attribute} = ^ ${LATERALIZABLE_REFSET})`;
+    return forkJoin({
+      finding: this.eclMatches(`${code} AND << ${CLINICAL_FINDING}`, version),
+      procedure: this.eclMatches(`${code} AND << ${PROCEDURE}`, version),
+      lateralizable: this.eclMatches(`${lateralizableSite(FINDING_SITE)} OR ${lateralizableSite(PROCEDURE_SITE)}`, version),
+    }).pipe(
+      map(({finding, procedure, lateralizable}) => ({
+        laterality: (finding || procedure) && lateralizable,
+        severity: finding,
+      }))
+    );
+  }
+
+  /** True when the ECL expression returns at least one concept. */
+  private eclMatches(ecl: string, version: string): Observable<boolean> {
+    const url = `${this.config.fhirBaseUrl}/ValueSet/$expand`;
+    const options = ServiceUtils.getHTTPHeaders();
+    options.headers = options.headers.set('Accept', ['application/fhir+json', 'application/json']);
+    // Snowstorm fails on count=0, so ask for one concept
+    options.params = {...options.params, url: FhirService.toValueSet(version, ecl), count: 1};
+    return this.http.get<R4.IValueSet>(url, options).pipe(
+      map(valueSet => (valueSet.expansion?.total ?? valueSet.expansion?.contains?.length ?? 0) > 0)
     );
   }
 

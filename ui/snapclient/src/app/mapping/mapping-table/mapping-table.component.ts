@@ -52,6 +52,7 @@ import {WriteDisableUtils} from '../../_utils/write_disable_utils';
 import {FhirService} from "../../_services/fhir.service";
 import { MappingNotesComponent } from '../mapping-table-notes/mapping-notes.component';
 import { TargetChangedService } from 'src/app/_services/target-changed.service';
+import {focusOf} from '../../_utils/target-expression';
 
 export interface TableParams extends Params {
   pageIndex?: number;
@@ -271,8 +272,9 @@ export class MappingTableComponent implements OnInit, AfterViewInit, OnDestroy {
       this.clickedRow = undefined;
     } else {
       const m = this.getMapping();
+      // A refined target shows its focus concept
       this.selectionService.select({
-        code: row.targetCode,
+        code: focusOf(row.targetCode),
         display: row.targetDisplay,
         system: m?.toSystem ?? 'http://snomed.info/sct',
         version: m?.toVersion,

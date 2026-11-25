@@ -27,6 +27,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotEmpty;
@@ -40,6 +42,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.envers.Audited;
 import org.snomed.snap2snomed.model.enumeration.MappingRelationship;
 import org.snomed.snap2snomed.model.enumeration.TaskType;
+import org.snomed.snap2snomed.util.TargetExpression;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -57,6 +60,9 @@ import org.springframework.data.rest.core.config.Projection;
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "map_row_target")
 public class MapRowTarget implements Snap2SnomedEntity, java.lang.Comparable<MapRowTarget> {
+    /** A concept id or a close-to-user expression (see {@link TargetExpression}). */
+    public static final int TARGET_CODE_SIZE_LIMIT = 255;
+
     @Column(name = "created", nullable = false, updatable = false)
     @CreatedDate
     private Instant created;
@@ -83,7 +89,7 @@ public class MapRowTarget implements Snap2SnomedEntity, java.lang.Comparable<Map
     private MapRow row;
 
     @NotEmpty(message = "A MapRowTarget must always have a target code")
-    @Size(max = 18)
+    @Size(max = TARGET_CODE_SIZE_LIMIT)
     private String targetCode;
 
     @NotEmpty(message = "A MapRowTarget must always have a target display")
@@ -135,6 +141,15 @@ public class MapRowTarget implements Snap2SnomedEntity, java.lang.Comparable<Map
 
         User getLastAuthor();
 
+    }
+
+    /** Refined targets are always stored in canonical form, so equal refinements compare equal. */
+    @PrePersist
+    @PreUpdate
+    void canonicalizeTargetCode() {
+        if (targetCode != null) {
+            targetCode = TargetExpression.canonical(targetCode);
+        }
     }
 
     @Override

@@ -258,19 +258,13 @@ describe('MappingViewComponent', () => {
     expect(el).toBeTruthy();
   });
 
-  it('should show Export Menu button and menu', () => {
-    el = fixture.debugElement.query(By.css('.mat-mdc-menu-trigger'));
+  it('should show the Export button, which opens the export dialog', () => {
+    el = fixture.debugElement.query(By.css('#export-button'));
     expect(el).toBeTruthy();
+    expect(el.nativeElement.textContent.trim()).toBe('MAP.EXPORT');
 
-    expect(el.nativeElement.textContent).toBe('MAP.EXPORT');
-
+    const open = vi.spyOn(component, 'openExportDialog').mockImplementation(() => {});
     el.triggerEventHandler('click', null);
-
-    const menu = fixture.debugElement.query(By.css('.mat-mdc-menu-panel'));
-    expect(menu).toBeTruthy();
-
-    expect(menu.nativeElement.textContent).toBe(
-      'MAP.EXPORT_CSVMAP.EXPORT_TSVMAP.EXPORT_XLSXMAP.EXPORT_FHIR_JSONMAP.EXPORT_XLSX_EXTENDED'
-    );
+    expect(open).toHaveBeenCalled();
   });
 });

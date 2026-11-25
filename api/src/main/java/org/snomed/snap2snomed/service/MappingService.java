@@ -50,6 +50,7 @@ import java.time.Instant;
 import java.util.*;
 
 import org.snomed.snap2snomed.util.LanguageDialects;
+import org.snomed.snap2snomed.util.TargetExpression;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
@@ -714,7 +715,9 @@ public class MappingService {
     final User currentUser = authenticationFacade.getAuthenticatedUser();
     final String userId = currentUser.getId();
     final List<MapRowTarget> mapRowTargets = mapRowTargetRepository.findByMapId(mapId);
-    Set<String> targetCodes = mapRowTargets.stream().map(target -> target.getTargetCode()).collect(Collectors.toSet());
+    // A refined target (an expression) is valid when its focus concept is; its refinement values are fixed concepts
+    Set<String> targetCodes = mapRowTargets.stream().map(target -> TargetExpression.focusOf(target.getTargetCode()))
+            .collect(Collectors.toSet());
     String scope = null;
     String csVersion = null;
     Optional<org.snomed.snap2snomed.model.Map> map = mapRepository.findById(Long.valueOf(mapId));
@@ -733,7 +736,7 @@ public class MappingService {
               "modified: " + Instant.now() + "}: " + String.join(",", targetsToFlag));
       List<Long> targetIds = mapRowTargetRepository.findByMapId(mapId)
               .stream()
-              .filter(target -> targetsToFlag.contains(target.getTargetCode()))
+              .filter(target -> targetsToFlag.contains(TargetExpression.focusOf(target.getTargetCode())))
               .map(MapRowTarget::getId)
               .collect(Collectors.toList());
       mapRowTargetRepository.addOutOfScopeTag(targetIds);

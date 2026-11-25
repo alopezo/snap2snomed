@@ -70,6 +70,7 @@ import org.snomed.snap2snomed.repository.ImportedCodeSetRepository;
 import org.snomed.snap2snomed.repository.MapRepository;
 import org.snomed.snap2snomed.repository.MapRowRepository;
 import org.snomed.snap2snomed.security.WebSecurity;
+import org.snomed.snap2snomed.util.TargetExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
@@ -456,7 +457,7 @@ public class CodeSetImportService {
   private void validateRecord(Set<String> importedCodes, String code, String targetCode,
                               String targetDisplay, long recordNumber, Integer noMapFlag, MapStatus status) {
     checkCode(code, recordNumber);
-    checkCode(targetCode, recordNumber);
+    checkTargetCode(targetCode, recordNumber);
     checkDuplicateCodes(importedCodes, code, targetCode);
     checkDisplay(targetDisplay, recordNumber);
     checkNoMapFlag(targetCode, noMapFlag);
@@ -469,6 +470,18 @@ public class CodeSetImportService {
     checkDuplicateCodes(importedCodes, code, null);
     checkDisplay(display, recordNumber);
     checkAdditionalColumn(additionalColumnValues, importDetails.getAdditionalColumnIndexes(), recordNumber);
+  }
+
+  private void checkTargetCode(String targetCode, long recordNumber) {
+    if (targetCode.length() > MapRowTarget.TARGET_CODE_SIZE_LIMIT) {
+      throw new CodeSetImportProblem("code-size", "Code in the import file is too large",
+          "The target code value for record " + recordNumber + " is too long: " + targetCode.length()
+              + " is greater than the limit of " + MapRowTarget.TARGET_CODE_SIZE_LIMIT + " " + targetCode);
+    } else if (TargetExpression.looksLikeExpression(targetCode) && TargetExpression.parse(targetCode).isEmpty()) {
+      throw new CodeSetImportProblem("invalid-target-expression", "Unsupported target expression in the import file",
+          "The target code value for record " + recordNumber + " is an expression with refinements other than "
+              + "laterality (left, right, right and left) and severity (mild, moderate, severe): " + targetCode);
+    }
   }
 
   private void checkCode(String code, long recordNumber) {
@@ -638,7 +651,8 @@ public class CodeSetImportService {
           validateColumnIndexes(importDetails, csvRecord);
           testLineForBinary(csvRecord.toString());
           final String code = csvRecord.get(importDetails.getCodeColumnIndex()).trim();
-          final String targetCode = csvRecord.get(importDetails.getTargetCodeColumnIndex()).trim();
+          // A refined target (expression) is stored in canonical form, so equal refinements compare equal
+          final String targetCode = TargetExpression.canonical(csvRecord.get(importDetails.getTargetCodeColumnIndex()).trim());
           final String targetDisplay = csvRecord.get(importDetails.getTargetDisplayColumnIndex());
           final String relationship = csvRecord.get(importDetails.getRelationshipColumnIndex());
           // optional

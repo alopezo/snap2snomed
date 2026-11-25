@@ -234,7 +234,6 @@
     "EXPORT_TSV": "Séparé par des tabulations",
     "EXPORT_XLSX": "Excel (xlsx)",
     "EXPORT_FHIR_JSON": "FHIR (json)",
-    "EXPORT_XLSX_EXTENDED": "Excel (xlsx) étendu",
     "CODE_SYSTEMS": "Systèmes de codes",
     "LAST_UPDATED": "Dernière mise à jour",
     "UNSAVED_CHANGES": "Attention : vous avez des modifications non enregistrées",
@@ -628,9 +627,7 @@
   "MAPPING_ADD": {
     "SELECTED_MAPPING_FILE": "Fichier de correspondance sélectionné :"
   },
-  "MAPPING_VIEW": {
-    "EXPORT_XLSX_EXTENDED_TOOLTIP": "L'export étendu inclut aussi le rédacteur, le réviseur et les notes"
-  },
+  "MAPPING_VIEW": {},
   "LOGIN": {
     "ICON_ALT": "icône",
     "SUMMARY": "Un outil hébergé permettant aux Membres de SNOMED International de créer et de maintenir de manière collaborative des tables de correspondance simples vers SNOMED CT.",
@@ -665,5 +662,37 @@
   "SHELL_TARGET_VERSION": {
     "UNKNOWN_EDITION": "Édition SNOMED CT inconnue",
     "LATEST_AVAILABLE": "Dernière disponible"
+  },
+  "REFINEMENT": {
+    "TITLE": "Affiner la cible",
+    "SELECT_CONCEPT": "Sélectionnez une constatation clinique ou une procédure pour l'affiner avec la latéralité ou la sévérité.",
+    "OPTIONS_FAILED": "Impossible de vérifier quels affinements ce concept accepte.",
+    "NOT_REFINABLE": "Ce concept ne peut pas être affiné : la latéralité s'applique aux constatations et procédures ayant un site latéralisable, la sévérité aux constatations.",
+    "LATERALITY": "Latéralité",
+    "SEVERITY": "Sévérité",
+    "NOT_LATERALIZABLE": "Non applicable",
+    "NOT_LATERALIZABLE_TOOLTIP": "Le concept n'a pas de site de constatation ou de procédure latéralisable, ou il a déjà un côté",
+    "SEVERITY_FINDINGS_ONLY": "Constatations cliniques uniquement",
+    "DRAG_TOOLTIP": "Faites glisser sur une relation pour ajouter cette cible affinée",
+    "LEFT": "Gauche",
+    "RIGHT": "Droit",
+    "RIGHT_AND_LEFT": "Des deux côtés",
+    "MILD": "Léger",
+    "MODERATE": "Modéré",
+    "SEVERE": "Sévère"
+  },
+  "EXPORT": {
+    "TITLE": "Exporter la correspondance",
+    "FORMAT": "Format",
+    "EXTENDED": "Inclure les notes, auteurs et réviseurs",
+    "EXTENDED_TABULAR_ONLY": "Uniquement pour les fichiers séparés par des virgules, par des tabulations et Excel.",
+    "REFINED_TARGETS": "Cibles affinées",
+    "REFINED_TARGETS_COUNT": "Cette correspondance contient {{count}} cible(s) affinée(s) avec la latéralité ou la sévérité.",
+    "TARGET_FORM_EXPRESSION": "Expression (forme proche de l'utilisateur)",
+    "TARGET_FORM_FOCUS": "Concept focal uniquement",
+    "TARGET_FORM_BOTH": "Expression et colonnes du concept focal",
+    "TARGET_FORM_FOCUS_NOTE": "Le concept focal est plus large que la cible affinée : une relation équivalente est exportée comme plus large, une plus étroite comme inexacte. Les cibles affinées d'une même source partageant le concept focal ne sont exportées qu'une fois.",
+    "TARGET_FORM_BOTH_TABULAR_ONLY": "Uniquement pour les fichiers séparés par des virgules, par des tabulations et Excel ; FHIR exporte l'expression.",
+    "EXPORT": "Exporter"
   }
 }

@@ -1,0 +1,61 @@
+<mat-card appearance="outlined" class="refinement-card">
+  <mat-card-header>
+    <mat-card-title>{{'REFINEMENT.TITLE' | translate}}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    @if (!focus) {
+      <p class="hint">{{'REFINEMENT.SELECT_CONCEPT' | translate}}</p>
+    } @else {
+      <p class="focus" [title]="focus">{{focusDisplay || focus}}</p>
+      @if (loadingOptions) {
+        <mat-progress-spinner diameter="20" mode="indeterminate"></mat-progress-spinner>
+      } @else if (optionsFailed) {
+        <p class="hint">{{'REFINEMENT.OPTIONS_FAILED' | translate}}</p>
+      } @else if (!options.laterality && !options.severity) {
+        <p class="hint">{{'REFINEMENT.NOT_REFINABLE' | translate}}</p>
+      } @else {
+        <div class="refinement-row">
+          <span class="refinement-label">{{'REFINEMENT.LATERALITY' | translate}}</span>
+          @if (options.laterality) {
+            <mat-chip-listbox [attr.aria-label]="'REFINEMENT.LATERALITY' | translate" [disabled]="disabled"
+              [value]="laterality" (change)="setLaterality($event.value)">
+              @for (value of lateralityValues; track value.code) {
+                <mat-chip-option [value]="value.code">{{value.labelKey | translate}}</mat-chip-option>
+              }
+            </mat-chip-listbox>
+          } @else {
+            <span class="hint" matTooltip="{{'REFINEMENT.NOT_LATERALIZABLE_TOOLTIP' | translate}}">
+              {{'REFINEMENT.NOT_LATERALIZABLE' | translate}}</span>
+          }
+        </div>
+        <div class="refinement-row">
+          <span class="refinement-label">{{'REFINEMENT.SEVERITY' | translate}}</span>
+          @if (options.severity) {
+            <mat-chip-listbox [attr.aria-label]="'REFINEMENT.SEVERITY' | translate" [disabled]="disabled"
+              [value]="severity" (change)="setSeverity($event.value)">
+              @for (value of severityValues; track value.code) {
+                <mat-chip-option [value]="value.code">{{value.labelKey | translate}}</mat-chip-option>
+              }
+            </mat-chip-listbox>
+          } @else {
+            <span class="hint">{{'REFINEMENT.SEVERITY_FINDINGS_ONLY' | translate}}</span>
+          }
+        </div>
+        @if (expression) {
+          <div class="preview">
+            @if (canDrag) {
+              <mat-icon class="grip" [appDraggable]="{data: dragData, zones: dragZones}"
+                matTooltip="{{'REFINEMENT.DRAG_TOOLTIP' | translate}}">drag_indicator</mat-icon>
+            } @else if (loadingPreview) {
+              <mat-progress-spinner diameter="20" mode="indeterminate"></mat-progress-spinner>
+            }
+            <div class="preview-text">
+              <div class="preview-display">{{previewDisplay}}</div>
+              <code class="preview-code">{{expression}}</code>
+            </div>
+          </div>
+        }
+      }
+    }
+  </mat-card-content>
+</mat-card>

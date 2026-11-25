@@ -234,7 +234,6 @@
     "EXPORT_TSV": "Tab gescheiden",
     "EXPORT_XLSX": "Excel (xlsx)",
     "EXPORT_FHIR_JSON": "FHIR (json)",
-    "EXPORT_XLSX_EXTENDED": "Excel (xlsx) uitgebreid",
     "CODE_SYSTEMS": "Codestelsels",
     "LAST_UPDATED": "Laatst bijgewerkt",
     "UNSAVED_CHANGES": "Waarschuwing: je hebt niet-opgeslagen wijzigingen",
@@ -628,9 +627,7 @@
   "MAPPING_ADD": {
     "SELECTED_MAPPING_FILE": "Geselecteerd mappingbestand:"
   },
-  "MAPPING_VIEW": {
-    "EXPORT_XLSX_EXTENDED_TOOLTIP": "Uitgebreide export bevat ook auteur, beoordelaar en notities"
-  },
+  "MAPPING_VIEW": {},
   "LOGIN": {
     "ICON_ALT": "pictogram",
     "SUMMARY": "Een gehoste tool waarmee leden van SNOMED International samen eenvoudige mappings naar SNOMED CT kunnen maken en onderhouden.",
@@ -665,5 +662,37 @@
   "SHELL_TARGET_VERSION": {
     "UNKNOWN_EDITION": "Onbekende SNOMED CT-editie",
     "LATEST_AVAILABLE": "Nieuwste beschikbare"
+  },
+  "REFINEMENT": {
+    "TITLE": "Doel verfijnen",
+    "SELECT_CONCEPT": "Selecteer een klinische bevinding of verrichting om deze te verfijnen met lateraliteit of ernst.",
+    "OPTIONS_FAILED": "Kon niet controleren welke verfijningen dit concept accepteert.",
+    "NOT_REFINABLE": "Dit concept kan niet worden verfijnd: lateraliteit geldt voor bevindingen en verrichtingen met een lateraliseerbare locatie, ernst voor bevindingen.",
+    "LATERALITY": "Lateraliteit",
+    "SEVERITY": "Ernst",
+    "NOT_LATERALIZABLE": "Niet van toepassing",
+    "NOT_LATERALIZABLE_TOOLTIP": "Het concept heeft geen lateraliseerbare locatie van bevinding of verrichting, of heeft al een zijde",
+    "SEVERITY_FINDINGS_ONLY": "Alleen klinische bevindingen",
+    "DRAG_TOOLTIP": "Sleep naar een relatie om dit verfijnde doel toe te voegen",
+    "LEFT": "Links",
+    "RIGHT": "Rechts",
+    "RIGHT_AND_LEFT": "Beide zijden",
+    "MILD": "Licht",
+    "MODERATE": "Matig",
+    "SEVERE": "Ernstig"
+  },
+  "EXPORT": {
+    "TITLE": "Mapping exporteren",
+    "FORMAT": "Formaat",
+    "EXTENDED": "Notities, auteurs en reviewers opnemen",
+    "EXTENDED_TABULAR_ONLY": "Alleen voor kommagescheiden, tabgescheiden en Excel-bestanden.",
+    "REFINED_TARGETS": "Verfijnde doelen",
+    "REFINED_TARGETS_COUNT": "Deze mapping heeft {{count}} doel(en) verfijnd met lateraliteit of ernst.",
+    "TARGET_FORM_EXPRESSION": "Expressie (gebruikersnabije vorm)",
+    "TARGET_FORM_FOCUS": "Alleen focusconcept",
+    "TARGET_FORM_BOTH": "Expressie plus kolommen met het focusconcept",
+    "TARGET_FORM_FOCUS_NOTE": "Het focusconcept is breder dan het verfijnde doel: een equivalente relatie wordt als breder geëxporteerd, een nauwere als inexact. Verfijnde doelen van dezelfde bron met hetzelfde focusconcept worden één keer geëxporteerd.",
+    "TARGET_FORM_BOTH_TABULAR_ONLY": "Alleen voor kommagescheiden, tabgescheiden en Excel-bestanden; FHIR exporteert de expressie.",
+    "EXPORT": "Exporteren"
   }
 }

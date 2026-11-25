@@ -234,7 +234,6 @@
     "EXPORT_TSV": "Tabulatorsepareret",
     "EXPORT_XLSX": "Excel (xlsx)",
     "EXPORT_FHIR_JSON": "FHIR (json)",
-    "EXPORT_XLSX_EXTENDED": "Excel (xlsx) udvidet",
     "CODE_SYSTEMS": "Kodesystemer",
     "LAST_UPDATED": "Senest opdateret",
     "UNSAVED_CHANGES": "Advarsel: du har ændringer, der ikke er gemt",
@@ -628,9 +627,7 @@
   "MAPPING_ADD": {
     "SELECTED_MAPPING_FILE": "Valgt mapningsfil:"
   },
-  "MAPPING_VIEW": {
-    "EXPORT_XLSX_EXTENDED_TOOLTIP": "Udvidet eksport indeholder også redaktør, korrekturlæser og noter"
-  },
+  "MAPPING_VIEW": {},
   "LOGIN": {
     "ICON_ALT": "ikon",
     "SUMMARY": "Et hostet værktøj, hvor SNOMED International-medlemmer i fællesskab kan oprette og vedligeholde simple mapninger til SNOMED CT.",
@@ -665,5 +662,37 @@
   "SHELL_TARGET_VERSION": {
     "UNKNOWN_EDITION": "Ukendt SNOMED CT-udgave",
     "LATEST_AVAILABLE": "Seneste tilgængelige"
+  },
+  "REFINEMENT": {
+    "TITLE": "Præciser mål",
+    "SELECT_CONCEPT": "Vælg et klinisk fund eller en procedure for at præcisere det med lateralitet eller sværhedsgrad.",
+    "OPTIONS_FAILED": "Kunne ikke kontrollere, hvilke præciseringer dette begreb accepterer.",
+    "NOT_REFINABLE": "Dette begreb kan ikke præciseres: lateralitet gælder fund og procedurer med en lateraliserbar lokalisation, sværhedsgrad gælder fund.",
+    "LATERALITY": "Lateralitet",
+    "SEVERITY": "Sværhedsgrad",
+    "NOT_LATERALIZABLE": "Ikke relevant",
+    "NOT_LATERALIZABLE_TOOLTIP": "Begrebet har ingen fund- eller procedurelokalisation, der kan lateraliseres, eller det har allerede en side",
+    "SEVERITY_FINDINGS_ONLY": "Kun kliniske fund",
+    "DRAG_TOOLTIP": "Træk til en relation for at tilføje dette præciserede mål",
+    "LEFT": "Venstre",
+    "RIGHT": "Højre",
+    "RIGHT_AND_LEFT": "Begge sider",
+    "MILD": "Let",
+    "MODERATE": "Moderat",
+    "SEVERE": "Svær"
+  },
+  "EXPORT": {
+    "TITLE": "Eksportér mapping",
+    "FORMAT": "Format",
+    "EXTENDED": "Medtag noter, forfattere og reviewere",
+    "EXTENDED_TABULAR_ONLY": "Kun for kommaseparerede, tabulatorseparerede og Excel-filer.",
+    "REFINED_TARGETS": "Præciserede mål",
+    "REFINED_TARGETS_COUNT": "Denne mapping har {{count}} mål præciseret med lateralitet eller sværhedsgrad.",
+    "TARGET_FORM_EXPRESSION": "Udtryk (brugernær form)",
+    "TARGET_FORM_FOCUS": "Kun fokusbegreb",
+    "TARGET_FORM_BOTH": "Udtryk plus kolonner med fokusbegrebet",
+    "TARGET_FORM_FOCUS_NOTE": "Fokusbegrebet er bredere end det præciserede mål: en ækvivalent relation eksporteres som bredere, en snævrere som upræcis. Præciserede mål for samme kilde med samme fokusbegreb eksporteres én gang.",
+    "TARGET_FORM_BOTH_TABULAR_ONLY": "Kun for kommaseparerede, tabulatorseparerede og Excel-filer; FHIR eksporterer udtrykket.",
+    "EXPORT": "Eksportér"
   }
 }

@@ -53,9 +53,11 @@ import org.snomed.snap2snomed.problem.Snap2SnomedProblem;
 import org.snomed.snap2snomed.problem.auth.NoSuchUserProblem;
 import org.snomed.snap2snomed.problem.auth.NotAuthorisedProblem;
 import org.snomed.snap2snomed.repository.MapRepository;
+import org.snomed.snap2snomed.repository.MapRowTargetRepository;
 import org.snomed.snap2snomed.security.WebSecurity;
 import org.snomed.snap2snomed.service.FhirService;
 import org.snomed.snap2snomed.util.LanguageDialects;
+import org.snomed.snap2snomed.util.TargetExportForm;
 import org.snomed.snap2snomed.service.MapViewService;
 import org.snomed.snap2snomed.service.MapViewService.MapViewFilter;
 import org.snomed.snap2snomed.service.TerminologyProvider;
@@ -102,6 +104,9 @@ public class MapViewRestController {
 
   @Autowired
   TerminologyProvider terminology;
+
+  @Autowired
+  MapRowTargetRepository mapRowTargetRepository;
 
   @Operation(description = "Returns a flattened view of the MapRows and MapRowTargets for the specified mapId.")
   @Parameter(name = "mapId", in = ParameterIn.PATH, required = true, allowEmptyValue = false,
@@ -268,10 +273,14 @@ public class MapViewRestController {
       array = @ArraySchema(schema = @Schema(type = "string")))
   @Parameter(name="extraColumns", in = ParameterIn.QUERY, required = false, allowEmptyValue = false,
       description = "Additional columns to include. Options are ( notes | lastAuthor | lastReviewer | assignedAuthor | assignedReviewer ).")
+  @Parameter(name="targetForm", in = ParameterIn.QUERY, required = false, allowEmptyValue = false,
+      description = "How refined targets (expressions) are written: expression (default) | focus | both.")
   @GetMapping(path = "/{mapId}", produces = {TEXT_CSV, TEXT_TSV})
   public void getMapViewCsv(HttpServletResponse response, @RequestHeader(name = "Accept", required = false) String contentType,
       @PathVariable("mapId") Long mapId,
-      @RequestParam(required = false) List<String> extraColumns) {
+      @RequestParam(required = false) List<String> extraColumns,
+      @RequestParam(required = false) String targetForm) {
+    final TargetExportForm form = TargetExportForm.of(targetForm);
 
     if (!webSecurity.isValidUser()) {
       throw new NoSuchUserProblem();
@@ -306,9 +315,9 @@ public class MapViewRestController {
         new OutputStreamWriter(response.getOutputStream()));
 
         CSVPrinter csvPrinter = new CSVPrinter(writer,
-            format.builder().setHeader(mapViewService.getExportHeader(mapId, extraColumns)).build());) {
+            format.builder().setHeader(mapViewService.getExportHeader(mapId, extraColumns, form)).build());) {
       
-      for (final MapView mapView : mapViewService.getAllMapViewForMap(mapId)) {
+      for (final MapView mapView : form.apply(mapViewService.getAllMapViewForMap(mapId))) {
 
         ArrayList<Object> printRow = new ArrayList<Object>(Arrays.asList(mapView.getSourceCode(), mapView.getSourceDisplay()));
 
@@ -322,7 +331,12 @@ public class MapViewRestController {
             }
         }
 
-        printRow.addAll(Arrays.asList(mapView.getTargetCode(), mapView.getTargetDisplay(),
+        printRow.addAll(Arrays.asList(mapView.getTargetCode(), mapView.getTargetDisplay()));
+        if (form == TargetExportForm.BOTH) {
+          printRow.addAll(Arrays.asList(TargetExportForm.focusCode(mapView.getTargetCode()),
+              TargetExportForm.focusDisplay(mapView.getTargetCode(), mapView.getTargetDisplay())));
+        }
+        printRow.addAll(Arrays.asList(
             mapView.getRelationship(), mapView.getRelationship() == null ? "" : mapView.getRelationship().getLabel(),
             mapView.getNoMap() == null ? "" : mapView.getNoMap(),
             mapView.getStatus()));
@@ -369,10 +383,14 @@ public class MapViewRestController {
       array = @ArraySchema(schema = @Schema(type = "string")))
   @Parameter(name="extraColumns", in = ParameterIn.QUERY, required = false, allowEmptyValue = false,
       description = "Additional columns to include. Options are ( notes | lastAuthor | lastReviewer | assignedAuthor | assignedReviewer ).")
+  @Parameter(name="targetForm", in = ParameterIn.QUERY, required = false, allowEmptyValue = false,
+      description = "How refined targets (expressions) are written: expression (default) | focus | both.")
   @GetMapping(path = "/{mapId}", produces = APPLICATION_XSLX)
   public void getMapViewExcel(HttpServletResponse response, 
         @PathVariable("mapId") Long mapId,
-        @RequestParam(required = false) List<String> extraColumns) throws IOException {
+        @RequestParam(required = false) List<String> extraColumns,
+        @RequestParam(required = false) String targetForm) throws IOException {
+    final TargetExportForm form = TargetExportForm.of(targetForm);
     if (!webSecurity.isValidUser()) {
       throw new NoSuchUserProblem();
     }
@@ -384,14 +402,14 @@ public class MapViewRestController {
     response.setHeader("Content-Disposition",
         "attachment; filename=\"" + mapViewService.getFileNameForMapExport(mapId, APPLICATION_XSLX) + "\"");
 
-    final List<MapView> mapViewResult = mapViewService.getAllMapViewForMap(mapId);
+    final List<MapView> mapViewResult = form.apply(mapViewService.getAllMapViewForMap(mapId));
 
     try (SXSSFWorkbook wb = new SXSSFWorkbook(10000)) {
 
       final SXSSFSheet sh = wb.createSheet();
       final SXSSFRow header = sh.createRow(0);
 
-      final String[] exportHeader = mapViewService.getExportHeader(mapId, extraColumns);
+      final String[] exportHeader = mapViewService.getExportHeader(mapId, extraColumns, form);
 
       for (int cellNum = 0; cellNum < exportHeader.length; cellNum++) {
         final SXSSFCell cell = header.createCell(cellNum);
@@ -427,6 +445,16 @@ public class MapViewRestController {
         cell = row.createCell(cellCount);
         cell.setCellValue(mapView.getTargetDisplay());
         cellCount++;
+
+        if (form == TargetExportForm.BOTH) {
+          cell = row.createCell(cellCount);
+          cell.setCellValue(TargetExportForm.focusCode(mapView.getTargetCode()));
+          cellCount++;
+
+          cell = row.createCell(cellCount);
+          cell.setCellValue(TargetExportForm.focusDisplay(mapView.getTargetCode(), mapView.getTargetDisplay()));
+          cellCount++;
+        }
 
         cell = row.createCell(cellCount);
         cell.setCellValue(mapView.getRelationship() == null ? "" : mapView.getRelationship().toString());
@@ -487,9 +515,12 @@ public class MapViewRestController {
   @Parameter(name = "sort", in = ParameterIn.QUERY, required = false, allowEmptyValue = false,
       description = "Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
       array = @ArraySchema(schema = @Schema(type = "string")))
+  @Parameter(name="targetForm", in = ParameterIn.QUERY, required = false, allowEmptyValue = false,
+      description = "How refined targets (expressions) are written: expression (default) | focus.")
   @GetMapping(path = "/{mapId}", produces = {FHIR_JSON})
   public void getMapViewConceptMapJson(HttpServletResponse response, @RequestHeader(name = "Accept", required = false) String contentType,
-          @PathVariable("mapId") Long mapId) {
+          @PathVariable("mapId") Long mapId,
+          @RequestParam(required = false) String targetForm) {
 
       if (!webSecurity.isValidUser()) {
           throw new NoSuchUserProblem();
@@ -504,7 +535,7 @@ public class MapViewRestController {
               + "\"");
 
 
-      final ConceptMap cm = convertToConceptMap(mapId);
+      final ConceptMap cm = convertToConceptMap(mapId, TargetExportForm.of(targetForm));
 
       try (final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(response.getOutputStream()))) {
           final IParser parser = terminology.getFhirContext().newJsonParser();
@@ -518,7 +549,7 @@ public class MapViewRestController {
   @Autowired
   private MapRepository mapRepo;
 
-  private ConceptMap convertToConceptMap(Long mapId) {
+  private ConceptMap convertToConceptMap(Long mapId, TargetExportForm targetForm) {
       final Map<Long, SourceElementComponent> mapEntry = new HashMap<>();
       final ConceptMap cm = new ConceptMap();
       final ConceptMapGroupComponent group = cm.addGroup();
@@ -555,7 +586,7 @@ public class MapViewRestController {
       });
 
 
-      for (final MapView mapView : mapViewService.getAllMapViewForMap(mapId)) {
+      for (final MapView mapView : targetForm.apply(mapViewService.getAllMapViewForMap(mapId))) {
           final Long key = mapView.getSourceIndex();
           final SourceElementComponent src;
           if (!mapEntry.containsKey(key)) {
@@ -598,6 +629,19 @@ public class MapViewRestController {
           }
       }
       return cm;
+  }
+
+  @Operation(description = "Returns how many targets of the map are refined targets (expressions), so the "
+      + "export can offer how to write them.")
+  @GetMapping(path = "/{mapId}/$refinedTargetCount", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Long> getRefinedTargetCount(@PathVariable("mapId") Long mapId) {
+    if (!webSecurity.isValidUser()) {
+      throw new NoSuchUserProblem();
+    }
+    if (!webSecurity.isAdminUser() && !webSecurity.hasAnyProjectRoleForMapId(mapId)) {
+      throw new NotAuthorisedProblem("Not authorised to view map if the user is not admin or member of an associated project!");
+    }
+    return ResponseEntity.ok(mapRowTargetRepository.countRefinedTargets(mapId));
   }
 
   @Operation(description = "Returns a flattened view of the MapRow and MapRowTargets for sibling of the specified mapRow.")

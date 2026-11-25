@@ -75,6 +75,11 @@ public interface MapRowTargetRepository
       + "                      or u member of mrt.row.map.project.guests)))")
   List<MapRowTarget> findByMapId(Long mapId);
 
+  /** Targets of the map written as an expression (refined with laterality or severity); authorised by the caller. */
+  @RestResource(exported = false)
+  @Query("select count(mrt) from MapRowTarget mrt where mrt.row.map.id = :mapId and mrt.targetCode like '%:%'")
+  long countRefinedTargets(Long mapId);
+
   // CVE-2026-41837 (Spring Data REST 5.1.0+, pulled in by Boot 4.1) - the generic GET /mapRowTargets
   // collection search silently drops any query parameter that isn't a literal top-level Jackson-
   // serialized property name, which breaks Querydsl-web aliases (mapId) and nested dotted paths

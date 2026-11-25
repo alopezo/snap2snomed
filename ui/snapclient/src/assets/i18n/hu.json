@@ -234,7 +234,6 @@
     "EXPORT_TSV": "Tabulátorral elválasztott",
     "EXPORT_XLSX": "Excel (xlsx)",
     "EXPORT_FHIR_JSON": "FHIR (json)",
-    "EXPORT_XLSX_EXTENDED": "Excel (xlsx), bővített",
     "CODE_SYSTEMS": "Kódrendszerek",
     "LAST_UPDATED": "Utoljára frissítve",
     "UNSAVED_CHANGES": "Figyelem: nem mentett módosításai vannak",
@@ -628,9 +627,7 @@
   "MAPPING_ADD": {
     "SELECTED_MAPPING_FILE": "Kiválasztott leképezési fájl:"
   },
-  "MAPPING_VIEW": {
-    "EXPORT_XLSX_EXTENDED_TOOLTIP": "A bővített exportálás a szerzőt, a bírálót és a megjegyzéseket is tartalmazza"
-  },
+  "MAPPING_VIEW": {},
   "LOGIN": {
     "ICON_ALT": "ikon",
     "SUMMARY": "Hosztolt eszköz, amellyel a SNOMED International tagjai közösen hozhatnak létre és tarthatnak karban egyszerű leképezéseket a SNOMED CT-re.",
@@ -665,5 +662,37 @@
   "SHELL_TARGET_VERSION": {
     "UNKNOWN_EDITION": "Ismeretlen SNOMED CT kiadás",
     "LATEST_AVAILABLE": "Legújabb elérhető"
+  },
+  "REFINEMENT": {
+    "TITLE": "Cél pontosítása",
+    "SELECT_CONCEPT": "Válasszon ki egy klinikai leletet vagy beavatkozást, hogy oldaliság vagy súlyosság szerint pontosítsa.",
+    "OPTIONS_FAILED": "Nem sikerült ellenőrizni, hogy ez a fogalom milyen pontosításokat fogad el.",
+    "NOT_REFINABLE": "Ez a fogalom nem pontosítható: az oldaliság oldalhoz köthető helyű leletekre és beavatkozásokra, a súlyosság leletekre vonatkozik.",
+    "LATERALITY": "Oldaliság",
+    "SEVERITY": "Súlyosság",
+    "NOT_LATERALIZABLE": "Nem alkalmazható",
+    "NOT_LATERALIZABLE_TOOLTIP": "A fogalomnak nincs oldalhoz köthető lelet- vagy beavatkozási helye, vagy már van oldala",
+    "SEVERITY_FINDINGS_ONLY": "Csak klinikai leletek",
+    "DRAG_TOOLTIP": "Húzza egy kapcsolatra a pontosított cél hozzáadásához",
+    "LEFT": "Bal",
+    "RIGHT": "Jobb",
+    "RIGHT_AND_LEFT": "Mindkét oldal",
+    "MILD": "Enyhe",
+    "MODERATE": "Közepes",
+    "SEVERE": "Súlyos"
+  },
+  "EXPORT": {
+    "TITLE": "Megfeleltetés exportálása",
+    "FORMAT": "Formátum",
+    "EXTENDED": "Jegyzetek, szerzők és ellenőrök hozzáadása",
+    "EXTENDED_TABULAR_ONLY": "Csak vesszővel, tabulátorral tagolt és Excel fájlokhoz.",
+    "REFINED_TARGETS": "Pontosított célok",
+    "REFINED_TARGETS_COUNT": "Ebben a megfeleltetésben {{count}} cél van oldalisággal vagy súlyossággal pontosítva.",
+    "TARGET_FORM_EXPRESSION": "Kifejezés (felhasználóközeli forma)",
+    "TARGET_FORM_FOCUS": "Csak a fókuszfogalom",
+    "TARGET_FORM_BOTH": "Kifejezés és a fókuszfogalom oszlopai",
+    "TARGET_FORM_FOCUS_NOTE": "A fókuszfogalom tágabb, mint a pontosított cél: az egyenértékű kapcsolat tágabbként, a szűkebb pontatlanként kerül exportálásra. Ugyanazon forrás azonos fókuszfogalmú pontosított céljai egyszer kerülnek exportálásra.",
+    "TARGET_FORM_BOTH_TABULAR_ONLY": "Csak vesszővel, tabulátorral tagolt és Excel fájlokhoz; a FHIR a kifejezést exportálja.",
+    "EXPORT": "Exportálás"
   }
 }

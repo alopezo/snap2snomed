@@ -39,8 +39,11 @@ import {
 } from '../../_models/map_row';
 import {TranslateService} from '@ngx-translate/core';
 import {MapService} from '../../_services/map.service';
-import {debounceTime, tap} from 'rxjs/operators';
-import {merge, Subscription} from 'rxjs';
+import {catchError, debounceTime, tap} from 'rxjs/operators';
+import {merge, of, Subscription} from 'rxjs';
+import {
+  EXPORT_EXTRA_COLUMNS, ExportDialogComponent, ExportDialogData, ExportOptions
+} from '../export-dialog/export-dialog.component';
 import {MatSort} from '@angular/material/sort';
 import {Task, TaskType} from '../../_models/task';
 import {LoadTasksForMap} from '../../store/task-feature/task.actions';
@@ -531,11 +534,28 @@ export class MappingViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.opened = false;
   }
 
-  exportMapViewAdditionalColumns(type: string, additionalColumns: string[]) {
+  /** Asks for the export options, then downloads the map. */
+  openExportDialog(): void {
+    if (!this.mapping?.id) {
+      return;
+    }
+    const mapId = this.mapping.id;
+    this.mapService.getRefinedTargetCount(mapId).pipe(catchError(() => of(0))).subscribe(refinedTargetCount => {
+      this.dialog.open<ExportDialogComponent, ExportDialogData, ExportOptions>(ExportDialogComponent,
+        {width: '520px', data: {refinedTargetCount}})
+        .afterClosed().subscribe(options => {
+          if (options) {
+            this.exportMap(options);
+          }
+        });
+    });
+  }
+
+  exportMap(options: ExportOptions): void {
     this.setLoading();
     let contentType: string;
     let extension: string;
-    switch (type) {
+    switch (options.format) {
 
       case 'tsv':
         contentType = 'text/tab-separated-values';
@@ -559,17 +579,14 @@ export class MappingViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     if (this.mapping && this.mapping.id) {
-      this.mapService.exportMapView(this.mapping.id, contentType, additionalColumns)
+      this.mapService.exportMapView(this.mapping.id, contentType, options.extended ? EXPORT_EXTRA_COLUMNS : [],
+        options.targetForm)
         .subscribe(blob => saveAs(blob, this.mapping?.project.title + '_' + this.mapping?.mapVersion + extension),
           (error) => {
             console.log(error);
             this.translate.get('ERROR.EXPORT_FAILED').subscribe((msg) => this.error = msg);
           }).add(() => this.clearLoading());
     }
-  }
-
-  exportMapView(type: string): void {
-    this.exportMapViewAdditionalColumns(type, []);
   }
 
   loadTaskList(): void {

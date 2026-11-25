@@ -88,6 +88,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import {DraggableDirective} from './_directives/draggable.directive';
 import {DroppableDirective} from './_directives/droppable.directive';
 import {ConceptPropertiesComponent} from './concept-properties/concept-properties.component';
+import {TargetRefinementComponent} from './mapping/target-refinement/target-refinement.component';
+import {ExportDialogComponent} from './mapping/export-dialog/export-dialog.component';
 import {TaskCardComponent} from './task/task-card/task-card.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatRadioModule} from '@angular/material/radio';
@@ -167,6 +169,8 @@ export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
         MappingNotesComponent,
         DraggableDirective,
         ConceptPropertiesComponent,
+        TargetRefinementComponent,
+        ExportDialogComponent,
         TaskCardComponent,
         TargetVersionComponent,
         TaskAddComponent,

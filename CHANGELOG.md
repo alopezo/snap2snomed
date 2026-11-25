@@ -17,6 +17,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.3.0] - 2026-11-25
+
+Map targets can be refined with laterality and severity, and the export asks how to write them.
+
+#### Added
+
+- "Refine target" card in the mapping detail, below the target properties. For the selected
+  concept it offers laterality (left, right, both sides) for clinical findings and procedures
+  whose finding or procedure site is in the lateralizable body structure reference set, and
+  severity (mild, moderate, severe) for clinical findings. The refined target is dragged onto a
+  relationship like any other target.
+- A refined target is stored as a close-to-user SNOMED CT expression without terms, e.g.
+  `71620000:272741003=7771000,246112005=24484000`, always in the same canonical form (laterality
+  before severity). Its display is the focus term followed by the value terms, e.g. "Fracture of
+  femur - Left - Severe", in the map's display language, and REFRESH TERMS rebuilds it.
+- Export dialog (replaces the export menu): format, an option to include notes, authors and
+  reviewers in any tabular format, and, when the map has refined targets, how to write them: the
+  expression, only the focus concept, or both (extra "Focus concept" columns). With only the focus
+  concept, an equivalent relationship is exported as broader and a narrower one as inexact, and
+  refined targets of the same source sharing the focus concept are exported once. The last choice
+  is remembered in the browser.
+- API: `targetForm` parameter (`expression`, `focus`, `both`) on the map export, and
+  `GET /mapView/{mapId}/$refinedTargetCount`.
+- Mapping import accepts refined targets (in canonical form or with terms and spaces) in the
+  target code column.
+
+#### Changed
+
+- Target codes can be up to 255 characters (database migration V22).
+- Target validation checks the focus concept of refined targets; clicking a refined target shows
+  its focus concept.
+
 ## [1.2.0] - 2026-11-24
 
 The user interface is available in seven languages.

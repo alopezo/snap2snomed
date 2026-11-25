@@ -56,6 +56,7 @@ import org.snomed.snap2snomed.repository.MapRepository;
 import org.snomed.snap2snomed.repository.TaskRepository;
 import org.snomed.snap2snomed.security.AuthenticationFacade;
 import org.snomed.snap2snomed.security.WebSecurity;
+import org.snomed.snap2snomed.util.TargetExportForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -476,7 +477,7 @@ public class MapViewService {
     return mapRepository.findSourceByMapId(mapId).get().getAdditionalColumnsMetadata();
   }
 
-  public String[] getExportHeader(Long mapId, List<String> extraColumns) {
+  public String[] getExportHeader(Long mapId, List<String> extraColumns, TargetExportForm targetForm) {
     
     ArrayList<String> exportHeader = new ArrayList<String>(Arrays.asList("\ufeff" + "Source code", "Source display"));
 
@@ -486,7 +487,11 @@ public class MapViewService {
         exportHeader.add(additionalColumn.getName());
       }
     }
-    exportHeader.addAll(Arrays.asList("Target code", "Target display", "Relationship type code", "Relationship type display", "No map flag", "Status"));
+    exportHeader.addAll(Arrays.asList("Target code", "Target display"));
+    if (targetForm == TargetExportForm.BOTH) {
+      exportHeader.addAll(Arrays.asList("Focus concept code", "Focus concept display"));
+    }
+    exportHeader.addAll(Arrays.asList("Relationship type code", "Relationship type display", "No map flag", "Status"));
 
     if (extraColumns != null) {
       for (String extraColumn : extraColumns) {

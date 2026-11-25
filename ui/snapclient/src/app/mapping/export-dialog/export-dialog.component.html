@@ -1,0 +1,34 @@
+<h2 mat-dialog-title>{{'EXPORT.TITLE' | translate}}</h2>
+<mat-dialog-content>
+  <h3>{{'EXPORT.FORMAT' | translate}}</h3>
+  <mat-radio-group class="options" [(ngModel)]="options.format" [attr.aria-label]="'EXPORT.FORMAT' | translate">
+    @for (format of formats; track format.value) {
+      <mat-radio-button [value]="format.value">{{format.labelKey | translate}}</mat-radio-button>
+    }
+  </mat-radio-group>
+
+  <mat-checkbox [(ngModel)]="options.extended" [disabled]="!tabular">{{'EXPORT.EXTENDED' | translate}}</mat-checkbox>
+  @if (!tabular) {
+    <p class="hint">{{'EXPORT.EXTENDED_TABULAR_ONLY' | translate}}</p>
+  }
+
+  @if (hasRefinedTargets) {
+    <h3>{{'EXPORT.REFINED_TARGETS' | translate}}</h3>
+    <p class="hint">{{'EXPORT.REFINED_TARGETS_COUNT' | translate: {count: data.refinedTargetCount} }}</p>
+    <mat-radio-group class="options" [(ngModel)]="options.targetForm" [attr.aria-label]="'EXPORT.REFINED_TARGETS' | translate">
+      <mat-radio-button value="expression">{{'EXPORT.TARGET_FORM_EXPRESSION' | translate}}</mat-radio-button>
+      <mat-radio-button value="focus">{{'EXPORT.TARGET_FORM_FOCUS' | translate}}</mat-radio-button>
+      <mat-radio-button value="both" [disabled]="!tabular">{{'EXPORT.TARGET_FORM_BOTH' | translate}}</mat-radio-button>
+    </mat-radio-group>
+    @if (options.targetForm === 'focus') {
+      <p class="note">{{'EXPORT.TARGET_FORM_FOCUS_NOTE' | translate}}</p>
+    }
+    @if (options.targetForm === 'both' && !tabular) {
+      <p class="hint">{{'EXPORT.TARGET_FORM_BOTH_TABULAR_ONLY' | translate}}</p>
+    }
+  }
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>{{'FORM.CANCEL' | translate}}</button>
+  <button mat-flat-button color="primary" id="export-confirm" (click)="export()">{{'EXPORT.EXPORT' | translate}}</button>
+</mat-dialog-actions>

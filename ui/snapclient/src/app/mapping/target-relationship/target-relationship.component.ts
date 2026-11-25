@@ -19,6 +19,7 @@ import {MapRowRelationship, mapRowRelationships, MapRowStatus, MapView, TARGET_N
 import {MapService} from '../../_services/map.service';
 import {Router} from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
+import {focusOf} from '../../_utils/target-expression';
 import {DroppableEventObject} from '../../_directives/droppable.directive';
 import {ErrorInfo} from '../../errormessage/errormessage.component';
 import {SelectionService} from 'src/app/_services/selection.service';
@@ -111,8 +112,9 @@ export class TargetRelationshipComponent implements OnInit, OnChanges {
   }
 
   click(row: MapView): void {
+    // A refined target shows its focus concept
     this.selectionService.select({
-      code: row.targetCode,
+      code: focusOf(row.targetCode),
       system: this.task?.mapping.toSystem ?? 'http://snomed.info/sct',
       version: this.task?.mapping.toVersion,
     });
@@ -262,7 +264,7 @@ export class TargetRelationshipComponent implements OnInit, OnChanges {
   onMapMaintenance(row: MapView): void {
 
     if (row.targetOutOfScope && row.targetCode) {
-      this.fhirService.findReplacementConcepts(row.targetCode, this.task?.mapping.toScope ?? '', 
+      this.fhirService.findReplacementConcepts(focusOf(row.targetCode), this.task?.mapping.toScope ?? '', 
         this.task?.mapping.toVersion ?? '').subscribe(parameters => {
 
           let suggestionsFound : boolean = false;

@@ -234,7 +234,6 @@
     "EXPORT_TSV": "Separado por tabulaciones",
     "EXPORT_XLSX": "Excel (xlsx)",
     "EXPORT_FHIR_JSON": "FHIR (json)",
-    "EXPORT_XLSX_EXTENDED": "Excel (xlsx) ampliado",
     "CODE_SYSTEMS": "Sistemas de códigos",
     "LAST_UPDATED": "Última actualización",
     "UNSAVED_CHANGES": "Advertencia: tiene cambios sin guardar",
@@ -628,9 +627,7 @@
   "MAPPING_ADD": {
     "SELECTED_MAPPING_FILE": "Archivo de mapeo seleccionado:"
   },
-  "MAPPING_VIEW": {
-    "EXPORT_XLSX_EXTENDED_TOOLTIP": "La exportación ampliada también incluye autor, revisor y notas"
-  },
+  "MAPPING_VIEW": {},
   "LOGIN": {
     "ICON_ALT": "icono",
     "SUMMARY": "Una herramienta alojada para que los Miembros de SNOMED International creen y mantengan de forma colaborativa mapas simples a SNOMED CT.",
@@ -665,5 +662,37 @@
   "SHELL_TARGET_VERSION": {
     "UNKNOWN_EDITION": "Edición de SNOMED CT desconocida",
     "LATEST_AVAILABLE": "Última disponible"
+  },
+  "REFINEMENT": {
+    "TITLE": "Refinar destino",
+    "SELECT_CONCEPT": "Seleccione un hallazgo clínico o un procedimiento para refinarlo con lateralidad o gravedad.",
+    "OPTIONS_FAILED": "No se pudo comprobar qué refinamientos acepta este concepto.",
+    "NOT_REFINABLE": "Este concepto no se puede refinar: la lateralidad se aplica a hallazgos y procedimientos con un sitio lateralizable, la gravedad a hallazgos.",
+    "LATERALITY": "Lateralidad",
+    "SEVERITY": "Gravedad",
+    "NOT_LATERALIZABLE": "No corresponde",
+    "NOT_LATERALIZABLE_TOOLTIP": "El concepto no tiene un sitio del hallazgo o del procedimiento lateralizable, o ya tiene un lado",
+    "SEVERITY_FINDINGS_ONLY": "Solo hallazgos clínicos",
+    "DRAG_TOOLTIP": "Arrastre sobre una relación para agregar este destino refinado",
+    "LEFT": "Izquierdo",
+    "RIGHT": "Derecho",
+    "RIGHT_AND_LEFT": "Ambos lados",
+    "MILD": "Leve",
+    "MODERATE": "Moderado",
+    "SEVERE": "Grave"
+  },
+  "EXPORT": {
+    "TITLE": "Exportar mapa",
+    "FORMAT": "Formato",
+    "EXTENDED": "Incluir notas, autores y revisores",
+    "EXTENDED_TABULAR_ONLY": "Solo para archivos separados por comas, por tabulaciones y Excel.",
+    "REFINED_TARGETS": "Destinos refinados",
+    "REFINED_TARGETS_COUNT": "Este mapa tiene {{count}} destino(s) refinado(s) con lateralidad o gravedad.",
+    "TARGET_FORM_EXPRESSION": "Expresión (forma cercana al usuario)",
+    "TARGET_FORM_FOCUS": "Solo el concepto foco",
+    "TARGET_FORM_BOTH": "Expresión más columnas con el concepto foco",
+    "TARGET_FORM_FOCUS_NOTE": "El concepto foco es más amplio que el destino refinado: una relación equivalente se exporta como más amplia y una más específica como inexacta. Los destinos refinados de un mismo origen que comparten el concepto foco se exportan una sola vez.",
+    "TARGET_FORM_BOTH_TABULAR_ONLY": "Solo para archivos separados por comas, por tabulaciones y Excel; FHIR exporta la expresión.",
+    "EXPORT": "Exportar"
   }
 }
