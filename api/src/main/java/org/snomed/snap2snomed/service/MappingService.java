@@ -123,6 +123,10 @@ public class MappingService {
         map.setToScope(e.getToScope());
         map.setDisplayLanguage(e.getDisplayLanguage());
       }
+      // Inheritance can be switched on and off, for single author maps from SNOMED CT only
+      if (!e.isFromSnomed() || e.getProject().getDualMapMode()) {
+        map.setInheritance(false);
+      }
     });
     final boolean termsChanged = existing.isPresent()
         && (!Objects.equals(LanguageDialects.normalize(existing.get().getDisplayLanguage()), LanguageDialects.normalize(map.getDisplayLanguage()))
@@ -679,6 +683,7 @@ public class MappingService {
         .source(newSource)
         .direction(originalMap.getDirection())
         .targetCodeSet(originalMap.getTargetCodeSet())
+        .inheritance(originalMap.isInheritance())
         .build();
 
     final Map mapCreated = mapRepository.save(newMap);

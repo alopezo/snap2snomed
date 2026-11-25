@@ -87,6 +87,9 @@ public class MapEventHandler {
     } else if (map.getTargetCodeSet() != null) {
       throw new BadRequestDataProblem("A target code set can only be specified for a map from SNOMED CT");
     }
+    if (map.isInheritance() && (!map.isFromSnomed() || map.getProject().getDualMapMode())) {
+      throw new BadRequestDataProblem("Inheritance is only available for single author maps from SNOMED CT");
+    }
 
   }
 

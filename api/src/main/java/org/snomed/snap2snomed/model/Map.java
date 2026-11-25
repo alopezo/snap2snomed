@@ -118,6 +118,13 @@ public class Map implements Snap2SnomedEntity {
   @ManyToOne
   private ImportedCodeSet targetCodeSet;
 
+  /**
+   * Maps from SNOMED CT only: unmapped concepts take the targets of their nearest mapped ancestor. Can be
+   * switched on and off, as inherited targets are computed, not stored.
+   */
+  @Builder.Default
+  private boolean inheritance = false;
+
   public boolean isFromSnomed() {
     return direction == MapDirection.FROM_SNOMED;
   }
@@ -144,6 +151,8 @@ public class Map implements Snap2SnomedEntity {
     MapDirection getDirection();
 
     ImportedCodeSet getTargetCodeSet();
+
+    boolean isInheritance();
 
     ListView getProject();
 

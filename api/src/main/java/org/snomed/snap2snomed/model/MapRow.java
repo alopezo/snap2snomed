@@ -102,6 +102,14 @@ public class MapRow implements Snap2SnomedEntity, Serializable {
   @Builder.Default
   private boolean noMap = false;
 
+  /**
+   * In a map with inheritance: this concept and its descendants do not inherit the targets of mapped
+   * ancestors (see InheritanceService).
+   */
+  @Column(columnDefinition = "boolean default false")
+  @Builder.Default
+  private boolean stopInheritance = false;
+
   @JsonIgnore
   @Transient
   @Builder.Default
