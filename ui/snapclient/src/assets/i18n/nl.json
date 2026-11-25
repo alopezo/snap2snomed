@@ -275,7 +275,17 @@
     "INHERITANCE_HINT": "Concepten zonder mapping nemen de doelen over van hun dichtstbijzijnde gemapte voorouder, tenzij een concept dat voor zijn subboom stopt. Later te wijzigen.",
     "INHERITANCE_LABEL": "Overerving",
     "INHERITANCE_ON": "Aan",
-    "INHERITANCE_OFF": "Uit"
+    "INHERITANCE_OFF": "Uit",
+    "SOURCE_KIND": "Bron",
+    "SOURCE_KIND_ECL": "ECL-expressie",
+    "SOURCE_KIND_CODES": "Lijst met SNOMED CT-codes",
+    "SOURCE_CODES": "Bron-SNOMED CT-codes",
+    "SOURCE_CODES_HINT": "Een geïmporteerde lijst met SNOMED CT-concept-id's (maximaal {{max}}), allemaal actief in de gekozen versie",
+    "SOURCE_CODES_REQUIRED": "Kies of importeer de lijst met SNOMED CT-codes",
+    "INHERITANCE_SCOPE": "Bereik van overerving (ECL)",
+    "INHERITANCE_SCOPE_SAME_AS_SOURCE": "Gelijk aan de bron-ECL",
+    "INHERITANCE_SCOPE_HINT_CODES": "Waar afstammelingen bij export worden gegenereerd; leeg betekent alle concepten",
+    "INHERITANCE_SCOPE_HINT_ECL": "Waar afstammelingen bij export worden gegenereerd; leeg betekent de bron-ECL"
   },
   "TABLE": {
     "SOURCE_CODE": "Broncode",
@@ -759,6 +769,24 @@
     "ROW_UNCOVERED": "Geen gemapte voorouder: niet gedekt",
     "STOP": "Overerving stoppen",
     "STOP_TOOLTIP": "Dit concept en zijn afstammelingen erven de mappings van hun voorouders niet",
-    "STOP_FAILED": "De wijziging kon niet worden opgeslagen"
+    "STOP_FAILED": "De wijziging kon niet worden opgeslagen",
+    "STATE_ASSERTED": "Gemapt",
+    "STATE_INHERITED": "Overgeërfd",
+    "STATE_BLOCKED": "Gestopt door een voorouder",
+    "STATE_STOPPED": "Stopt overerving",
+    "STATE_NO_MAP": "Geen mapping",
+    "STATE_CONFLICT": "In conflict",
+    "STATE_UNCOVERED": "Niet gedekt",
+    "POPOVER_PASSES_ON": "{{rows}} rijen van de mapping en {{generated}} bij export gegenereerde concepten erven deze mapping",
+    "POPOVER_FROM": "Erft van",
+    "POPOVER_RELATIONSHIP_HINT": "De relatie wordt aangepast: het overgeërfde doel is breder dan dit concept.",
+    "POPOVER_CONFLICT_HINT": "Map dit concept direct om het conflict op te lossen.",
+    "POPOVER_NO_MAP": "Er is geen lokale code van toepassing; de afstammelingen erven ook niet.",
+    "GENERATED_TITLE": "Gegenereerd bij export",
+    "GENERATED_HINT": "Afstammelingen van gemapte of stoppende concepten binnen het bereik die geen rijen zijn. Ze worden niet opgeslagen: ze worden bij elke export opnieuw berekend.",
+    "GENERATED_FAILED": "De gegenereerde concepten konden niet worden geladen",
+    "GENERATED_COUNT": "Gegenereerd bij export: {{count}}",
+    "GENERATED_TOO_LARGE": "Bereik van overerving te groot (meer dan {{max}} concepten)",
+    "ALL": "Alle"
   }
 }

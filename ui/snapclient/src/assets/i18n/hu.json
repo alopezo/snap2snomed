@@ -275,7 +275,17 @@
     "INHERITANCE_HINT": "A megfeleltetés nélküli fogalmak a legközelebbi megfeleltetett ős céljait kapják, hacsak egy fogalom le nem állítja ezt a részfájára. Később módosítható.",
     "INHERITANCE_LABEL": "Öröklés",
     "INHERITANCE_ON": "Be",
-    "INHERITANCE_OFF": "Ki"
+    "INHERITANCE_OFF": "Ki",
+    "SOURCE_KIND": "Forrás",
+    "SOURCE_KIND_ECL": "ECL-kifejezés",
+    "SOURCE_KIND_CODES": "SNOMED CT kódok listája",
+    "SOURCE_CODES": "Forrás SNOMED CT kódok",
+    "SOURCE_CODES_HINT": "SNOMED CT fogalomazonosítók importált listája (legfeljebb {{max}}), mind aktív a választott verzióban",
+    "SOURCE_CODES_REQUIRED": "Válassza ki vagy importálja a SNOMED CT kódok listáját",
+    "INHERITANCE_SCOPE": "Az öröklés hatóköre (ECL)",
+    "INHERITANCE_SCOPE_SAME_AS_SOURCE": "Ugyanaz, mint a forrás ECL",
+    "INHERITANCE_SCOPE_HINT_CODES": "Hol jönnek létre leszármazottak exportáláskor; üresen minden fogalom",
+    "INHERITANCE_SCOPE_HINT_ECL": "Hol jönnek létre leszármazottak exportáláskor; üresen a forrás ECL"
   },
   "TABLE": {
     "SOURCE_CODE": "Forráskód",
@@ -759,6 +769,24 @@
     "ROW_UNCOVERED": "Nincs megfeleltetett ős: nem lefedett",
     "STOP": "Öröklés leállítása",
     "STOP_TOOLTIP": "Ez a fogalom és leszármazottai nem öröklik őseik megfeleltetéseit",
-    "STOP_FAILED": "A módosítást nem sikerült menteni"
+    "STOP_FAILED": "A módosítást nem sikerült menteni",
+    "STATE_ASSERTED": "Megfeleltetett",
+    "STATE_INHERITED": "Örökölt",
+    "STATE_BLOCKED": "Egy ős leállította",
+    "STATE_STOPPED": "Leállítja az öröklést",
+    "STATE_NO_MAP": "Nincs megfeleltetés",
+    "STATE_CONFLICT": "Ütközésben",
+    "STATE_UNCOVERED": "Nem lefedett",
+    "POPOVER_PASSES_ON": "A megfeleltetés {{rows}} sora és exportáláskor {{generated}} generált fogalom örökli ezt a megfeleltetést",
+    "POPOVER_FROM": "Örököl innen:",
+    "POPOVER_RELATIONSHIP_HINT": "A kapcsolat módosul: az örökölt cél tágabb ennél a fogalomnál.",
+    "POPOVER_CONFLICT_HINT": "Az ütközés feloldásához feleltesse meg közvetlenül ezt a fogalmat.",
+    "POPOVER_NO_MAP": "Egyetlen helyi kód sem alkalmazható; a leszármazottai sem örökölnek.",
+    "GENERATED_TITLE": "Exportáláskor generált",
+    "GENERATED_HINT": "Megfeleltetett vagy öröklést leállító fogalmak hatókörön belüli leszármazottai, amelyek nem sorok. Nem kerülnek tárolásra: minden exportáláskor újra kiszámítjuk őket.",
+    "GENERATED_FAILED": "A generált fogalmakat nem sikerült betölteni",
+    "GENERATED_COUNT": "Exportáláskor generált: {{count}}",
+    "GENERATED_TOO_LARGE": "Az öröklés hatóköre túl nagy (több mint {{max}} fogalom)",
+    "ALL": "Mind"
   }
 }

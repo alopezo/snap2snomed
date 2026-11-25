@@ -275,7 +275,17 @@
     "INHERITANCE_HINT": "Unmapped concepts take the targets of their nearest mapped ancestor, unless a concept stops it for its subtree. Can be changed later.",
     "INHERITANCE_LABEL": "Inheritance",
     "INHERITANCE_ON": "On",
-    "INHERITANCE_OFF": "Off"
+    "INHERITANCE_OFF": "Off",
+    "SOURCE_KIND": "Source",
+    "SOURCE_KIND_ECL": "ECL expression",
+    "SOURCE_KIND_CODES": "List of SNOMED CT codes",
+    "SOURCE_CODES": "Source SNOMED CT codes",
+    "SOURCE_CODES_HINT": "An imported list of SNOMED CT concept ids (at most {{max}}), all active in the chosen version",
+    "SOURCE_CODES_REQUIRED": "Choose or import the list of SNOMED CT codes",
+    "INHERITANCE_SCOPE": "Inheritance scope (ECL)",
+    "INHERITANCE_SCOPE_SAME_AS_SOURCE": "Same as the source ECL",
+    "INHERITANCE_SCOPE_HINT_CODES": "Where descendants are generated at export time; empty means every concept",
+    "INHERITANCE_SCOPE_HINT_ECL": "Where descendants are generated at export time; empty means the source ECL"
   },
   "TABLE": {
     "SOURCE_CODE": "Source code",
@@ -759,6 +769,24 @@
     "ROW_UNCOVERED": "No mapped ancestor: not covered",
     "STOP": "Stop inheritance",
     "STOP_TOOLTIP": "This concept and its descendants do not inherit the mappings of their ancestors",
-    "STOP_FAILED": "Could not save the change"
+    "STOP_FAILED": "Could not save the change",
+    "STATE_ASSERTED": "Mapped",
+    "STATE_INHERITED": "Inherited",
+    "STATE_BLOCKED": "Stopped by an ancestor",
+    "STATE_STOPPED": "Stops inheritance",
+    "STATE_NO_MAP": "No map",
+    "STATE_CONFLICT": "In conflict",
+    "STATE_UNCOVERED": "Uncovered",
+    "POPOVER_PASSES_ON": "{{rows}} rows of the map and {{generated}} concepts generated at export inherit this mapping",
+    "POPOVER_FROM": "Inherits from",
+    "POPOVER_RELATIONSHIP_HINT": "The relationship is adjusted: the inherited target is broader than this concept.",
+    "POPOVER_CONFLICT_HINT": "Map this concept directly to resolve the conflict.",
+    "POPOVER_NO_MAP": "No local code applies; its descendants do not inherit either.",
+    "GENERATED_TITLE": "Generated at export",
+    "GENERATED_HINT": "Descendants of mapped or stopping concepts within the inheritance scope that are not rows of the map. They are not stored: they are computed again for each export.",
+    "GENERATED_FAILED": "The generated concepts could not be loaded",
+    "GENERATED_COUNT": "Generated at export: {{count}}",
+    "GENERATED_TOO_LARGE": "Inheritance scope too large (over {{max}} concepts)",
+    "ALL": "All"
   }
 }

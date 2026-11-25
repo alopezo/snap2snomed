@@ -275,7 +275,17 @@
     "INHERITANCE_HINT": "Begreber uden mapping arver målene fra deres nærmeste mappede forfader, medmindre et begreb stopper det for sit undertræ. Kan ændres senere.",
     "INHERITANCE_LABEL": "Nedarvning",
     "INHERITANCE_ON": "Til",
-    "INHERITANCE_OFF": "Fra"
+    "INHERITANCE_OFF": "Fra",
+    "SOURCE_KIND": "Kilde",
+    "SOURCE_KIND_ECL": "ECL-udtryk",
+    "SOURCE_KIND_CODES": "Liste over SNOMED CT-koder",
+    "SOURCE_CODES": "Kilde-SNOMED CT-koder",
+    "SOURCE_CODES_HINT": "En importeret liste over SNOMED CT-begrebs-id'er (højst {{max}}), alle aktive i den valgte version",
+    "SOURCE_CODES_REQUIRED": "Vælg eller importér listen over SNOMED CT-koder",
+    "INHERITANCE_SCOPE": "Nedarvningens omfang (ECL)",
+    "INHERITANCE_SCOPE_SAME_AS_SOURCE": "Samme som kilde-ECL",
+    "INHERITANCE_SCOPE_HINT_CODES": "Hvor efterkommere genereres ved eksport; tomt betyder alle begreber",
+    "INHERITANCE_SCOPE_HINT_ECL": "Hvor efterkommere genereres ved eksport; tomt betyder kilde-ECL"
   },
   "TABLE": {
     "SOURCE_CODE": "Kildekode",
@@ -759,6 +769,24 @@
     "ROW_UNCOVERED": "Ingen mappet forfader: ikke dækket",
     "STOP": "Stop nedarvning",
     "STOP_TOOLTIP": "Dette begreb og dets efterkommere arver ikke deres forfædres mappinger",
-    "STOP_FAILED": "Ændringen kunne ikke gemmes"
+    "STOP_FAILED": "Ændringen kunne ikke gemmes",
+    "STATE_ASSERTED": "Mappet",
+    "STATE_INHERITED": "Nedarvet",
+    "STATE_BLOCKED": "Stoppet af en forfader",
+    "STATE_STOPPED": "Stopper nedarvning",
+    "STATE_NO_MAP": "Ingen mapping",
+    "STATE_CONFLICT": "I konflikt",
+    "STATE_UNCOVERED": "Ikke dækket",
+    "POPOVER_PASSES_ON": "{{rows}} rækker i mappingen og {{generated}} begreber genereret ved eksport arver denne mapping",
+    "POPOVER_FROM": "Arver fra",
+    "POPOVER_RELATIONSHIP_HINT": "Relationen justeres: det nedarvede mål er bredere end dette begreb.",
+    "POPOVER_CONFLICT_HINT": "Map dette begreb direkte for at løse konflikten.",
+    "POPOVER_NO_MAP": "Ingen lokal kode gælder; dets efterkommere arver heller ikke.",
+    "GENERATED_TITLE": "Genereres ved eksport",
+    "GENERATED_HINT": "Efterkommere af mappede eller stoppende begreber inden for omfanget, som ikke er rækker. De gemmes ikke: de beregnes igen ved hver eksport.",
+    "GENERATED_FAILED": "De genererede begreber kunne ikke indlæses",
+    "GENERATED_COUNT": "Genereres ved eksport: {{count}}",
+    "GENERATED_TOO_LARGE": "Nedarvningens omfang er for stort (over {{max}} begreber)",
+    "ALL": "Alle"
   }
 }

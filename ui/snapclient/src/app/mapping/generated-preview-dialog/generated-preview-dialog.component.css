@@ -1,0 +1,44 @@
+.hint {
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.9em;
+}
+
+.attention {
+  color: #b26a00;
+}
+
+.rows {
+  max-height: 420px;
+  overflow: auto;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  margin-top: 8px;
+}
+
+.rows table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+}
+
+.rows th {
+  text-align: left;
+  position: sticky;
+  top: 0;
+  background: #fafafa;
+  padding: 4px 8px;
+}
+
+.rows td {
+  padding: 3px 8px;
+  vertical-align: top;
+}
+
+.rows tr:nth-child(even) td {
+  background-color: #00000008;
+}
+
+.code {
+  font-family: monospace;
+  white-space: nowrap;
+}

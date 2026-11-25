@@ -15,6 +15,15 @@
         }
       }
     }
+    @if (tooLarge) {
+      <span class="count attention" [title]="tooLargeConcepts">
+        {{'INHERITANCE.GENERATED_TOO_LARGE' | translate: {max: result.maxGenerated} }}
+      </span>
+    } @else if (generatedTotal > 0) {
+      <button type="button" class="count generated" id="generatedPreview" (click)="openGenerated()">
+        {{'INHERITANCE.GENERATED_COUNT' | translate: {count: generatedTotal} }}
+      </button>
+    }
     @if (inheritanceState.loading) {
       <mat-progress-spinner diameter="14" mode="indeterminate"></mat-progress-spinner>
     }

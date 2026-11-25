@@ -21,6 +21,7 @@ import {Mapping} from '../../_models/mapping';
 import {InheritanceResult, InheritanceState} from '../../_services/map.service';
 import {InheritanceStateService} from '../../_services/inheritance-state.service';
 import {InheritanceListDialogComponent} from '../inheritance-list-dialog/inheritance-list-dialog.component';
+import {GeneratedPreviewDialogComponent} from '../generated-preview-dialog/generated-preview-dialog.component';
 
 /** Coverage of a map with inheritance: rows mapped, inherited, stopped, in conflict and uncovered. */
 @Component({
@@ -63,6 +64,26 @@ export class InheritanceSummaryComponent implements OnInit, OnChanges, OnDestroy
 
   count(state: InheritanceState): number {
     return this.result?.counts?.[state] ?? 0;
+  }
+
+  get generatedTotal(): number {
+    return this.result?.generatedTotal ?? 0;
+  }
+
+  /** Generation is refused: a mapped concept, or all of them together, have too many descendants. */
+  get tooLarge(): boolean {
+    return !!this.result?.generatedTooLarge || (this.result?.tooLarge?.length ?? 0) > 0;
+  }
+
+  get tooLargeConcepts(): string {
+    return (this.result?.tooLarge ?? []).map(t => `${t.code} ${t.display ?? ''} (${t.descendants})`).join(', ');
+  }
+
+  openGenerated(): void {
+    if (this.mapping?.id && this.generatedTotal > 0) {
+      this.dialog.open(GeneratedPreviewDialogComponent, {width: '900px', maxWidth: '95vw',
+        data: {mapId: this.mapping.id, total: this.generatedTotal}});
+    }
   }
 
   open(state: InheritanceState, key: string): void {

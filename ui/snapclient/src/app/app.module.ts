@@ -97,6 +97,7 @@ import {InheritanceSummaryComponent} from './mapping/inheritance-summary/inherit
 import {RowInheritanceComponent} from './mapping/row-inheritance/row-inheritance.component';
 import {InheritanceListDialogComponent} from './mapping/inheritance-list-dialog/inheritance-list-dialog.component';
 import {InheritanceCellComponent} from './mapping/inheritance-cell/inheritance-cell.component';
+import {GeneratedPreviewDialogComponent} from './mapping/generated-preview-dialog/generated-preview-dialog.component';
 import {TaskCardComponent} from './task/task-card/task-card.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatRadioModule} from '@angular/material/radio';
@@ -185,6 +186,7 @@ export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
         RowInheritanceComponent,
         InheritanceListDialogComponent,
         InheritanceCellComponent,
+        GeneratedPreviewDialogComponent,
         TaskCardComponent,
         TargetVersionComponent,
         TaskAddComponent,

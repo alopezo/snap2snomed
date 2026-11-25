@@ -275,7 +275,17 @@
     "INHERITANCE_HINT": "Los conceptos sin mapear toman los destinos de su ancestro mapeado más cercano, salvo que un concepto la frene para su subárbol. Se puede cambiar después.",
     "INHERITANCE_LABEL": "Herencia",
     "INHERITANCE_ON": "Activada",
-    "INHERITANCE_OFF": "Desactivada"
+    "INHERITANCE_OFF": "Desactivada",
+    "SOURCE_KIND": "Origen",
+    "SOURCE_KIND_ECL": "Expresión ECL",
+    "SOURCE_KIND_CODES": "Lista de códigos SNOMED CT",
+    "SOURCE_CODES": "Códigos SNOMED CT de origen",
+    "SOURCE_CODES_HINT": "Una lista importada de identificadores de conceptos SNOMED CT (como máximo {{max}}), todos activos en la versión elegida",
+    "SOURCE_CODES_REQUIRED": "Elija o importe la lista de códigos SNOMED CT",
+    "INHERITANCE_SCOPE": "Alcance de la herencia (ECL)",
+    "INHERITANCE_SCOPE_SAME_AS_SOURCE": "Igual que la ECL de origen",
+    "INHERITANCE_SCOPE_HINT_CODES": "Dónde se generan descendientes al exportar; vacío significa todos los conceptos",
+    "INHERITANCE_SCOPE_HINT_ECL": "Dónde se generan descendientes al exportar; vacío significa la ECL de origen"
   },
   "TABLE": {
     "SOURCE_CODE": "Código de origen",
@@ -759,6 +769,24 @@
     "ROW_UNCOVERED": "Sin ancestro mapeado: no cubierto",
     "STOP": "Frenar herencia",
     "STOP_TOOLTIP": "Este concepto y sus descendientes no heredan los mapeos de sus ancestros",
-    "STOP_FAILED": "No se pudo guardar el cambio"
+    "STOP_FAILED": "No se pudo guardar el cambio",
+    "STATE_ASSERTED": "Mapeado",
+    "STATE_INHERITED": "Heredado",
+    "STATE_BLOCKED": "Frenado por un ancestro",
+    "STATE_STOPPED": "Frena la herencia",
+    "STATE_NO_MAP": "Sin mapa",
+    "STATE_CONFLICT": "En conflicto",
+    "STATE_UNCOVERED": "Sin cubrir",
+    "POPOVER_PASSES_ON": "{{rows}} filas del mapa y {{generated}} conceptos generados al exportar heredan este mapeo",
+    "POPOVER_FROM": "Hereda de",
+    "POPOVER_RELATIONSHIP_HINT": "La relación se ajusta: el destino heredado es más amplio que este concepto.",
+    "POPOVER_CONFLICT_HINT": "Mapee este concepto directamente para resolver el conflicto.",
+    "POPOVER_NO_MAP": "No aplica ningún código local; sus descendientes tampoco heredan.",
+    "GENERATED_TITLE": "Se generan al exportar",
+    "GENERATED_HINT": "Descendientes de conceptos mapeados o que frenan la herencia, dentro del alcance, que no son filas del mapa. No se guardan: se calculan de nuevo en cada exportación.",
+    "GENERATED_FAILED": "No se pudieron cargar los conceptos generados",
+    "GENERATED_COUNT": "Se generan al exportar: {{count}}",
+    "GENERATED_TOO_LARGE": "Alcance de la herencia demasiado grande (más de {{max}} conceptos)",
+    "ALL": "Todos"
   }
 }

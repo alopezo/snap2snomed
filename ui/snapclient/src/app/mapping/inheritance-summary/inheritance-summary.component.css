@@ -23,3 +23,7 @@ button.count {
   color: #b26a00;
   font-weight: 500;
 }
+
+.generated {
+  color: #1565c0;
+}

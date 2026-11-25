@@ -1,0 +1,38 @@
+<h2 mat-dialog-title>{{'INHERITANCE.GENERATED_TITLE' | translate}}</h2>
+<mat-dialog-content>
+  <p class="hint">{{'INHERITANCE.GENERATED_HINT' | translate}}</p>
+  <mat-chip-listbox [value]="state" (change)="selectState($event.value ?? '')" [attr.aria-label]="'INHERITANCE.GENERATED_TITLE' | translate">
+    @for (s of states; track s) {
+      <mat-chip-option [value]="s">{{ (s ? 'INHERITANCE.STATE_' + s : 'INHERITANCE.ALL') | translate }}</mat-chip-option>
+    }
+  </mat-chip-listbox>
+  @if (loading) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
+  @if (failed) {
+    <p class="attention">{{'INHERITANCE.GENERATED_FAILED' | translate}}</p>
+  }
+  <div class="rows">
+    <table>
+      <tr>
+        <th>{{'TABLE.SOURCE_CODE' | translate}}</th>
+        <th>{{'TABLE.SOURCE_DISPLAY' | translate}}</th>
+        <th>{{'INHERITANCE.TITLE' | translate}}</th>
+        <th>{{'TABLE.TARGET_DISPLAY' | translate}}</th>
+      </tr>
+      @for (row of rows; track row.code) {
+        <tr>
+          <td class="code">{{row.code}}</td>
+          <td>{{row.display}}</td>
+          <td><app-inheritance-cell [row]="row"></app-inheritance-cell></td>
+          <td>{{targets(row)}}</td>
+        </tr>
+      }
+    </table>
+  </div>
+  <mat-paginator [length]="total" [pageSize]="pageSize" [pageIndex]="pageIndex" [hidePageSize]="true"
+    (page)="page($event)"></mat-paginator>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-flat-button color="primary" mat-dialog-close>{{'DIALOG.OK' | translate}}</button>
+</mat-dialog-actions>

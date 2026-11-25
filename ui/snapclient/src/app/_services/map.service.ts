@@ -164,6 +164,18 @@ export interface InheritanceRow {
 export interface InheritanceResult {
   counts: Record<InheritanceState, number>;
   rows: InheritanceRow[];
+  /** Concepts generated at export time (descendants that are not rows), per state. */
+  generatedCounts?: Partial<Record<InheritanceState, number>>;
+  generatedTotal?: number;
+  /** Mapped or stopping concepts with more descendants in the scope than maxGenerated. */
+  tooLarge?: {code: string, display: string | null, descendants: number}[];
+  generatedTooLarge?: boolean;
+  maxGenerated?: number;
+}
+
+export interface GeneratedPage {
+  total: number;
+  rows: InheritanceRow[];
 }
 
 /** A code of the target code set of a map from SNOMED CT. */
@@ -231,6 +243,16 @@ export class MapService {
 
   getInheritance(mapId: string): Observable<InheritanceResult> {
     return this.http.get<InheritanceResult>(`${this.config.apiBaseUrl}/map/${mapId}/inheritance`, ServiceUtils.getHTTPHeaders());
+  }
+
+  /** A page of the concepts inheritance generates at export time, optionally of one state. */
+  getGeneratedConcepts(mapId: string, state: string | null, page: number, size: number): Observable<GeneratedPage> {
+    let params = new HttpParams().set('page', String(page)).set('size', String(size));
+    if (state) {
+      params = params.set('state', state);
+    }
+    return this.http.get<GeneratedPage>(`${this.config.apiBaseUrl}/map/${mapId}/inheritance/generated`,
+      {...ServiceUtils.getHTTPHeaders(), params});
   }
 
   /** In a map with inheritance: this concept and its descendants stop inheriting from mapped ancestors. */

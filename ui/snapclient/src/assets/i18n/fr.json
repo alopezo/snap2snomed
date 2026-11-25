@@ -275,7 +275,17 @@
     "INHERITANCE_HINT": "Les concepts sans correspondance prennent les cibles de leur ancêtre le plus proche ayant une correspondance, sauf si un concept l'arrête pour son sous-arbre. Modifiable par la suite.",
     "INHERITANCE_LABEL": "Héritage",
     "INHERITANCE_ON": "Activé",
-    "INHERITANCE_OFF": "Désactivé"
+    "INHERITANCE_OFF": "Désactivé",
+    "SOURCE_KIND": "Source",
+    "SOURCE_KIND_ECL": "Expression ECL",
+    "SOURCE_KIND_CODES": "Liste de codes SNOMED CT",
+    "SOURCE_CODES": "Codes SNOMED CT source",
+    "SOURCE_CODES_HINT": "Une liste importée d'identifiants de concepts SNOMED CT (au plus {{max}}), tous actifs dans la version choisie",
+    "SOURCE_CODES_REQUIRED": "Choisissez ou importez la liste de codes SNOMED CT",
+    "INHERITANCE_SCOPE": "Portée de l'héritage (ECL)",
+    "INHERITANCE_SCOPE_SAME_AS_SOURCE": "Identique à l'ECL source",
+    "INHERITANCE_SCOPE_HINT_CODES": "Où les descendants sont générés à l'export ; vide signifie tous les concepts",
+    "INHERITANCE_SCOPE_HINT_ECL": "Où les descendants sont générés à l'export ; vide signifie l'ECL source"
   },
   "TABLE": {
     "SOURCE_CODE": "Code source",
@@ -759,6 +769,24 @@
     "ROW_UNCOVERED": "Aucun ancêtre avec correspondance : non couvert",
     "STOP": "Arrêter l'héritage",
     "STOP_TOOLTIP": "Ce concept et ses descendants n'héritent pas des correspondances de leurs ancêtres",
-    "STOP_FAILED": "Impossible d'enregistrer la modification"
+    "STOP_FAILED": "Impossible d'enregistrer la modification",
+    "STATE_ASSERTED": "Avec correspondance",
+    "STATE_INHERITED": "Hérité",
+    "STATE_BLOCKED": "Arrêté par un ancêtre",
+    "STATE_STOPPED": "Arrête l'héritage",
+    "STATE_NO_MAP": "Sans correspondance",
+    "STATE_CONFLICT": "En conflit",
+    "STATE_UNCOVERED": "Non couvert",
+    "POPOVER_PASSES_ON": "{{rows}} lignes de la correspondance et {{generated}} concepts générés à l'export héritent de cette correspondance",
+    "POPOVER_FROM": "Hérite de",
+    "POPOVER_RELATIONSHIP_HINT": "La relation est ajustée : la cible héritée est plus large que ce concept.",
+    "POPOVER_CONFLICT_HINT": "Établissez une correspondance directe pour ce concept afin de résoudre le conflit.",
+    "POPOVER_NO_MAP": "Aucun code local ne s'applique ; ses descendants n'héritent pas non plus.",
+    "GENERATED_TITLE": "Générés à l'export",
+    "GENERATED_HINT": "Descendants de concepts avec correspondance ou arrêtant l'héritage, dans la portée, qui ne sont pas des lignes. Ils ne sont pas enregistrés : ils sont recalculés à chaque export.",
+    "GENERATED_FAILED": "Impossible de charger les concepts générés",
+    "GENERATED_COUNT": "Générés à l'export : {{count}}",
+    "GENERATED_TOO_LARGE": "Portée de l'héritage trop grande (plus de {{max}} concepts)",
+    "ALL": "Tous"
   }
 }
