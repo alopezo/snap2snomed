@@ -87,6 +87,7 @@ public class PreAuthFilter extends GenericFilterBean {
 
             // REST controller GET operations need to be passed through
             // TODO these already do this validation, do we need to do it here too or just pass it on?
+            new FilterRule(HttpMethod.GET, "/map/([^\\/]+)/targetCodes", groupValues -> webSecurity.hasAnyProjectRoleForMapId(asLong(groupValues[0])) || webSecurity.isAdminUser()),
             new FilterRule(HttpMethod.GET, "/map/([^\\/]+)/validateTargetCodes", groupValues -> webSecurity.isProjectOwnerForMapId(asLong(groupValues[0])) || webSecurity.isAdminUser()),
             new FilterRule(HttpMethod.GET, "/mapView", groupValues -> webSecurity.isValidUser()),
             new FilterRule(HttpMethod.GET, "/mapView/([^\\/]+)", groupValues -> webSecurity.hasAnyProjectRoleForMapId(asLong(groupValues[0])) || webSecurity.isAdminUser()),

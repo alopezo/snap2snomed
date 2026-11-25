@@ -170,4 +170,18 @@ public interface ImportedCodeRepository extends JpaRepository<ImportedCode, Long
   @Override
   void deleteAll();
 
+
+  /**
+   * Codes of a code set whose code or display contains the text (lower case, already wrapped in %),
+   * in file order. Not exported: callers authorise access through the map that uses the code set.
+   */
+  @RestResource(exported = false)
+  @Query("select ic from ImportedCode ic where ic.importedCodeSet.id = :codeSetId "
+      + "and (lower(ic.code) like :text or lower(ic.display) like :text) order by ic.index")
+  Page<ImportedCode> searchInCodeSet(Long codeSetId, String text, Pageable pageable);
+
+  /** The code with exactly this value in a code set; not exported, see searchInCodeSet. */
+  @RestResource(exported = false)
+  @Query("select ic from ImportedCode ic where ic.importedCodeSet.id = :codeSetId and ic.code = :code")
+  List<ImportedCode> findInCodeSetByCode(Long codeSetId, String code);
 }
