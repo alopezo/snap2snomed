@@ -18,6 +18,6 @@
 -- imported code set (target_code_set_id)
 alter table map add column direction varchar(20) not null default 'TO_SNOMED';
 alter table map add column target_code_set_id bigint;
-alter table map add constraint fk_map_target_code_set foreign key (target_code_set_id) references imported_code_set (id);
+alter table map add constraint fk_map_target_code_set foreign key (target_code_set_id) references imported_codeset (id);
 alter table map_aud add column direction varchar(20);
 alter table map_aud add column target_code_set_id bigint;
