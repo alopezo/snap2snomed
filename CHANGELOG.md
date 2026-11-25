@@ -84,6 +84,8 @@ Maps from SNOMED CT (branch `from-snomed`).
 
 - The filter chips of the mapping detail showed "[object Object]" for code or term filters (the values
   read back from the URL are lists); typed text is now shown as is instead of going through translation.
+- The International Edition logo beside a SNOMED CT version was loaded from browser.ihtsdotools.org, which
+  now denies it, so it showed as a broken image; the SNOMED International icon is now bundled with the app.
 
 ## [1.3.0] - 2026-11-25
 
