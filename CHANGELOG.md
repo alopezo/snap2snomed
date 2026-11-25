@@ -79,6 +79,11 @@ Maps from SNOMED CT (branch `from-snomed`).
   the ECL or display language in a new version, and setting targets in bulk change (relationship and
   status can still be changed).
 
+#### Fixed
+
+- The filter chips of the mapping detail showed "[object Object]" for code or term filters (the values
+  read back from the URL are lists); typed text is now shown as is instead of going through translation.
+
 ## [1.3.0] - 2026-11-25
 
 Map targets can be refined with laterality and severity, and the export asks how to write them.

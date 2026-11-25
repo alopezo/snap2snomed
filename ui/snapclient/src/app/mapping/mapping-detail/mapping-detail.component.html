@@ -71,9 +71,9 @@
       </div>
       <div class="row">
         <mat-chip-listbox [attr.aria-label]="'MAPPING_DETAIL.FILTERS' | translate">
-          @for (filter of appliedFilters; track filter) {
+          @for (filter of appliedFilters; track $index) {
             <mat-chip-option [disabled]="true" [selected]="false" #tooltip="matTooltip"
-            matTooltip="{{'DETAILS.APPLIED_FILTER' | translate}}">{{filter | translate}}</mat-chip-option>
+            matTooltip="{{'DETAILS.APPLIED_FILTER' | translate}}">{{filter.translate ? (filter.text | translate) : filter.text}}</mat-chip-option>
           }
         </mat-chip-listbox>
       </div>

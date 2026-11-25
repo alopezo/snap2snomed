@@ -88,7 +88,8 @@ export class MappingDetailComponent implements OnInit, OnDestroy {
   cancel = '';
   confirmTitle = '';
   confirmMessage = '';
-  appliedFilters: string[] = [];
+  /** Chips of the table filters in use: translation keys for fixed values, typed text as is. */
+  appliedFilters: {text: string, translate: boolean}[] = [];
   toIconName = mapRowStatusToIconName;
   toMapRowStatus = toMapRowStatus;
   writeDisableUtils = WriteDisableUtils;
@@ -284,37 +285,27 @@ export class MappingDetailComponent implements OnInit, OnDestroy {
 
     if (self.filterEntity) {
       self.appliedFilters = [];
+      // filter values read back from the URL can be lists (one entry per value) or plain strings
+      const values = (v: string[] | string | null | undefined): string[] =>
+        (Array.isArray(v) ? v : v ? [v] : []).filter(x => !!x);
 
       if (self.filterEntity.noMap !== undefined) {
-        self.appliedFilters.push('FILTERCHIP.noMap=' + self.filterEntity.noMap);
+        self.appliedFilters.push({text: 'FILTERCHIP.noMap=' + self.filterEntity.noMap, translate: true});
       }
       if (self.filterEntity.flagged !== undefined) {
-        self.appliedFilters.push('FILTERCHIP.flagged=' + self.filterEntity.flagged);
+        self.appliedFilters.push({text: 'FILTERCHIP.flagged=' + self.filterEntity.flagged, translate: true});
       }
-      if (Array.isArray(self.filterEntity.relationship)) {
-        self.filterEntity.relationship.forEach(r => {
-          self.appliedFilters.push('RELATIONSHIP.' + r);
-        });
-      }
-      if (Array.isArray(self.filterEntity.status)) {
-        self.filterEntity.status.forEach(s => {
-          self.appliedFilters.push('STATUS.' + s);
-        });
-      }
+      values(self.filterEntity.relationship).forEach(r => self.appliedFilters.push({text: 'RELATIONSHIP.' + r, translate: true}));
+      values(self.filterEntity.status).forEach(s => self.appliedFilters.push({text: 'STATUS.' + s, translate: true}));
 
-      if (self.filterEntity.sourceCode) {
-        self.appliedFilters.push(self.filterEntity.sourceCode);
+      // typed text (codes, terms) is shown as is: it is not a translation key
+      for (const text of [self.filterEntity.sourceCode, self.filterEntity.sourceDisplay,
+        self.filterEntity.targetCode, self.filterEntity.targetDisplay]) {
+        const typed = values(text).join(', ');
+        if (typed) {
+          self.appliedFilters.push({text: typed, translate: false});
+        }
       }
-      if (self.filterEntity.sourceDisplay) {
-        self.appliedFilters.push(self.filterEntity.sourceDisplay);
-      }
-      if (self.filterEntity.targetCode) {
-        self.appliedFilters.push(self.filterEntity.targetCode);
-      }
-      if (self.filterEntity.targetDisplay) {
-        self.appliedFilters.push(self.filterEntity.targetDisplay);
-      }
-
     }
   }
 
