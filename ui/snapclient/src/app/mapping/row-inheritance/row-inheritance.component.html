@@ -1,0 +1,40 @@
+<div class="row-inheritance" id="rowInheritance">
+  @if (row; as r) {
+    <div class="info">
+      @switch (r.state) {
+        @case ('ASSERTED') {
+          @if (r.inheritedBy > 0) {
+            <mat-icon class="state-icon">account_tree</mat-icon>
+            <span>{{'INHERITANCE.ROW_PASSES_ON' | translate: {count: r.inheritedBy} }}</span>
+          }
+        }
+        @case ('INHERITED') {
+          <mat-icon class="state-icon">subdirectory_arrow_right</mat-icon>
+          <span>{{'INHERITANCE.ROW_INHERITS' | translate: {code: r.fromCode, display: r.fromDisplay} }}
+            <b>{{inheritedTargets}}</b></span>
+        }
+        @case ('BLOCKED') {
+          <mat-icon class="state-icon">block</mat-icon>
+          <span>{{'INHERITANCE.ROW_BLOCKED' | translate: {code: r.fromCode, display: r.fromDisplay} }}</span>
+        }
+        @case ('CONFLICT') {
+          <mat-icon class="state-icon attention">warning</mat-icon>
+          <span class="attention">{{'INHERITANCE.ROW_CONFLICT' | translate: {codes: r.candidates.join(', ')} }}</span>
+        }
+        @case ('UNCOVERED') {
+          <mat-icon class="state-icon">help_outline</mat-icon>
+          <span>{{'INHERITANCE.ROW_UNCOVERED' | translate}}</span>
+        }
+      }
+    </div>
+    <mat-checkbox id="stopInheritance" [checked]="r.stopInheritance" [disabled]="disabled || saving || !rowId"
+      (change)="toggleStop($event)" [matTooltip]="'INHERITANCE.STOP_TOOLTIP' | translate">
+      {{'INHERITANCE.STOP' | translate}}
+    </mat-checkbox>
+    @if (failed) {
+      <span class="attention">{{'INHERITANCE.STOP_FAILED' | translate}}</span>
+    }
+  } @else if (inheritanceState.loading) {
+    <mat-progress-spinner diameter="16" mode="indeterminate"></mat-progress-spinner>
+  }
+</div>

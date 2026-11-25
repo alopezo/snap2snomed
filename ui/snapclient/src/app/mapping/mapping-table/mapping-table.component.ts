@@ -53,6 +53,8 @@ import {FhirService} from "../../_services/fhir.service";
 import { MappingNotesComponent } from '../mapping-table-notes/mapping-notes.component';
 import { TargetChangedService } from 'src/app/_services/target-changed.service';
 import {focusOf} from '../../_utils/target-expression';
+import {InheritanceStateService} from '../../_services/inheritance-state.service';
+import {InheritanceRow} from '../../_services/map.service';
 
 export interface TableParams extends Params {
   pageIndex?: number;
@@ -178,6 +180,7 @@ export class MappingTableComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(private snackBar: MatSnackBar,
               private store: Store<IAppState>,
               private fhirService: FhirService,
+              private inheritanceState: InheritanceStateService,
               public translate: TranslateService,
               private selectionService: SelectionService,
               private mapService: MapService,
@@ -285,6 +288,15 @@ export class MappingTableComponent implements OnInit, AfterViewInit, OnDestroy {
 
   isClicked(idx: number): boolean {
     return idx === this.clickedRow;
+  }
+
+  /** Maps with inheritance: the inheritance of an unmapped row (rendered after each recomputation). */
+  inheritedRow(row: MapView): InheritanceRow | undefined {
+    return Mapping.hasInheritance(this.getMapping()) ? this.inheritanceState.rowFor(row.sourceCode) : undefined;
+  }
+
+  joinTargets(row: InheritanceRow, field: 'code' | 'display'): string {
+    return row.targets.map(t => t[field]).join(', ');
   }
 
   getMapping(): Mapping | undefined {

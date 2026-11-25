@@ -65,22 +65,23 @@ describe('ExportDialogComponent', () => {
 
   it('drops options that do not apply to FHIR', async () => {
     await create(3);
-    component.options = {format: 'fhir-json', extended: true, targetForm: 'both'};
-    expect(component.effectiveOptions).toEqual({format: 'fhir-json', extended: false, targetForm: 'expression'});
-    component.options = {format: 'fhir-json', extended: false, targetForm: 'focus'};
+    component.options = {format: 'fhir-json', extended: true, targetForm: 'both', inherited: true};
+    expect(component.effectiveOptions).toEqual({format: 'fhir-json', extended: false, targetForm: 'expression', inherited: true});
+    component.options = {format: 'fhir-json', extended: false, targetForm: 'focus', inherited: true};
     expect(component.effectiveOptions.targetForm).toBe('focus');
   });
 
   it('returns the options and remembers them', async () => {
     await create(1);
-    component.options = {format: 'xlsx', extended: true, targetForm: 'both'};
+    component.options = {format: 'xlsx', extended: true, targetForm: 'both', inherited: false};
     component.export();
-    expect(close).toHaveBeenCalledWith({format: 'xlsx', extended: true, targetForm: 'both'});
-    expect(ExportDialogComponent.readStored()).toEqual({format: 'xlsx', extended: true, targetForm: 'both'});
+    // without inheritance on the map, inherited stays true (the option does not apply)
+    expect(close).toHaveBeenCalledWith({format: 'xlsx', extended: true, targetForm: 'both', inherited: true});
+    expect(ExportDialogComponent.readStored()).toEqual({format: 'xlsx', extended: true, targetForm: 'both', inherited: false});
   });
 
   it('ignores an unreadable stored choice', () => {
     localStorage.setItem(EXPORT_OPTIONS_STORAGE_KEY, '{"format":"pdf"}');
-    expect(ExportDialogComponent.readStored()).toEqual({format: 'csv', extended: false, targetForm: 'expression'});
+    expect(ExportDialogComponent.readStored()).toEqual({format: 'csv', extended: false, targetForm: 'expression', inherited: true});
   });
 });

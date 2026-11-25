@@ -270,7 +270,12 @@
     "FROM_SNOMED_SOURCE_ERROR": "A forrásfogalmakat nem sikerült létrehozni az ECL-kifejezésből",
     "SOURCE_DISPLAY_LANGUAGE": "A forrás megjelenítési nyelve",
     "SOURCE_DISPLAY_LANGUAGE_HINT": "A forrásfogalmak kifejezéseinek nyelve, a megfeleltetés létrehozásakor rögzítve",
-    "FROM_SNOMED_NEW_VERSION_HINT": "Ez az új verzió ugyanazt az ECL-t és megjelenítési nyelvet bontja ki újra a választott SNOMED CT verzióban. Az eredményben maradó fogalmak megtartják soraikat; a célok a(z) {{codeSet}} készletben maradnak."
+    "FROM_SNOMED_NEW_VERSION_HINT": "Ez az új verzió ugyanazt az ECL-t és megjelenítési nyelvet bontja ki újra a választott SNOMED CT verzióban. Az eredményben maradó fogalmak megtartják soraikat; a célok a(z) {{codeSet}} készletben maradnak.",
+    "INHERITANCE": "Örökléssel",
+    "INHERITANCE_HINT": "A megfeleltetés nélküli fogalmak a legközelebbi megfeleltetett ős céljait kapják, hacsak egy fogalom le nem állítja ezt a részfájára. Később módosítható.",
+    "INHERITANCE_LABEL": "Öröklés",
+    "INHERITANCE_ON": "Be",
+    "INHERITANCE_OFF": "Ki"
   },
   "TABLE": {
     "SOURCE_CODE": "Forráskód",
@@ -712,7 +717,10 @@
     "TARGET_FORM_BOTH": "Kifejezés és a fókuszfogalom oszlopai",
     "TARGET_FORM_FOCUS_NOTE": "A fókuszfogalom tágabb, mint a pontosított cél: az egyenértékű kapcsolat tágabbként, a szűkebb pontatlanként kerül exportálásra. Ugyanazon forrás azonos fókuszfogalmú pontosított céljai egyszer kerülnek exportálásra.",
     "TARGET_FORM_BOTH_TABULAR_ONLY": "Csak vesszővel, tabulátorral tagolt és Excel fájlokhoz; a FHIR a kifejezést exportálja.",
-    "EXPORT": "Exportálás"
+    "EXPORT": "Exportálás",
+    "INHERITANCE": "Öröklés",
+    "INCLUDE_INHERITED": "Örökölt célok hozzáadása",
+    "INCLUDE_INHERITED_HINT": "A megfeleltetés nélküli fogalmak a legközelebbi megfeleltetett ős céljait kapják; a \"Mapping origin\" és \"Inherited from\" oszlopok mutatják az egyes megfeleltetések eredetét."
   },
   "TARGET_CODES": {
     "SEARCH_TITLE": "Célkód keresése",
@@ -733,5 +741,24 @@
     "REMOVED": "{{count}} fogalom már nincs az ECL eredményében, ezért kimaradt",
     "REMOVED_HINT": "Inaktívak az új SNOMED CT verzióban, vagy már nem felelnek meg az ECL-nek. Megfeleltetéseik az előző verzióban maradnak.",
     "COPY_REMOVED": "Lista másolása"
+  },
+  "INHERITANCE": {
+    "TITLE": "Öröklés",
+    "ASSERTED": "Megfeleltetett",
+    "INHERITED": "Örökölt",
+    "UNCOVERED": "Nem lefedett",
+    "CONFLICT": "Ütközésben",
+    "BLOCKED": "Egy ős leállította",
+    "STOPPED": "Leállítják az öröklést",
+    "NO_MAP": "Nincs megfeleltetés",
+    "SHOW_LIST": "Lista megjelenítése",
+    "ROW_PASSES_ON": "{{count}} fogalom örökli ezt a megfeleltetést",
+    "ROW_INHERITS": "Örököl innen: {{code}} {{display}}:",
+    "ROW_BLOCKED": "Nem örököl: leállítva itt: {{code}} {{display}}",
+    "ROW_CONFLICT": "Ütközés: a legközelebbi megfeleltetett ősök nem egyeznek ({{codes}})",
+    "ROW_UNCOVERED": "Nincs megfeleltetett ős: nem lefedett",
+    "STOP": "Öröklés leállítása",
+    "STOP_TOOLTIP": "Ez a fogalom és leszármazottai nem öröklik őseik megfeleltetéseit",
+    "STOP_FAILED": "A módosítást nem sikerült menteni"
   }
 }

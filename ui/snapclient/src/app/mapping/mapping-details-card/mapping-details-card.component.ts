@@ -39,6 +39,10 @@ export class MappingDetailsCardComponent {
     return Mapping.isFromSnomed(this.mapping);
   }
 
+  get hasInheritance(): boolean {
+    return Mapping.hasInheritance(this.mapping);
+  }
+
   @Output() clicked = new EventEmitter();
 
   outOfScopeTargetCount: number = 0;

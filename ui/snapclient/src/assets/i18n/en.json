@@ -270,7 +270,12 @@
     "FROM_SNOMED_SOURCE_ERROR": "The source concepts could not be created from the ECL expression",
     "SOURCE_DISPLAY_LANGUAGE": "Source display language",
     "SOURCE_DISPLAY_LANGUAGE_HINT": "Language of the source concept terms, frozen when the map is created",
-    "FROM_SNOMED_NEW_VERSION_HINT": "This new version expands the same ECL and display language again in the SNOMED CT version you choose. Concepts still in the result keep their rows; the targets stay in {{codeSet}}."
+    "FROM_SNOMED_NEW_VERSION_HINT": "This new version expands the same ECL and display language again in the SNOMED CT version you choose. Concepts still in the result keep their rows; the targets stay in {{codeSet}}.",
+    "INHERITANCE": "With inheritance",
+    "INHERITANCE_HINT": "Unmapped concepts take the targets of their nearest mapped ancestor, unless a concept stops it for its subtree. Can be changed later.",
+    "INHERITANCE_LABEL": "Inheritance",
+    "INHERITANCE_ON": "On",
+    "INHERITANCE_OFF": "Off"
   },
   "TABLE": {
     "SOURCE_CODE": "Source code",
@@ -712,7 +717,10 @@
     "TARGET_FORM_BOTH": "Expression plus focus concept columns",
     "TARGET_FORM_FOCUS_NOTE": "The focus concept is broader than the refined target: an equivalent relationship is exported as broader, a narrower one as inexact. Refined targets of the same source that share the focus concept are exported once.",
     "TARGET_FORM_BOTH_TABULAR_ONLY": "Only for comma separated, tab separated and Excel files; FHIR exports the expression.",
-    "EXPORT": "Export"
+    "EXPORT": "Export",
+    "INHERITANCE": "Inheritance",
+    "INCLUDE_INHERITED": "Include inherited targets",
+    "INCLUDE_INHERITED_HINT": "Unmapped concepts get the targets of their nearest mapped ancestor; \"Mapping origin\" and \"Inherited from\" columns say where each mapping comes from."
   },
   "TARGET_CODES": {
     "SEARCH_TITLE": "Search target code",
@@ -733,5 +741,24 @@
     "REMOVED": "{{count}} concepts are no longer in the ECL result and were left out",
     "REMOVED_HINT": "They are inactive in the new SNOMED CT version or no longer match the ECL. Their mappings stay in the previous version.",
     "COPY_REMOVED": "Copy the list"
+  },
+  "INHERITANCE": {
+    "TITLE": "Inheritance",
+    "ASSERTED": "Mapped",
+    "INHERITED": "Inherited",
+    "UNCOVERED": "Uncovered",
+    "CONFLICT": "In conflict",
+    "BLOCKED": "Stopped by an ancestor",
+    "STOPPED": "Stops inheritance",
+    "NO_MAP": "No map",
+    "SHOW_LIST": "Show the list",
+    "ROW_PASSES_ON": "{{count}} concepts inherit this mapping",
+    "ROW_INHERITS": "Inherits from {{code}} {{display}}:",
+    "ROW_BLOCKED": "Does not inherit: stopped at {{code}} {{display}}",
+    "ROW_CONFLICT": "Conflict: the nearest mapped ancestors disagree ({{codes}})",
+    "ROW_UNCOVERED": "No mapped ancestor: not covered",
+    "STOP": "Stop inheritance",
+    "STOP_TOOLTIP": "This concept and its descendants do not inherit the mappings of their ancestors",
+    "STOP_FAILED": "Could not save the change"
   }
 }

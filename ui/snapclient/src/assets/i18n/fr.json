@@ -270,7 +270,12 @@
     "FROM_SNOMED_SOURCE_ERROR": "Les concepts source n'ont pas pu être créés à partir de l'expression ECL",
     "SOURCE_DISPLAY_LANGUAGE": "Langue d'affichage de la source",
     "SOURCE_DISPLAY_LANGUAGE_HINT": "Langue des libellés des concepts source, figés à la création de la correspondance",
-    "FROM_SNOMED_NEW_VERSION_HINT": "Cette nouvelle version développe à nouveau la même ECL et la même langue d'affichage dans la version SNOMED CT choisie. Les concepts toujours présents conservent leurs lignes ; les cibles restent dans {{codeSet}}."
+    "FROM_SNOMED_NEW_VERSION_HINT": "Cette nouvelle version développe à nouveau la même ECL et la même langue d'affichage dans la version SNOMED CT choisie. Les concepts toujours présents conservent leurs lignes ; les cibles restent dans {{codeSet}}.",
+    "INHERITANCE": "Avec héritage",
+    "INHERITANCE_HINT": "Les concepts sans correspondance prennent les cibles de leur ancêtre le plus proche ayant une correspondance, sauf si un concept l'arrête pour son sous-arbre. Modifiable par la suite.",
+    "INHERITANCE_LABEL": "Héritage",
+    "INHERITANCE_ON": "Activé",
+    "INHERITANCE_OFF": "Désactivé"
   },
   "TABLE": {
     "SOURCE_CODE": "Code source",
@@ -712,7 +717,10 @@
     "TARGET_FORM_BOTH": "Expression et colonnes du concept focal",
     "TARGET_FORM_FOCUS_NOTE": "Le concept focal est plus large que la cible affinée : une relation équivalente est exportée comme plus large, une plus étroite comme inexacte. Les cibles affinées d'une même source partageant le concept focal ne sont exportées qu'une fois.",
     "TARGET_FORM_BOTH_TABULAR_ONLY": "Uniquement pour les fichiers séparés par des virgules, par des tabulations et Excel ; FHIR exporte l'expression.",
-    "EXPORT": "Exporter"
+    "EXPORT": "Exporter",
+    "INHERITANCE": "Héritage",
+    "INCLUDE_INHERITED": "Inclure les cibles héritées",
+    "INCLUDE_INHERITED_HINT": "Les concepts sans correspondance reçoivent les cibles de leur ancêtre le plus proche ; les colonnes « Mapping origin » et « Inherited from » indiquent l'origine de chaque correspondance."
   },
   "TARGET_CODES": {
     "SEARCH_TITLE": "Rechercher un code cible",
@@ -733,5 +741,24 @@
     "REMOVED": "{{count}} concepts ne figurent plus dans le résultat de l'ECL et ont été exclus",
     "REMOVED_HINT": "Ils sont inactifs dans la nouvelle version SNOMED CT ou ne correspondent plus à l'ECL. Leurs correspondances restent dans la version précédente.",
     "COPY_REMOVED": "Copier la liste"
+  },
+  "INHERITANCE": {
+    "TITLE": "Héritage",
+    "ASSERTED": "Avec correspondance",
+    "INHERITED": "Hérités",
+    "UNCOVERED": "Non couverts",
+    "CONFLICT": "En conflit",
+    "BLOCKED": "Arrêtés par un ancêtre",
+    "STOPPED": "Arrêtent l'héritage",
+    "NO_MAP": "Sans correspondance",
+    "SHOW_LIST": "Voir la liste",
+    "ROW_PASSES_ON": "{{count}} concepts héritent de cette correspondance",
+    "ROW_INHERITS": "Hérite de {{code}} {{display}} :",
+    "ROW_BLOCKED": "N'hérite pas : arrêté à {{code}} {{display}}",
+    "ROW_CONFLICT": "Conflit : les ancêtres les plus proches ne concordent pas ({{codes}})",
+    "ROW_UNCOVERED": "Aucun ancêtre avec correspondance : non couvert",
+    "STOP": "Arrêter l'héritage",
+    "STOP_TOOLTIP": "Ce concept et ses descendants n'héritent pas des correspondances de leurs ancêtres",
+    "STOP_FAILED": "Impossible d'enregistrer la modification"
   }
 }

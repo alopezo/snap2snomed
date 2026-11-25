@@ -1,0 +1,21 @@
+<h2 mat-dialog-title>{{data.titleKey | translate}} ({{data.rows.length}})</h2>
+<mat-dialog-content>
+  <div class="rows">
+    <table>
+      @for (row of data.rows; track row.code) {
+        <tr>
+          <td class="code">{{row.code}}</td>
+          <td>{{row.display}}</td>
+          <td class="detail">{{detail(row)}}</td>
+        </tr>
+      }
+    </table>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button type="button" [cdkCopyToClipboard]="text" (cdkCopyToClipboardCopied)="copied = $event">
+    <mat-icon>{{copied ? 'check' : 'content_copy'}}</mat-icon>
+    {{'SOURCE_CHANGES.COPY_REMOVED' | translate}}
+  </button>
+  <button mat-flat-button color="primary" mat-dialog-close>{{'DIALOG.OK' | translate}}</button>
+</mat-dialog-actions>

@@ -276,3 +276,20 @@ td.mat-mdc-cell {
 .hide-filter {
   display: none;
 }
+
+.inherited {
+  color: rgba(0, 0, 0, 0.55);
+  font-style: italic;
+}
+
+.inherited-icon {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+  vertical-align: middle;
+}
+
+.inheritance-attention {
+  color: #b26a00;
+  font-style: italic;
+}

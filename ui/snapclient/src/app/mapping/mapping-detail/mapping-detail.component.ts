@@ -51,6 +51,7 @@ import {debounceTime} from "rxjs/operators";
 import {User} from "../../_models/user";
 import { TargetChangedService } from 'src/app/_services/target-changed.service';
 import {Mapping} from '../../_models/mapping';
+import {InheritanceStateService} from '../../_services/inheritance-state.service';
 
 export type SourceRow = {
   id: string;
@@ -102,6 +103,10 @@ export class MappingDetailComponent implements OnInit, OnDestroy {
   get fromSnomed(): boolean {
     return Mapping.isFromSnomed(this.task?.mapping);
   }
+
+  get hasInheritance(): boolean {
+    return Mapping.hasInheritance(this.task?.mapping);
+  }
   @Input() paging!: TableParams;
   @Input() filterEntity!: MapViewFilter;
   @Input() additionalDisplayedColumns: TableColumn[] | undefined;
@@ -110,6 +115,7 @@ export class MappingDetailComponent implements OnInit, OnDestroy {
   constructor(private store: Store<IAppState>,
               private translate: TranslateService,
               private selectionService: SelectionService,
+              private inheritanceState: InheritanceStateService,
               private mapService: MapService,
               private sourceNavigation: SourceNavigationService,
               public dialog: MatDialog,
@@ -466,6 +472,7 @@ export class MappingDetailComponent implements OnInit, OnDestroy {
               // remove any saved targets - will be deleted by API when No Map set to true
               self.mapService.updateNoMap(self.rowId, cbNoMap, self.task?.type == TaskType.RECONCILE).subscribe((result) => {
                 self.source.noMap = cbNoMap;
+                self.inheritanceState.refresh();
                 self.mapRows = [];
                 self.source.status = result.status;
                 if (self.task && self.selectedRowset?.current && self.selectedRowset?.mapRow) {
@@ -493,6 +500,7 @@ export class MappingDetailComponent implements OnInit, OnDestroy {
 
       self.mapService.updateNoMap(rowId, cbNoMap, self.task?.type == TaskType.RECONCILE).subscribe((result) => {
         self.source.noMap = cbNoMap;
+        self.inheritanceState.refresh();
         if (self.isDualMapMode() && self.selectedRowset?.siblingRow) {
           self.selectedRowset.siblingRow.noMap = cbNoMap;
         }

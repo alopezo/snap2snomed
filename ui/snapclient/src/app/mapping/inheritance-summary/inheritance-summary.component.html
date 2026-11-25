@@ -1,0 +1,22 @@
+<div class="inheritance-summary" id="inheritanceSummary">
+  <b>{{'INHERITANCE.TITLE' | translate}}:</b>
+  @if (!result) {
+    <mat-progress-spinner diameter="16" mode="indeterminate"></mat-progress-spinner>
+  } @else {
+    @for (item of states; track item.state) {
+      @if (count(item.state) > 0 || item.state === 'UNCOVERED' || item.state === 'CONFLICT') {
+        @if (item.attention && count(item.state) > 0) {
+          <button type="button" class="count attention" (click)="open(item.state, item.key)"
+            [matTooltip]="'INHERITANCE.SHOW_LIST' | translate">
+            {{item.key | translate}}: {{count(item.state)}}
+          </button>
+        } @else {
+          <span class="count">{{item.key | translate}}: {{count(item.state)}}</span>
+        }
+      }
+    }
+    @if (inheritanceState.loading) {
+      <mat-progress-spinner diameter="14" mode="indeterminate"></mat-progress-spinner>
+    }
+  }
+</div>

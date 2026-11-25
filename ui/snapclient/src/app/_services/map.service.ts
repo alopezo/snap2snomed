@@ -140,6 +140,30 @@ export interface SourceChanges {
   removed: {code: string, display: string}[];
 }
 
+export type InheritanceState = 'ASSERTED' | 'NO_MAP' | 'STOPPED' | 'INHERITED' | 'BLOCKED' | 'CONFLICT' | 'UNCOVERED';
+
+/** A row of a map with inheritance (see GET /map/{id}/inheritance). */
+export interface InheritanceRow {
+  rowId: number;
+  code: string;
+  display: string;
+  state: InheritanceState;
+  stopInheritance: boolean;
+  /** INHERITED: the ancestor the targets come from; BLOCKED: the row that stops it. */
+  fromCode: string | null;
+  fromDisplay: string | null;
+  targets: {code: string, display: string, relationship: string | null}[];
+  /** CONFLICT: the disagreeing nearest ancestors. */
+  candidates: string[];
+  /** ASSERTED: how many rows inherit its targets. */
+  inheritedBy: number;
+}
+
+export interface InheritanceResult {
+  counts: Record<InheritanceState, number>;
+  rows: InheritanceRow[];
+}
+
 /** A code of the target code set of a map from SNOMED CT. */
 export interface TargetCode {
   code: string;
@@ -201,6 +225,15 @@ export class MapService {
       params = params.set('text', query.text ?? '');
     }
     return this.http.get<TargetCode[]>(url, {...options, params});
+  }
+
+  getInheritance(mapId: string): Observable<InheritanceResult> {
+    return this.http.get<InheritanceResult>(`${this.config.apiBaseUrl}/map/${mapId}/inheritance`, ServiceUtils.getHTTPHeaders());
+  }
+
+  /** In a map with inheritance: this concept and its descendants stop inheriting from mapped ancestors. */
+  updateStopInheritance(rowId: string, stopInheritance: boolean): Observable<any> {
+    return this.http.patch<any>(`${this.config.apiBaseUrl}/mapRows/${rowId}`, {stopInheritance}, ServiceUtils.getHTTPHeaders());
   }
 
   /** How the source codes of a map differ from those of a previous version in the same project. */
@@ -476,7 +509,8 @@ export class MapService {
     return this.http.get<MapRowTargetResults>(url, header);
   }
 
-  exportMapView(mapping: string, contentType: string, extraColumns: string[], targetForm: string = 'expression'): Observable<Blob> {
+  exportMapView(mapping: string, contentType: string, extraColumns: string[], targetForm: string = 'expression',
+                inherited: boolean = true): Observable<Blob> {
     const url = `${this.config.apiBaseUrl}/mapView/${mapping}`;
     let params = new HttpParams();
     if (extraColumns.length > 0) {
@@ -484,6 +518,9 @@ export class MapService {
     }
     if (targetForm !== 'expression') {
       params = params.set('targetForm', targetForm);
+    }
+    if (!inherited) {
+      params = params.set('inherited', 'false');
     }
     return this.http.get(url,
       {

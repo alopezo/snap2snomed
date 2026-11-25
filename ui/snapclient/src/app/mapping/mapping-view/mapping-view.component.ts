@@ -549,7 +549,7 @@ export class MappingViewComponent implements OnInit, AfterViewInit, OnDestroy {
     const refinedTargetCount$ = this.fromSnomed ? of(0) : this.mapService.getRefinedTargetCount(mapId).pipe(catchError(() => of(0)));
     refinedTargetCount$.subscribe(refinedTargetCount => {
       this.dialog.open<ExportDialogComponent, ExportDialogData, ExportOptions>(ExportDialogComponent,
-        {width: '520px', data: {refinedTargetCount}})
+        {width: '520px', data: {refinedTargetCount, inheritance: Mapping.hasInheritance(this.mapping)}})
         .afterClosed().subscribe(options => {
           if (options) {
             this.exportMap(options);
@@ -587,7 +587,7 @@ export class MappingViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (this.mapping && this.mapping.id) {
       this.mapService.exportMapView(this.mapping.id, contentType, options.extended ? EXPORT_EXTRA_COLUMNS : [],
-        options.targetForm)
+        options.targetForm, options.inherited)
         .subscribe(blob => saveAs(blob, this.mapping?.project.title + '_' + this.mapping?.mapVersion + extension),
           (error) => {
             console.log(error);

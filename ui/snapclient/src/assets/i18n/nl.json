@@ -270,7 +270,12 @@
     "FROM_SNOMED_SOURCE_ERROR": "De bronconcepten konden niet worden aangemaakt uit de ECL-expressie",
     "SOURCE_DISPLAY_LANGUAGE": "Weergavetaal van de bron",
     "SOURCE_DISPLAY_LANGUAGE_HINT": "Taal van de termen van de bronconcepten, vastgelegd bij het aanmaken van de mapping",
-    "FROM_SNOMED_NEW_VERSION_HINT": "Deze nieuwe versie expandeert dezelfde ECL en weergavetaal opnieuw in de SNOMED CT-versie die u kiest. Concepten die nog in het resultaat staan behouden hun rijen; de doelen blijven in {{codeSet}}."
+    "FROM_SNOMED_NEW_VERSION_HINT": "Deze nieuwe versie expandeert dezelfde ECL en weergavetaal opnieuw in de SNOMED CT-versie die u kiest. Concepten die nog in het resultaat staan behouden hun rijen; de doelen blijven in {{codeSet}}.",
+    "INHERITANCE": "Met overerving",
+    "INHERITANCE_HINT": "Concepten zonder mapping nemen de doelen over van hun dichtstbijzijnde gemapte voorouder, tenzij een concept dat voor zijn subboom stopt. Later te wijzigen.",
+    "INHERITANCE_LABEL": "Overerving",
+    "INHERITANCE_ON": "Aan",
+    "INHERITANCE_OFF": "Uit"
   },
   "TABLE": {
     "SOURCE_CODE": "Broncode",
@@ -712,7 +717,10 @@
     "TARGET_FORM_BOTH": "Expressie plus kolommen met het focusconcept",
     "TARGET_FORM_FOCUS_NOTE": "Het focusconcept is breder dan het verfijnde doel: een equivalente relatie wordt als breder geëxporteerd, een nauwere als inexact. Verfijnde doelen van dezelfde bron met hetzelfde focusconcept worden één keer geëxporteerd.",
     "TARGET_FORM_BOTH_TABULAR_ONLY": "Alleen voor kommagescheiden, tabgescheiden en Excel-bestanden; FHIR exporteert de expressie.",
-    "EXPORT": "Exporteren"
+    "EXPORT": "Exporteren",
+    "INHERITANCE": "Overerving",
+    "INCLUDE_INHERITED": "Overgeërfde doelen opnemen",
+    "INCLUDE_INHERITED_HINT": "Concepten zonder mapping krijgen de doelen van hun dichtstbijzijnde gemapte voorouder; de kolommen \"Mapping origin\" en \"Inherited from\" geven aan waar elke mapping vandaan komt."
   },
   "TARGET_CODES": {
     "SEARCH_TITLE": "Doelcode zoeken",
@@ -733,5 +741,24 @@
     "REMOVED": "{{count}} concepten staan niet meer in het ECL-resultaat en zijn weggelaten",
     "REMOVED_HINT": "Ze zijn inactief in de nieuwe SNOMED CT-versie of voldoen niet meer aan de ECL. Hun mappings blijven in de vorige versie.",
     "COPY_REMOVED": "Lijst kopiëren"
+  },
+  "INHERITANCE": {
+    "TITLE": "Overerving",
+    "ASSERTED": "Gemapt",
+    "INHERITED": "Overgeërfd",
+    "UNCOVERED": "Niet gedekt",
+    "CONFLICT": "In conflict",
+    "BLOCKED": "Gestopt door een voorouder",
+    "STOPPED": "Stoppen overerving",
+    "NO_MAP": "Geen mapping",
+    "SHOW_LIST": "Lijst tonen",
+    "ROW_PASSES_ON": "{{count}} concepten erven deze mapping",
+    "ROW_INHERITS": "Erft van {{code}} {{display}}:",
+    "ROW_BLOCKED": "Erft niet: gestopt bij {{code}} {{display}}",
+    "ROW_CONFLICT": "Conflict: de dichtstbijzijnde gemapte voorouders zijn het oneens ({{codes}})",
+    "ROW_UNCOVERED": "Geen gemapte voorouder: niet gedekt",
+    "STOP": "Overerving stoppen",
+    "STOP_TOOLTIP": "Dit concept en zijn afstammelingen erven de mappings van hun voorouders niet",
+    "STOP_FAILED": "De wijziging kon niet worden opgeslagen"
   }
 }

@@ -26,11 +26,15 @@ export interface ExportOptions {
   /** Adds notes, authors and reviewers (tabular formats only). */
   extended: boolean;
   targetForm: TargetForm;
+  /** Maps with inheritance: include inherited targets and the mapping origin columns. */
+  inherited: boolean;
 }
 
 export interface ExportDialogData {
   /** Targets of the map written as expressions; the refined target choice is shown only when there are some. */
   refinedTargetCount: number;
+  /** The map has inheritance switched on. */
+  inheritance?: boolean;
 }
 
 export const EXPORT_EXTRA_COLUMNS = ['notes', 'lastAuthor', 'lastReviewer', 'assignedAuthor', 'assignedReviewer'];
@@ -38,7 +42,7 @@ export const EXPORT_EXTRA_COLUMNS = ['notes', 'lastAuthor', 'lastReviewer', 'ass
 /** Where the last export choice is kept, in this browser only. */
 export const EXPORT_OPTIONS_STORAGE_KEY = 'snap2snomed.exportOptions';
 
-const DEFAULT_OPTIONS: ExportOptions = {format: 'csv', extended: false, targetForm: 'expression'};
+const DEFAULT_OPTIONS: ExportOptions = {format: 'csv', extended: false, targetForm: 'expression', inherited: true};
 
 @Component({
   selector: 'app-export-dialog',
@@ -74,7 +78,8 @@ export class ExportDialogComponent {
   get effectiveOptions(): ExportOptions {
     const targetForm = !this.hasRefinedTargets ? 'expression'
       : (!this.tabular && this.options.targetForm === 'both') ? 'expression' : this.options.targetForm;
-    return {format: this.options.format, extended: this.tabular && this.options.extended, targetForm};
+    return {format: this.options.format, extended: this.tabular && this.options.extended, targetForm,
+      inherited: !this.data.inheritance || this.options.inherited};
   }
 
   export(): void {
@@ -91,7 +96,8 @@ export class ExportDialogComponent {
       const stored = JSON.parse(localStorage.getItem(EXPORT_OPTIONS_STORAGE_KEY) ?? 'null');
       if (stored && ['csv', 'tsv', 'xlsx', 'fhir-json'].includes(stored.format)
         && ['expression', 'focus', 'both'].includes(stored.targetForm)) {
-        return {format: stored.format, extended: !!stored.extended, targetForm: stored.targetForm};
+        return {format: stored.format, extended: !!stored.extended, targetForm: stored.targetForm,
+          inherited: stored.inherited !== false};
       }
     } catch (e) {
       // Unreadable or unavailable storage: use the defaults

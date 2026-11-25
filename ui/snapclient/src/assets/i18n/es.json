@@ -270,7 +270,12 @@
     "FROM_SNOMED_SOURCE_ERROR": "No se pudieron crear los conceptos de origen a partir de la expresión ECL",
     "SOURCE_DISPLAY_LANGUAGE": "Idioma de visualización del origen",
     "SOURCE_DISPLAY_LANGUAGE_HINT": "Idioma de los términos de los conceptos de origen, fijados al crear el mapa",
-    "FROM_SNOMED_NEW_VERSION_HINT": "Esta nueva versión vuelve a expandir la misma ECL e idioma de visualización en la versión de SNOMED CT que elija. Los conceptos que siguen en el resultado conservan sus filas; los destinos siguen en {{codeSet}}."
+    "FROM_SNOMED_NEW_VERSION_HINT": "Esta nueva versión vuelve a expandir la misma ECL e idioma de visualización en la versión de SNOMED CT que elija. Los conceptos que siguen en el resultado conservan sus filas; los destinos siguen en {{codeSet}}.",
+    "INHERITANCE": "Con herencia",
+    "INHERITANCE_HINT": "Los conceptos sin mapear toman los destinos de su ancestro mapeado más cercano, salvo que un concepto la frene para su subárbol. Se puede cambiar después.",
+    "INHERITANCE_LABEL": "Herencia",
+    "INHERITANCE_ON": "Activada",
+    "INHERITANCE_OFF": "Desactivada"
   },
   "TABLE": {
     "SOURCE_CODE": "Código de origen",
@@ -712,7 +717,10 @@
     "TARGET_FORM_BOTH": "Expresión más columnas con el concepto foco",
     "TARGET_FORM_FOCUS_NOTE": "El concepto foco es más amplio que el destino refinado: una relación equivalente se exporta como más amplia y una más específica como inexacta. Los destinos refinados de un mismo origen que comparten el concepto foco se exportan una sola vez.",
     "TARGET_FORM_BOTH_TABULAR_ONLY": "Solo para archivos separados por comas, por tabulaciones y Excel; FHIR exporta la expresión.",
-    "EXPORT": "Exportar"
+    "EXPORT": "Exportar",
+    "INHERITANCE": "Herencia",
+    "INCLUDE_INHERITED": "Incluir destinos heredados",
+    "INCLUDE_INHERITED_HINT": "Los conceptos sin mapear reciben los destinos de su ancestro mapeado más cercano; las columnas \"Mapping origin\" e \"Inherited from\" indican de dónde viene cada mapeo."
   },
   "TARGET_CODES": {
     "SEARCH_TITLE": "Buscar código destino",
@@ -733,5 +741,24 @@
     "REMOVED": "{{count}} conceptos ya no están en el resultado de la ECL y quedaron afuera",
     "REMOVED_HINT": "Están inactivos en la nueva versión de SNOMED CT o ya no cumplen la ECL. Sus mapeos siguen en la versión anterior.",
     "COPY_REMOVED": "Copiar la lista"
+  },
+  "INHERITANCE": {
+    "TITLE": "Herencia",
+    "ASSERTED": "Mapeados",
+    "INHERITED": "Heredados",
+    "UNCOVERED": "Sin cubrir",
+    "CONFLICT": "En conflicto",
+    "BLOCKED": "Frenados por un ancestro",
+    "STOPPED": "Frenan la herencia",
+    "NO_MAP": "Sin mapa",
+    "SHOW_LIST": "Ver la lista",
+    "ROW_PASSES_ON": "{{count}} conceptos heredan este mapeo",
+    "ROW_INHERITS": "Hereda de {{code}} {{display}}:",
+    "ROW_BLOCKED": "No hereda: frenado en {{code}} {{display}}",
+    "ROW_CONFLICT": "Conflicto: los ancestros mapeados más cercanos no coinciden ({{codes}})",
+    "ROW_UNCOVERED": "Sin ancestro mapeado: no cubierto",
+    "STOP": "Frenar herencia",
+    "STOP_TOOLTIP": "Este concepto y sus descendientes no heredan los mapeos de sus ancestros",
+    "STOP_FAILED": "No se pudo guardar el cambio"
   }
 }

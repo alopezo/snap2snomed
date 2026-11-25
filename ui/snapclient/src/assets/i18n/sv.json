@@ -270,7 +270,12 @@
     "FROM_SNOMED_SOURCE_ERROR": "Källbegreppen kunde inte skapas från ECL-uttrycket",
     "SOURCE_DISPLAY_LANGUAGE": "Visningsspråk för källan",
     "SOURCE_DISPLAY_LANGUAGE_HINT": "Språk för källbegreppens termer, låsta när mappningen skapas",
-    "FROM_SNOMED_NEW_VERSION_HINT": "Den här nya versionen expanderar samma ECL-uttryck och visningsspråk igen i den SNOMED CT-version du väljer. Begrepp som fortfarande finns i resultatet behåller sina rader; målen finns kvar i {{codeSet}}."
+    "FROM_SNOMED_NEW_VERSION_HINT": "Den här nya versionen expanderar samma ECL-uttryck och visningsspråk igen i den SNOMED CT-version du väljer. Begrepp som fortfarande finns i resultatet behåller sina rader; målen finns kvar i {{codeSet}}.",
+    "INHERITANCE": "Med arv",
+    "INHERITANCE_HINT": "Begrepp utan mappning tar målen från sin närmaste mappade förfader, om inte ett begrepp stoppar det för sitt underträd. Kan ändras senare.",
+    "INHERITANCE_LABEL": "Arv",
+    "INHERITANCE_ON": "På",
+    "INHERITANCE_OFF": "Av"
   },
   "TABLE": {
     "SOURCE_CODE": "Källkod",
@@ -712,7 +717,10 @@
     "TARGET_FORM_BOTH": "Uttryck plus kolumner med fokusbegreppet",
     "TARGET_FORM_FOCUS_NOTE": "Fokusbegreppet är bredare än det förfinade målet: en ekvivalent relation exporteras som bredare, en snävare som inexakt. Förfinade mål för samma källa med samma fokusbegrepp exporteras en gång.",
     "TARGET_FORM_BOTH_TABULAR_ONLY": "Endast för kommaseparerade, tabbseparerade och Excel-filer; FHIR exporterar uttrycket.",
-    "EXPORT": "Exportera"
+    "EXPORT": "Exportera",
+    "INHERITANCE": "Arv",
+    "INCLUDE_INHERITED": "Inkludera ärvda mål",
+    "INCLUDE_INHERITED_HINT": "Begrepp utan mappning får målen från sin närmaste mappade förfader; kolumnerna \"Mapping origin\" och \"Inherited from\" visar varifrån varje mappning kommer."
   },
   "TARGET_CODES": {
     "SEARCH_TITLE": "Sök målkod",
@@ -733,5 +741,24 @@
     "REMOVED": "{{count}} begrepp finns inte längre i ECL-resultatet och utelämnades",
     "REMOVED_HINT": "De är inaktiva i den nya SNOMED CT-versionen eller matchar inte längre ECL-uttrycket. Deras mappningar finns kvar i den föregående versionen.",
     "COPY_REMOVED": "Kopiera listan"
+  },
+  "INHERITANCE": {
+    "TITLE": "Arv",
+    "ASSERTED": "Mappade",
+    "INHERITED": "Ärvda",
+    "UNCOVERED": "Ej täckta",
+    "CONFLICT": "I konflikt",
+    "BLOCKED": "Stoppade av en förfader",
+    "STOPPED": "Stoppar arv",
+    "NO_MAP": "Ingen mappning",
+    "SHOW_LIST": "Visa listan",
+    "ROW_PASSES_ON": "{{count}} begrepp ärver denna mappning",
+    "ROW_INHERITS": "Ärver från {{code}} {{display}}:",
+    "ROW_BLOCKED": "Ärver inte: stoppat vid {{code}} {{display}}",
+    "ROW_CONFLICT": "Konflikt: de närmaste mappade förfäderna är oense ({{codes}})",
+    "ROW_UNCOVERED": "Ingen mappad förfader: ej täckt",
+    "STOP": "Stoppa arv",
+    "STOP_TOOLTIP": "Detta begrepp och dess ättlingar ärver inte förfädernas mappningar",
+    "STOP_FAILED": "Ändringen kunde inte sparas"
   }
 }

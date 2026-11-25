@@ -93,6 +93,9 @@ import {ExportDialogComponent} from './mapping/export-dialog/export-dialog.compo
 import {TargetCodeSearchComponent} from './mapping/target-code-search/target-code-search.component';
 import {TargetCodeDetailsComponent} from './mapping/target-code-details/target-code-details.component';
 import {SourceChangesDialogComponent} from './mapping/source-changes-dialog/source-changes-dialog.component';
+import {InheritanceSummaryComponent} from './mapping/inheritance-summary/inheritance-summary.component';
+import {RowInheritanceComponent} from './mapping/row-inheritance/row-inheritance.component';
+import {InheritanceListDialogComponent} from './mapping/inheritance-list-dialog/inheritance-list-dialog.component';
 import {TaskCardComponent} from './task/task-card/task-card.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatRadioModule} from '@angular/material/radio';
@@ -177,6 +180,9 @@ export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
         TargetCodeSearchComponent,
         TargetCodeDetailsComponent,
         SourceChangesDialogComponent,
+        InheritanceSummaryComponent,
+        RowInheritanceComponent,
+        InheritanceListDialogComponent,
         TaskCardComponent,
         TargetVersionComponent,
         TaskAddComponent,

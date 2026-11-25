@@ -26,6 +26,9 @@
       {{mapping.toScope}}
     </li>
   </ul>
+  @if (hasInheritance) {
+    <app-inheritance-summary [mapping]="mapping"></app-inheritance-summary>
+  }
 </div>
 @if (outOfScopeTargetCount > 0) {
   <div class="col-middle">

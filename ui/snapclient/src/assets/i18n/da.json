@@ -270,7 +270,12 @@
     "FROM_SNOMED_SOURCE_ERROR": "Kildebegreberne kunne ikke oprettes ud fra ECL-udtrykket",
     "SOURCE_DISPLAY_LANGUAGE": "Visningssprog for kilden",
     "SOURCE_DISPLAY_LANGUAGE_HINT": "Sprog for kildebegrebernes termer, fastlåst når mappingen oprettes",
-    "FROM_SNOMED_NEW_VERSION_HINT": "Denne nye version udfolder det samme ECL-udtryk og visningssprog igen i den SNOMED CT-version, du vælger. Begreber, der stadig er i resultatet, beholder deres rækker; målene forbliver i {{codeSet}}."
+    "FROM_SNOMED_NEW_VERSION_HINT": "Denne nye version udfolder det samme ECL-udtryk og visningssprog igen i den SNOMED CT-version, du vælger. Begreber, der stadig er i resultatet, beholder deres rækker; målene forbliver i {{codeSet}}.",
+    "INHERITANCE": "Med nedarvning",
+    "INHERITANCE_HINT": "Begreber uden mapping arver målene fra deres nærmeste mappede forfader, medmindre et begreb stopper det for sit undertræ. Kan ændres senere.",
+    "INHERITANCE_LABEL": "Nedarvning",
+    "INHERITANCE_ON": "Til",
+    "INHERITANCE_OFF": "Fra"
   },
   "TABLE": {
     "SOURCE_CODE": "Kildekode",
@@ -712,7 +717,10 @@
     "TARGET_FORM_BOTH": "Udtryk plus kolonner med fokusbegrebet",
     "TARGET_FORM_FOCUS_NOTE": "Fokusbegrebet er bredere end det præciserede mål: en ækvivalent relation eksporteres som bredere, en snævrere som upræcis. Præciserede mål for samme kilde med samme fokusbegreb eksporteres én gang.",
     "TARGET_FORM_BOTH_TABULAR_ONLY": "Kun for kommaseparerede, tabulatorseparerede og Excel-filer; FHIR eksporterer udtrykket.",
-    "EXPORT": "Eksportér"
+    "EXPORT": "Eksportér",
+    "INHERITANCE": "Nedarvning",
+    "INCLUDE_INHERITED": "Medtag nedarvede mål",
+    "INCLUDE_INHERITED_HINT": "Begreber uden mapping får målene fra deres nærmeste mappede forfader; kolonnerne \"Mapping origin\" og \"Inherited from\" viser, hvor hver mapping kommer fra."
   },
   "TARGET_CODES": {
     "SEARCH_TITLE": "Søg målkode",
@@ -733,5 +741,24 @@
     "REMOVED": "{{count}} begreber er ikke længere i ECL-resultatet og blev udeladt",
     "REMOVED_HINT": "De er inaktive i den nye SNOMED CT-version eller matcher ikke længere ECL-udtrykket. Deres mappinger forbliver i den forrige version.",
     "COPY_REMOVED": "Kopiér listen"
+  },
+  "INHERITANCE": {
+    "TITLE": "Nedarvning",
+    "ASSERTED": "Mappede",
+    "INHERITED": "Nedarvede",
+    "UNCOVERED": "Ikke dækket",
+    "CONFLICT": "I konflikt",
+    "BLOCKED": "Stoppet af en forfader",
+    "STOPPED": "Stopper nedarvning",
+    "NO_MAP": "Ingen mapping",
+    "SHOW_LIST": "Vis listen",
+    "ROW_PASSES_ON": "{{count}} begreber arver denne mapping",
+    "ROW_INHERITS": "Arver fra {{code}} {{display}}:",
+    "ROW_BLOCKED": "Arver ikke: stoppet ved {{code}} {{display}}",
+    "ROW_CONFLICT": "Konflikt: de nærmeste mappede forfædre er uenige ({{codes}})",
+    "ROW_UNCOVERED": "Ingen mappet forfader: ikke dækket",
+    "STOP": "Stop nedarvning",
+    "STOP_TOOLTIP": "Dette begreb og dets efterkommere arver ikke deres forfædres mappinger",
+    "STOP_FAILED": "Ændringen kunne ikke gemmes"
   }
 }

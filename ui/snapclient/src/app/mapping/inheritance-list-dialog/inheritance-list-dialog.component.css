@@ -1,0 +1,48 @@
+.counts {
+  padding-left: 18px;
+  margin: 4px 0 10px;
+}
+
+.counts li {
+  margin: 3px 0;
+}
+
+.counts .warning {
+  color: #b26a00;
+  font-weight: 500;
+}
+
+.hint {
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.9em;
+}
+
+.rows {
+  max-height: 300px;
+  overflow: auto;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+}
+
+.rows table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.rows td {
+  padding: 3px 8px;
+}
+
+.rows tr:nth-child(even) {
+  background-color: #00000010;
+}
+
+.code {
+  font-family: monospace;
+  white-space: nowrap;
+}
+
+.detail {
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.9em;
+}

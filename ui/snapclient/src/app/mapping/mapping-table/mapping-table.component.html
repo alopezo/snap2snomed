@@ -53,6 +53,11 @@
         <td mat-cell *matCellDef="let maprow; let i = index" (click)="clickRow(i, maprow)">
           @if (!maprow.noMap) {
             <span>{{maprow.targetCode}}</span>
+            @if (!maprow.targetCode && inheritedRow(maprow); as inherited) {
+              @if (inherited.state === 'INHERITED') {
+                <span class="inherited">{{joinTargets(inherited, 'code')}}</span>
+              }
+            }
           }
         </td>
       </ng-container>
@@ -62,6 +67,25 @@
         <td mat-cell *matCellDef="let maprow; let i = index" (click)="clickRow(i, maprow)">
           @if (!maprow.noMap) {
             <span>{{maprow.targetDisplay}}</span>
+            <!-- Maps with inheritance: what an unmapped concept inherits, or why it does not -->
+            @if (!maprow.targetCode && inheritedRow(maprow); as inherited) {
+              @switch (inherited.state) {
+                @case ('INHERITED') {
+                  <span class="inherited" [title]="('INHERITANCE.ROW_INHERITS' | translate: {code: inherited.fromCode, display: inherited.fromDisplay})">
+                    <mat-icon class="inherited-icon">subdirectory_arrow_right</mat-icon>{{joinTargets(inherited, 'display')}}
+                  </span>
+                }
+                @case ('CONFLICT') {
+                  <span class="inheritance-attention">{{'INHERITANCE.CONFLICT' | translate}}</span>
+                }
+                @case ('BLOCKED') {
+                  <span class="inherited">{{'INHERITANCE.BLOCKED' | translate}}</span>
+                }
+                @case ('STOPPED') {
+                  <span class="inherited">{{'INHERITANCE.STOPPED' | translate}}</span>
+                }
+              }
+            }
           }
         </td>
       </ng-container>
