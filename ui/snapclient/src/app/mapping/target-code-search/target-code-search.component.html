@@ -12,7 +12,9 @@
       <mat-form-field class="search-field field-full-width-no-margin" appearance="outline"
         [appDroppable]="{zone: 'searchZone'}" (onDroppableComplete)="onDrop($event)">
         <mat-label>{{'TARGET_CODES.SEARCH_LABEL' | translate}}</mat-label>
-        <input id="targetCodeSearch" type="search" matInput [formControl]="searchControl"
+        <!-- No fixed id: the work screen and the detail dialog both show this search, and a shared id would
+             send the label focus (and the typing) to the other one -->
+        <input type="search" matInput class="target-code-search-input" [formControl]="searchControl"
           autocomplete="off" spellcheck="false">
         @if (searchControl.value?.trim()) {
           <button matSuffix mat-icon-button type="button" [attr.aria-label]="'FORM.CLEAR' | translate"
@@ -28,7 +30,7 @@
     @if (failed) {
       <p class="hint">{{'TARGET_CODES.SEARCH_FAILED' | translate}}</p>
     }
-    <div class="results" id="targetCodeResults">
+    <div class="results">
       @for (code of results; track code.code) {
         <div class="result" [class.selected]="code.code === selectedCode" (click)="select(code)">
           <mat-icon class="grip" [appDraggable]="{data: dragData(code), zones: dragZones}">drag_indicator</mat-icon>
