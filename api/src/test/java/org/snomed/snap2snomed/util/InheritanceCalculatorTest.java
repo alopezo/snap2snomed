@@ -131,4 +131,16 @@ class InheritanceCalculatorTest {
     assertThat(InheritanceCalculator.anchorCodes(List.of(mapped("A", "X", TARGET_EQUIVALENT), empty("B"),
         new Row("C", true, false, List.of()), new Row("D", false, true, List.of())))).containsExactlyInAnyOrder("A", "C", "D");
   }
+
+  @Test
+  void generatesTheDescendantsThatAreNotRows() {
+    // only A and C are rows: B, D and E are generated; E is also below F, which is not an anchor here
+    final List<Result> generated = InheritanceCalculator.computeGenerated(
+        List.of(mapped("A", "X1", TARGET_EQUIVALENT), new Row("C", false, true, List.of())), DESCENDANTS::get);
+    assertThat(generated).extracting(Result::code, Result::state, Result::from)
+        .containsExactly(
+            org.assertj.core.groups.Tuple.tuple("B", State.INHERITED, "A"),
+            org.assertj.core.groups.Tuple.tuple("D", State.BLOCKED, "C"),
+            org.assertj.core.groups.Tuple.tuple("E", State.BLOCKED, "C"));
+  }
 }

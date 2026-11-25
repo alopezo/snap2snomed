@@ -35,7 +35,7 @@ class InheritanceExportTest {
 
   private static InheritanceDto.RowDto row(String code, String state, String from, List<InheritanceDto.TargetDto> targets,
       List<String> candidates) {
-    return new InheritanceDto.RowDto(1L, code, code + " display", state, false, from, null, targets, candidates, 0);
+    return new InheritanceDto.RowDto(1L, code, code + " display", state, false, from, null, targets, candidates, 0, 0);
   }
 
   @Test
@@ -62,5 +62,19 @@ class InheritanceExportTest {
   void plainLinesHaveNoOrigin() {
     assertThat(InheritanceExport.plain(List.of(view("A", "X1")))).singleElement()
         .extracting(InheritanceExport.Line::origin).isNull();
+  }
+
+  @Test
+  void generatedConceptsAreAppendedAfterTheRows() {
+    final InheritanceDto inheritance = new InheritanceDto(Map.of(), List.of(row("A", "ASSERTED", null, List.of(), List.of())));
+    final List<InheritanceExport.Line> lines = InheritanceExport.apply(List.of(view("A", "X1")), inheritance, List.of(
+        row("G1", "INHERITED", "A", List.of(new InheritanceDto.TargetDto("X1", "One", "TARGET_BROADER")), List.of()),
+        row("G2", "BLOCKED", "S", List.of(), List.of())));
+    assertThat(lines).extracting(l -> l.view().getSourceCode(), l -> l.view().getSourceIndex(), l -> l.view().getTargetCode(),
+            InheritanceExport.Line::origin, InheritanceExport.Line::inheritedFrom)
+        .containsExactly(
+            tuple("A", 1L, "X1", "ASSERTED", null),
+            tuple("G1", null, "X1", "GENERATED", "A"),
+            tuple("G2", null, null, "BLOCKED", "S"));
   }
 }

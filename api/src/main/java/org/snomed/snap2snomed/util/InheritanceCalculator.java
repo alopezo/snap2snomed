@@ -108,6 +108,25 @@ public final class InheritanceCalculator {
     return results;
   }
 
+  /**
+   * Inheritance of the concepts that are descendants of an anchor but not rows of the map: generated at
+   * export time, never stored. They inherit, are blocked or are in conflict (never uncovered, as they are
+   * below an anchor). Sorted by code.
+   */
+  public static List<Result> computeGenerated(List<Row> rows, Function<String, Set<String>> descendantsOf) {
+    final Map<String, Row> anchors = new LinkedHashMap<>();
+    rows.stream().filter(Row::anchor).forEach(row -> anchors.put(row.code(), row));
+    final Map<String, Set<String>> descendants = new LinkedHashMap<>();
+    anchors.keySet().forEach(code -> descendants.put(code, descendantsOf.apply(code)));
+    final Set<String> rowCodes = rows.stream().map(Row::code).collect(Collectors.toSet());
+    final java.util.TreeSet<String> generated = new java.util.TreeSet<>();
+    descendants.values().forEach(generated::addAll);
+    generated.removeAll(rowCodes);
+    final List<Result> results = new ArrayList<>(generated.size());
+    generated.forEach(code -> results.add(inherit(code, anchors, descendants)));
+    return results;
+  }
+
   private static Result inherit(String code, Map<String, Row> anchors, Map<String, Set<String>> descendants) {
     final List<String> candidates = descendants.entrySet().stream()
         .filter(entry -> entry.getValue().contains(code))

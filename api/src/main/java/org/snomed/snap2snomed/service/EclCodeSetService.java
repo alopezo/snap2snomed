@@ -105,6 +105,41 @@ public class EclCodeSetService {
     return codeSetImportService.saveCodeSet(codeSet, new ArrayList<>(concepts.entrySet()));
   }
 
+  /** An ECL expansion: its total and, unless it was over the limit asked for, code to term. */
+  public record Expansion(int total, Map<String, String> concepts) {
+    public boolean tooLarge() {
+      return concepts == null;
+    }
+  }
+
+  /**
+   * The active concepts an ECL expression returns in a SNOMED CT version, with their terms in the display
+   * language (English FSN when none). Over {@code max} concepts, only the total is returned.
+   */
+  public Expansion expandConcepts(String version, String ecl, String displayLanguage, int max) {
+    final String valueSetUrl = version + "?fhir_vs=ecl/" + ecl.trim();
+    final boolean englishFsn = LanguageDialects.normalize(displayLanguage) == null;
+    final String acceptLanguage = englishFsn
+        ? "en"
+        : LanguageDialects.toServerFormat(displayLanguage, terminologyProvider.getServerKind());
+    final int total = expand(valueSetUrl, 0, 1, false, acceptLanguage).getExpansion().getTotal();
+    if (total > max) {
+      return new Expansion(total, null);
+    }
+    final Map<String, String> concepts = new LinkedHashMap<>();
+    for (int offset = 0; offset < total; offset += PAGE_SIZE) {
+      final ValueSet page = expand(valueSetUrl, offset, PAGE_SIZE, englishFsn, acceptLanguage);
+      for (final ValueSet.ValueSetExpansionContainsComponent concept : page.getExpansion().getContains()) {
+        final String display = englishFsn ? TargetDisplayResolver.englishFsn(concept) : concept.getDisplay();
+        concepts.put(concept.getCode(), display == null || display.isBlank() ? concept.getDisplay() : display);
+      }
+      if (page.getExpansion().getContains().isEmpty()) {
+        break;
+      }
+    }
+    return new Expansion(total, concepts);
+  }
+
   /** The codes of the active concepts an ECL expression returns in a SNOMED CT version (no terms). */
   public List<String> expandCodes(String version, String ecl) {
     final String valueSetUrl = version + "?fhir_vs=ecl/" + ecl.trim();

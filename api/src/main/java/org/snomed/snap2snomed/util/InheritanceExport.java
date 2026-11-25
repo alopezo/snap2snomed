@@ -48,6 +48,32 @@ public final class InheritanceExport {
     return views.stream().map(view -> new Line(view, null, null)).toList();
   }
 
+  /**
+   * The rows of the map, then one line per generated concept (a descendant of a mapped or stopping concept
+   * that is not a row): GENERATED when it inherits (one line per target), CONFLICT or BLOCKED otherwise.
+   */
+  public static List<Line> apply(List<MapView> views, InheritanceDto inheritance, List<InheritanceDto.RowDto> generated) {
+    final List<Line> lines = new ArrayList<>(apply(views, inheritance));
+    for (final InheritanceDto.RowDto row : generated) {
+      final MapView base = MapView.builder().sourceCode(row.getCode()).sourceDisplay(row.getDisplay()).noMap(false).build();
+      if ("INHERITED".equals(row.getState())) {
+        for (final InheritanceDto.TargetDto target : row.getTargets()) {
+          final MapView view = MapView.builder().build();
+          BeanUtils.copyProperties(base, view);
+          view.setTargetCode(target.getCode());
+          view.setTargetDisplay(target.getDisplay());
+          view.setRelationship(target.getRelationship() == null ? null : MappingRelationship.valueOf(target.getRelationship()));
+          lines.add(new Line(view, "GENERATED", row.getFromCode()));
+        }
+      } else if ("CONFLICT".equals(row.getState())) {
+        lines.add(new Line(base, "CONFLICT", String.join(" ", row.getCandidates())));
+      } else {
+        lines.add(new Line(base, row.getState(), row.getFromCode()));
+      }
+    }
+    return lines;
+  }
+
   public static List<Line> apply(List<MapView> views, InheritanceDto inheritance) {
     final Map<String, InheritanceDto.RowDto> byCode = new HashMap<>();
     inheritance.getRows().forEach(row -> byCode.put(row.getCode(), row));

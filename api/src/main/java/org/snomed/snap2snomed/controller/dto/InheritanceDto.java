@@ -25,12 +25,25 @@ import lombok.NoArgsConstructor;
 /** Inheritance in a map from SNOMED CT: a count per state and the state of every row. */
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class InheritanceDto {
 
   /** Rows per state (ASSERTED, NO_MAP, STOPPED, INHERITED, BLOCKED, CONFLICT, UNCOVERED). */
   private Map<String, Integer> counts;
   private List<RowDto> rows;
+
+  /** Concepts generated at export time (descendants that are not rows) per state, and their total. */
+  private Map<String, Integer> generatedCounts = Map.of();
+  private int generatedTotal;
+  /** Mapped or stopping concepts with more descendants in the scope than {@link #maxGenerated}. */
+  private List<TooLarge> tooLarge = List.of();
+  /** All generated concepts together are more than {@link #maxGenerated}. */
+  private boolean generatedTooLarge;
+  private int maxGenerated;
+
+  public InheritanceDto(Map<String, Integer> counts, List<RowDto> rows) {
+    this.counts = counts;
+    this.rows = rows;
+  }
 
   @Data
   @NoArgsConstructor
@@ -49,6 +62,25 @@ public class InheritanceDto {
     private List<String> candidates;
     /** ASSERTED: how many rows inherit its targets. */
     private int inheritedBy;
+    /** ASSERTED: how many generated concepts inherit its targets. */
+    private int generatedBy;
+  }
+
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  public static class TooLarge {
+    private String code;
+    private String display;
+    private int descendants;
+  }
+
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  public static class GeneratedPage {
+    private int total;
+    private List<RowDto> rows;
   }
 
   @Data

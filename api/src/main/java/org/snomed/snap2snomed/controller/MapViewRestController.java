@@ -49,6 +49,7 @@ import org.snomed.snap2snomed.model.MapView;
 import org.snomed.snap2snomed.model.Project;
 import org.snomed.snap2snomed.model.enumeration.MapStatus;
 import org.snomed.snap2snomed.model.enumeration.MappingRelationship;
+import org.snomed.snap2snomed.problem.BadRequestDataProblem;
 import org.snomed.snap2snomed.problem.Snap2SnomedProblem;
 import org.snomed.snap2snomed.problem.auth.NoSuchUserProblem;
 import org.snomed.snap2snomed.problem.auth.NotAuthorisedProblem;
@@ -582,13 +583,19 @@ public class MapViewRestController {
 
   private List<InheritanceExport.Line> exportLines(Long mapId, TargetExportForm form, boolean inherited) {
     final List<MapView> views = form.apply(mapViewService.getAllMapViewForMap(mapId));
-    return withInheritance(mapId, inherited)
-        ? InheritanceExport.apply(views, inheritanceService.computeForMap(mapId))
-        : InheritanceExport.plain(views);
+    if (!withInheritance(mapId, inherited)) {
+      return InheritanceExport.plain(views);
+    }
+    final InheritanceService.ExportData data = inheritanceService.exportData(mapId);
+    if (!data.canGenerate()) {
+      throw new BadRequestDataProblem("Inheritance generates more concepts than allowed in this map's inheritance scope; "
+          + "narrow the scope (edit the map) or export without inherited targets");
+    }
+    return InheritanceExport.apply(views, data.inheritance(), data.generated());
   }
 
   private ConceptMap convertToConceptMap(Long mapId, TargetExportForm targetForm, boolean inherited) {
-      final Map<Long, SourceElementComponent> mapEntry = new HashMap<>();
+      final Map<Object, SourceElementComponent> mapEntry = new HashMap<>();
       final ConceptMap cm = new ConceptMap();
       final ConceptMapGroupComponent group = cm.addGroup();
 
@@ -644,7 +651,8 @@ public class MapViewRestController {
 
       for (final InheritanceExport.Line line : exportLines(mapId, targetForm, inherited)) {
           final MapView mapView = line.view();
-          final Long key = mapView.getSourceIndex();
+          // generated concepts (inheritance) have no source index: one element per code
+          final Object key = mapView.getSourceIndex() != null ? mapView.getSourceIndex() : "generated:" + mapView.getSourceCode();
           final SourceElementComponent src;
           if (!mapEntry.containsKey(key)) {
               src = group.addElement();

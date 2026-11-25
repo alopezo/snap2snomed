@@ -149,6 +149,23 @@ public class TargetCodeRestController {
     return inheritanceService.computeForMap(mapId);
   }
 
+  @Operation(description = "A page of the concepts inheritance generates at export time in a map from SNOMED CT "
+      + "(descendants of mapped or stopping concepts within the inheritance scope that are not rows), optionally of "
+      + "one state (INHERITED, CONFLICT, BLOCKED).")
+  @GetMapping(path = "/map/{mapId}/inheritance/generated", produces = MediaType.APPLICATION_JSON_VALUE)
+  public InheritanceDto.GeneratedPage getGeneratedConcepts(@PathVariable("mapId") Long mapId,
+      @RequestParam(required = false) String state,
+      @RequestParam(required = false, defaultValue = "0") int page,
+      @RequestParam(required = false, defaultValue = "100") int size) {
+    if (!webSecurity.isValidUser()) {
+      throw new NoSuchUserProblem();
+    }
+    if (!webSecurity.isAdminUser() && !webSecurity.hasAnyProjectRoleForMapId(mapId)) {
+      throw new NotAuthorisedProblem("Not authorised to view this map");
+    }
+    return inheritanceService.generatedPage(mapId, state, page, Math.min(Math.max(size, 1), 1000));
+  }
+
   static TargetCodeDto toDto(ImportedCode code, List<AdditionalCodeColumn> columns) {
     final List<TargetCodeDto.Column> additional = new ArrayList<>();
     if (code.getAdditionalColumns() != null && columns != null) {
