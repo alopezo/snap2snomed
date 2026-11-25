@@ -477,6 +477,23 @@
     "flagged=true": "Marcado: Sí",
     "topLevel=true": "Solo nivel superior"
   },
+  "INVERT_MAP": {
+      "TITLE": "Crear un mapa desde SNOMED CT",
+      "ACTION_TOOLTIP": "Crear un mapa desde SNOMED CT a partir de este mapa (invertido, en un proyecto nuevo)",
+      "EXPLANATION": "Se crea un proyecto nuevo con un mapa desde SNOMED CT: su origen son los conceptos SNOMED CT que este mapa usa como destino, cada uno mapeado de vuelta a los códigos locales que lo usaban, con la relación invertida. Los destinos refinados se mapean desde su concepto foco. Las filas empiezan en DRAFT, para revisar; este mapa no cambia.",
+      "PROJECT_TITLE": "Título del proyecto nuevo",
+      "DESCRIPTION": "Descripción",
+      "CREATE": "CREAR",
+      "OPEN": "ABRIR MAPA NUEVO",
+      "CLOSE": "CERRAR",
+      "ERROR": "No se pudo crear el mapa.",
+      "RESULT_CONCEPTS": "{{count}} conceptos SNOMED CT en el origen nuevo",
+      "RESULT_TARGETS": "{{count}} mapeos de vuelta a códigos locales",
+      "RESULT_REFINED": "{{count}} de ellos desde destinos refinados (mapeados desde el concepto foco)",
+      "RESULT_INACTIVE": "{{count}} conceptos dejados afuera: no están activos en la versión de SNOMED CT",
+      "RESULT_NO_MAP": "{{count}} filas sin mapeo (no map) dejadas afuera",
+      "RESULT_HINT": "El mapa nuevo es un mapa desde SNOMED CT común: revisá ahí sus filas y la herencia."
+  },
   "DIALOG": {
     "OK": "Aceptar",
     "TITLE_CONFIRM": "Advertencia",

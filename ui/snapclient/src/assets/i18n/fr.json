@@ -477,6 +477,23 @@
     "flagged=true": "Signalé : Oui",
     "topLevel=true": "Niveau supérieur seul"
   },
+  "INVERT_MAP": {
+      "TITLE": "Créer un mapping depuis SNOMED CT",
+      "ACTION_TOOLTIP": "Créer un mapping depuis SNOMED CT à partir de ce mapping (inversé, dans un nouveau projet)",
+      "EXPLANATION": "Un nouveau projet est créé avec un mapping depuis SNOMED CT : sa source est l'ensemble des concepts SNOMED CT ciblés par ce mapping, chacun associé aux codes locaux qui le ciblaient, avec la relation inversée. Les cibles raffinées sont associées depuis leur concept focus. Les lignes commencent en DRAFT, à réviser ; ce mapping ne change pas.",
+      "PROJECT_TITLE": "Titre du nouveau projet",
+      "DESCRIPTION": "Description",
+      "CREATE": "CRÉER",
+      "OPEN": "OUVRIR LE NOUVEAU MAPPING",
+      "CLOSE": "FERMER",
+      "ERROR": "Le mapping n'a pas pu être créé.",
+      "RESULT_CONCEPTS": "{{count}} concepts SNOMED CT dans la nouvelle source",
+      "RESULT_TARGETS": "{{count}} correspondances vers les codes locaux",
+      "RESULT_REFINED": "{{count}} d'entre elles depuis des cibles raffinées (associées depuis le concept focus)",
+      "RESULT_INACTIVE": "{{count}} concepts exclus : inactifs dans la version SNOMED CT",
+      "RESULT_NO_MAP": "{{count}} lignes sans correspondance exclues",
+      "RESULT_HINT": "Le nouveau mapping est un mapping depuis SNOMED CT ordinaire : révisez-y ses lignes et l'héritage."
+  },
   "DIALOG": {
     "OK": "OK",
     "TITLE_CONFIRM": "Avertissement",

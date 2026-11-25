@@ -56,6 +56,11 @@ Maps from SNOMED CT (branch `from-snomed`).
   source list with only the concepts that have no ancestor in the source. It is computed once per map
   version with one ECL expansion, `(S) MINUS (< (S))`, where S is the source ECL or the source codes joined
   by OR (sent inline in a POST $expand, as it can be thousands of codes), and cached with the map.
+- A single author map to SNOMED CT can seed a map from SNOMED CT (a swap button in the map list, project
+  owners only): a new project whose source is the SNOMED CT concepts the map targets, each mapped back to the
+  local codes that targeted it with the relationship inverted. Refined targets are mapped from their focus
+  concept (the relationship adjusted first); no-map rows and concepts not active in the version are left out.
+  The rows start as DRAFT, the original map does not change, and the dialog reports what was carried over.
 - Authors accept the inheritance of rows without targets of their own (inheriting, stopped or blocked),
   from the mapping detail or in bulk (bulk change, "Accept the inheritance of the selected rows"): they
   become MAPPED and go on through the workflow. What a row inherited when accepted is recorded; if it

@@ -1,0 +1,59 @@
+<h2 mat-dialog-title>{{'INVERT_MAP.TITLE' | translate}}</h2>
+<mat-dialog-content>
+  @if (!result) {
+    <p class="hint">{{'INVERT_MAP.EXPLANATION' | translate}}</p>
+    <mat-form-field class="field-full-width" subscriptSizing="dynamic">
+      <mat-label>{{'INVERT_MAP.PROJECT_TITLE' | translate}}</mat-label>
+      <input matInput id="invertTitle" [(ngModel)]="title" maxlength="100" required>
+    </mat-form-field>
+    <mat-form-field class="field-full-width" subscriptSizing="dynamic">
+      <mat-label>{{'INVERT_MAP.DESCRIPTION' | translate}}</mat-label>
+      <input matInput id="invertDescription" [(ngModel)]="description" maxlength="200">
+    </mat-form-field>
+    <mat-checkbox id="invertInheritance" [(ngModel)]="inheritance">{{'MAP.INHERITANCE' | translate}}</mat-checkbox>
+    @if (inheritance) {
+      <mat-radio-group class="inheritance-mode" [(ngModel)]="inheritanceMode" [attr.aria-label]="'MAP.INHERITANCE_MODE' | translate">
+        <mat-radio-button value="WITHIN_SOURCE">
+          {{'MAP.INHERITANCE_WITHIN_SOURCE' | translate}}
+          <span class="hint">{{'MAP.INHERITANCE_WITHIN_SOURCE_HINT' | translate}}</span>
+        </mat-radio-button>
+        <mat-radio-button value="BEYOND_SOURCE">
+          {{'MAP.INHERITANCE_BEYOND_SOURCE' | translate}}
+          <span class="hint">{{'MAP.INHERITANCE_BEYOND_SOURCE_HINT' | translate}}</span>
+        </mat-radio-button>
+      </mat-radio-group>
+    }
+    @if (error !== null) {
+      <p class="error" id="invertError">{{'INVERT_MAP.ERROR' | translate}} {{error}}</p>
+    }
+  } @else {
+    <ul class="counts" id="invertResult">
+      <li>{{'INVERT_MAP.RESULT_CONCEPTS' | translate: {count: result.concepts} }}</li>
+      <li>{{'INVERT_MAP.RESULT_TARGETS' | translate: {count: result.targets} }}</li>
+      @if (result.refinedTargets) {
+        <li>{{'INVERT_MAP.RESULT_REFINED' | translate: {count: result.refinedTargets} }}</li>
+      }
+      @if (result.inactiveConcepts) {
+        <li class="warning">{{'INVERT_MAP.RESULT_INACTIVE' | translate: {count: result.inactiveConcepts} }}</li>
+      }
+      @if (result.noMapRows) {
+        <li>{{'INVERT_MAP.RESULT_NO_MAP' | translate: {count: result.noMapRows} }}</li>
+      }
+    </ul>
+    <p class="hint">{{'INVERT_MAP.RESULT_HINT' | translate}}</p>
+  }
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  @if (!result) {
+    <button mat-button mat-dialog-close [disabled]="creating">{{'DIALOG.CANCEL' | translate}}</button>
+    <button mat-flat-button color="primary" id="invertCreate" (click)="create()" [disabled]="creating || !title.trim()">
+      @if (creating) {
+        <mat-progress-spinner diameter="16" mode="indeterminate" class="inline-spinner"></mat-progress-spinner>
+      }
+      {{'INVERT_MAP.CREATE' | translate}}
+    </button>
+  } @else {
+    <button mat-button [mat-dialog-close]="result">{{'INVERT_MAP.CLOSE' | translate}}</button>
+    <button mat-flat-button color="primary" id="invertOpen" (click)="openNewMap()">{{'INVERT_MAP.OPEN' | translate}}</button>
+  }
+</mat-dialog-actions>

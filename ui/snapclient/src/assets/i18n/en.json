@@ -477,6 +477,23 @@
     "flagged=true": "Flagged: Yes",
     "topLevel=true": "Top level only"
   },
+  "INVERT_MAP": {
+      "TITLE": "Create a map from SNOMED CT",
+      "ACTION_TOOLTIP": "Create a map from SNOMED CT from this map (inverted, in a new project)",
+      "EXPLANATION": "A new project is created with a map from SNOMED CT: its source is the SNOMED CT concepts this map targets, each mapped back to the local codes that targeted it, with the relationship inverted. Refined targets are mapped from their focus concept. The rows start as DRAFT, to be reviewed; this map does not change.",
+      "PROJECT_TITLE": "New project title",
+      "DESCRIPTION": "Description",
+      "CREATE": "CREATE",
+      "OPEN": "OPEN NEW MAP",
+      "CLOSE": "CLOSE",
+      "ERROR": "The map could not be created.",
+      "RESULT_CONCEPTS": "{{count}} SNOMED CT concepts in the new source",
+      "RESULT_TARGETS": "{{count}} mappings back to local codes",
+      "RESULT_REFINED": "{{count}} of them from refined targets (mapped from the focus concept)",
+      "RESULT_INACTIVE": "{{count}} concepts left out: not active in the SNOMED CT version",
+      "RESULT_NO_MAP": "{{count}} no-map rows left out",
+      "RESULT_HINT": "The new map is an ordinary map from SNOMED CT: review its rows and the inheritance there."
+  },
   "DIALOG": {
     "OK": "OK",
     "TITLE_CONFIRM": "Warning",

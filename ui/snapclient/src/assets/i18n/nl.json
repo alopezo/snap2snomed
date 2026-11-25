@@ -477,6 +477,23 @@
     "flagged=true": "Gemarkeerd: Ja",
     "topLevel=true": "Alleen bovenste niveau"
   },
+  "INVERT_MAP": {
+      "TITLE": "Een map vanuit SNOMED CT maken",
+      "ACTION_TOOLTIP": "Een map vanuit SNOMED CT maken op basis van deze map (omgekeerd, in een nieuw project)",
+      "EXPLANATION": "Er wordt een nieuw project gemaakt met een map vanuit SNOMED CT: de bron zijn de SNOMED CT-concepten waar deze map naar verwijst, elk teruggemapt naar de lokale codes die ernaar verwezen, met de relatie omgekeerd. Verfijnde doelen worden gemapt vanuit hun focusconcept. De rijen beginnen als DRAFT, ter beoordeling; deze map verandert niet.",
+      "PROJECT_TITLE": "Titel van het nieuwe project",
+      "DESCRIPTION": "Beschrijving",
+      "CREATE": "MAKEN",
+      "OPEN": "NIEUWE MAP OPENEN",
+      "CLOSE": "SLUITEN",
+      "ERROR": "De map kon niet worden gemaakt.",
+      "RESULT_CONCEPTS": "{{count}} SNOMED CT-concepten in de nieuwe bron",
+      "RESULT_TARGETS": "{{count}} mappings terug naar lokale codes",
+      "RESULT_REFINED": "{{count}} daarvan vanuit verfijnde doelen (gemapt vanuit het focusconcept)",
+      "RESULT_INACTIVE": "{{count}} concepten weggelaten: niet actief in de SNOMED CT-versie",
+      "RESULT_NO_MAP": "{{count}} rijen zonder mapping weggelaten",
+      "RESULT_HINT": "De nieuwe map is een gewone map vanuit SNOMED CT: beoordeel daar de rijen en de overerving."
+  },
   "DIALOG": {
     "OK": "OK",
     "TITLE_CONFIRM": "Waarschuwing",

@@ -39,9 +39,11 @@ import {MatTableDataSource} from '@angular/material/table';
 import {MatSelectChange} from "@angular/material/select";
 import {MatSort} from '@angular/material/sort';
 import {debounce} from "lodash";
-import {tap} from "rxjs/operators";
+import {filter, take, tap, timeout} from "rxjs/operators";
+import {selectAuthorizedProjects} from '../../store/app.selectors';
 import {ConfirmDialogComponent, DialogType} from "../../dialog/confirm-dialog/confirm-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
+import {InvertMapDialogComponent} from '../invert-map-dialog/invert-map-dialog.component';
 import {ErrorDetail} from "../../_models/error_detail";
 import { FormUtils } from 'src/app/_utils/form_utils';
 
@@ -267,6 +269,39 @@ export class MappingListComponent implements OnInit, AfterViewInit, OnDestroy {
         });
       }
     }
+  }
+
+  /** The selected map of the project can seed a map from SNOMED CT: a single author map to SNOMED CT, as an owner. */
+  canInvert(project: Project): boolean {
+    const mapping = this.selectedMapping[project.id];
+    return !!mapping && !Mapping.isFromSnomed(mapping) && !project.dualMapMode && this.isOwner(project);
+  }
+
+  /** Creates a map from SNOMED CT, in a new project, from the selected map (see InvertMapDialogComponent). */
+  invertMap(project: Project): void {
+    const mapId = this.selectedMapping[project.id]?.id;
+    if (!mapId) {
+      return;
+    }
+    this.dialog.open(InvertMapDialogComponent, {width: '600px', data: {mapId, projectTitle: project.title}})
+      .afterClosed().subscribe(result => {
+        if (!result) {
+          return;
+        }
+        this.store.dispatch(new LoadProjects({pageSize: this.pageSize, currentPage: this.currentPage,
+          sort: `${this.sortCol},${this.sortDir}`, text: this.filterText, role: this.filterRole}));
+        if (result.open) {
+          // the route guard authorizes a map from the loaded projects: wait for the new one
+          this.store.select(selectAuthorizedProjects).pipe(
+            filter(projects => projects.some(p => String(p.id) === String(result.projectId))),
+            take(1),
+            timeout(15000)
+          ).subscribe({
+            next: () => this.router.navigate(['map-view', result.mapId]),
+            error: () => this.router.navigate(['map-view', result.mapId])
+          });
+        }
+      });
   }
 
   deleteProject(project: Project): void {

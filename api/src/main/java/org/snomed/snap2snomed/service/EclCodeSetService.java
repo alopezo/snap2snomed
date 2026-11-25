@@ -164,27 +164,7 @@ public class EclCodeSetService {
     final List<String> codes = new ArrayList<>();
     int total = Integer.MAX_VALUE;
     for (int offset = 0; offset < total; offset += PAGE_SIZE) {
-      final ValueSet valueSet = new ValueSet();
-      valueSet.getCompose().addInclude().setSystem(SNOMED_SYSTEM).setVersion(version).addFilter()
-          .setProperty("constraint").setOp(ValueSet.FilterOperator.EQUAL).setValue(ecl.trim());
-      final Parameters parameters = new Parameters();
-      parameters.addParameter().setName("valueSet").setResource(valueSet);
-      parameters.addParameter("offset", new IntegerType(offset));
-      parameters.addParameter("count", new IntegerType(PAGE_SIZE));
-      parameters.addParameter("activeOnly", new BooleanType(true));
-      final ValueSet page;
-      try {
-        page = terminologyProvider.getGenericClient().operation()
-            .onType(ValueSet.class)
-            .named("$expand")
-            .withParameters(parameters)
-            .returnResourceType(ValueSet.class)
-            .execute();
-      } catch (final BaseServerResponseException e) {
-        log.warn("Inline ECL expansion failed ({} characters): {}", ecl.length(), e.getMessage());
-        throw new CodeSetImportProblem("ecl-expansion-failed", "The terminology server could not expand the ECL expression",
-            e.getMessage());
-      }
+      final ValueSet page = expandInline(version, ecl, offset, false, "en");
       total = page.getExpansion().getTotal();
       page.getExpansion().getContains().forEach(concept -> codes.add(concept.getCode()));
       if (page.getExpansion().getContains().isEmpty()) {
@@ -192,6 +172,57 @@ public class EclCodeSetService {
       }
     }
     return codes;
+  }
+
+  /**
+   * The active concepts of an ECL expression too long for a URL, with their terms in a display language (the
+   * English FSN when null), code to term in the server's order.
+   */
+  public Map<String, String> expandConceptsInline(String version, String ecl, String displayLanguage) {
+    final boolean englishFsn = LanguageDialects.normalize(displayLanguage) == null;
+    final String acceptLanguage = englishFsn
+        ? "en"
+        : LanguageDialects.toServerFormat(displayLanguage, terminologyProvider.getServerKind());
+    final Map<String, String> concepts = new LinkedHashMap<>();
+    int total = Integer.MAX_VALUE;
+    for (int offset = 0; offset < total; offset += PAGE_SIZE) {
+      final ValueSet page = expandInline(version, ecl, offset, englishFsn, acceptLanguage);
+      total = page.getExpansion().getTotal();
+      for (final ValueSet.ValueSetExpansionContainsComponent concept : page.getExpansion().getContains()) {
+        final String display = englishFsn ? TargetDisplayResolver.englishFsn(concept) : concept.getDisplay();
+        concepts.put(concept.getCode(), display == null || display.isBlank() ? concept.getDisplay() : display);
+      }
+      if (page.getExpansion().getContains().isEmpty()) {
+        break;
+      }
+    }
+    return concepts;
+  }
+
+  /** A page of a POST $expand of a value set given inline: SNOMED CT with an ECL "constraint" filter. */
+  private ValueSet expandInline(String version, String ecl, int offset, boolean includeDesignations, String acceptLanguage) {
+    final ValueSet valueSet = new ValueSet();
+    valueSet.getCompose().addInclude().setSystem(SNOMED_SYSTEM).setVersion(version).addFilter()
+        .setProperty("constraint").setOp(ValueSet.FilterOperator.EQUAL).setValue(ecl.trim());
+    final Parameters parameters = new Parameters();
+    parameters.addParameter().setName("valueSet").setResource(valueSet);
+    parameters.addParameter("offset", new IntegerType(offset));
+    parameters.addParameter("count", new IntegerType(PAGE_SIZE));
+    parameters.addParameter("activeOnly", new BooleanType(true));
+    parameters.addParameter("includeDesignations", new BooleanType(includeDesignations));
+    try {
+      return terminologyProvider.getGenericClient().operation()
+          .onType(ValueSet.class)
+          .named("$expand")
+          .withParameters(parameters)
+          .returnResourceType(ValueSet.class)
+          .withAdditionalHeader("Accept-Language", acceptLanguage)
+          .execute();
+    } catch (final BaseServerResponseException e) {
+      log.warn("Inline ECL expansion failed ({} characters): {}", ecl.length(), e.getMessage());
+      throw new CodeSetImportProblem("ecl-expansion-failed", "The terminology server could not expand the ECL expression",
+          e.getMessage());
+    }
   }
 
   private ValueSet expand(String valueSetUrl, int offset, int count, boolean includeDesignations, String acceptLanguage) {
@@ -219,7 +250,7 @@ public class EclCodeSetService {
   }
 
   /** The code set version: the effective time of the SNOMED CT version (code set versions are short). */
-  static String effectiveTime(String versionUri) {
+  public static String effectiveTime(String versionUri) {
     final Matcher matcher = EFFECTIVE_TIME.matcher(versionUri);
     return matcher.find() ? matcher.group(1) : versionUri.substring(Math.max(0, versionUri.length() - 30));
   }

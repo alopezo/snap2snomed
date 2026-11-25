@@ -618,6 +618,26 @@ public class CodeSetImportService {
     }
   }
 
+  /** A target to add to the row of a source code (see {@link #insertTargets}). */
+  public record SeedTarget(String sourceCode, MapRowTarget target, MapStatus status) {
+  }
+
+  /**
+   * Adds targets to the rows of a new map, as a mapping import does (rows of other codes stay UNMAPPED): used to
+   * seed a map created from another one.
+   */
+  @Transactional
+  public int insertTargets(Long mapId, List<SeedTarget> targets) {
+    final InsertMappingCodeWork work = new InsertMappingCodeWork();
+    targets.forEach(t -> work.add(t.target(), t.sourceCode(), mapId, 0, t.status()));
+    if (work.getInsertCount() > 0) {
+      entityManager.unwrap(Session.class).doWork(work);
+    }
+    entityManager.flush();
+    entityManager.clear();
+    return work.getInsertCount();
+  }
+
   @Transactional
   public MappingImportResponse importMappings(
     @Validated ImportMappingFileDetails importDetails,

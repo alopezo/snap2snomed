@@ -477,6 +477,23 @@
     "flagged=true": "Markeret: Ja",
     "topLevel=true": "Kun øverste niveau"
   },
+  "INVERT_MAP": {
+      "TITLE": "Opret en mapping fra SNOMED CT",
+      "ACTION_TOOLTIP": "Opret en mapping fra SNOMED CT ud fra denne mapping (omvendt, i et nyt projekt)",
+      "EXPLANATION": "Der oprettes et nyt projekt med en mapping fra SNOMED CT: kilden er de SNOMED CT-begreber, denne mapping har som mål, hver mappet tilbage til de lokale koder, der havde det som mål, med omvendt relation. Forfinede mål mappes fra deres fokusbegreb. Rækkerne starter som DRAFT til gennemgang; denne mapping ændres ikke.",
+      "PROJECT_TITLE": "Titel på nyt projekt",
+      "DESCRIPTION": "Beskrivelse",
+      "CREATE": "OPRET",
+      "OPEN": "ÅBN NY MAPPING",
+      "CLOSE": "LUK",
+      "ERROR": "Mappingen kunne ikke oprettes.",
+      "RESULT_CONCEPTS": "{{count}} SNOMED CT-begreber i den nye kilde",
+      "RESULT_TARGETS": "{{count}} mappinger tilbage til lokale koder",
+      "RESULT_REFINED": "{{count}} af dem fra forfinede mål (mappet fra fokusbegrebet)",
+      "RESULT_INACTIVE": "{{count}} begreber udeladt: ikke aktive i SNOMED CT-versionen",
+      "RESULT_NO_MAP": "{{count}} rækker uden mapping udeladt",
+      "RESULT_HINT": "Den nye mapping er en almindelig mapping fra SNOMED CT: gennemgå rækkerne og nedarvningen der."
+  },
   "DIALOG": {
     "OK": "OK",
     "TITLE_CONFIRM": "Advarsel",

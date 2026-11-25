@@ -17,7 +17,7 @@
 import {Inject, Injectable} from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {Mapping} from '../_models/mapping';
+import {InheritanceMode, Mapping} from '../_models/mapping';
 import {Project} from '../_models/project';
 import {Source} from '../_models/source';
 import {ServiceUtils} from '../_utils/service_utils';
@@ -141,6 +141,25 @@ export interface SourceChanges {
 }
 
 export type InheritanceState = 'ASSERTED' | 'NO_MAP' | 'STOPPED' | 'INHERITED' | 'BLOCKED' | 'CONFLICT' | 'UNCOVERED';
+
+/** The new project of an inverted map (see MapService.invertMap). */
+export interface InvertMapRequest {
+  title: string;
+  description: string | null;
+  inheritance: boolean;
+  inheritanceMode: InheritanceMode;
+}
+
+/** What inverting a map created and carried over. */
+export interface InvertMapResult {
+  projectId: number;
+  mapId: number;
+  concepts: number;
+  targets: number;
+  refinedTargets: number;
+  inactiveConcepts: number;
+  noMapRows: number;
+}
 
 /** A row of a map with inheritance (see GET /map/{id}/inheritance). */
 export interface InheritanceRow {
@@ -278,6 +297,15 @@ export class MapService {
   acceptInheritance(mapId: string, rowIds: number[] | null, taskId: string | null): Observable<AcceptInheritanceResult> {
     return this.http.post<AcceptInheritanceResult>(`${this.config.apiBaseUrl}/map/${mapId}/inheritance/accept`,
       {rowIds, taskId: taskId ? Number(taskId) : null}, ServiceUtils.getHTTPHeaders());
+  }
+
+  /**
+   * Creates a map from SNOMED CT, in a new project, from a single author map to SNOMED CT: its targets become
+   * the source, each mapped back to the codes that targeted it (see MapInversionService in the API).
+   */
+  invertMap(mapId: string, request: InvertMapRequest): Observable<InvertMapResult> {
+    return this.http.post<InvertMapResult>(`${this.config.apiBaseUrl}/map/${mapId}/invert`, request,
+      ServiceUtils.getHTTPHeaders());
   }
 
   /** In a map with inheritance: this concept and its descendants stop inheriting from mapped ancestors. */

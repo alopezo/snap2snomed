@@ -477,6 +477,23 @@
     "flagged=true": "Megjelölt: Igen",
     "topLevel=true": "Csak felső szint"
   },
+  "INVERT_MAP": {
+      "TITLE": "Megfeleltetés létrehozása SNOMED CT-ből",
+      "ACTION_TOOLTIP": "Megfeleltetés létrehozása SNOMED CT-ből ebből a megfeleltetésből (megfordítva, új projektben)",
+      "EXPLANATION": "Új projekt jön létre egy SNOMED CT-ből induló megfeleltetéssel: a forrás azok a SNOMED CT fogalmak, amelyek ennek a megfeleltetésnek a céljai, mindegyik visszarendelve azokhoz a helyi kódokhoz, amelyek célként használták, megfordított kapcsolattal. A finomított célok a fókuszfogalmukból kerülnek megfeleltetésre. A sorok DRAFT állapotban indulnak, ellenőrzésre; ez a megfeleltetés nem változik.",
+      "PROJECT_TITLE": "Az új projekt címe",
+      "DESCRIPTION": "Leírás",
+      "CREATE": "LÉTREHOZÁS",
+      "OPEN": "ÚJ MEGFELELTETÉS MEGNYITÁSA",
+      "CLOSE": "BEZÁRÁS",
+      "ERROR": "A megfeleltetést nem sikerült létrehozni.",
+      "RESULT_CONCEPTS": "{{count}} SNOMED CT fogalom az új forrásban",
+      "RESULT_TARGETS": "{{count}} visszarendelés helyi kódokhoz",
+      "RESULT_REFINED": "Ebből {{count}} finomított célokból (a fókuszfogalomból megfeleltetve)",
+      "RESULT_INACTIVE": "{{count}} fogalom kihagyva: nem aktív a SNOMED CT verzióban",
+      "RESULT_NO_MAP": "{{count}} megfeleltetés nélküli sor kihagyva",
+      "RESULT_HINT": "Az új megfeleltetés egy szokásos SNOMED CT-ből induló megfeleltetés: ott ellenőrizze a sorait és az öröklést."
+  },
   "DIALOG": {
     "OK": "OK",
     "TITLE_CONFIRM": "Figyelmeztetés",

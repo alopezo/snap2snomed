@@ -23,6 +23,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.snomed.snap2snomed.controller.dto.InheritanceDto;
+import org.snomed.snap2snomed.controller.dto.InvertMapDto;
 import org.snomed.snap2snomed.controller.dto.SourceChangesDto;
 import org.snomed.snap2snomed.controller.dto.TargetCodeDto;
 import org.snomed.snap2snomed.model.AdditionalCodeColumn;
@@ -36,6 +37,7 @@ import org.snomed.snap2snomed.repository.ImportedCodeRepository;
 import org.snomed.snap2snomed.repository.MapRepository;
 import org.snomed.snap2snomed.security.WebSecurity;
 import org.snomed.snap2snomed.service.InheritanceService;
+import org.snomed.snap2snomed.service.MapInversionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -70,6 +72,9 @@ public class TargetCodeRestController {
 
   @Autowired
   InheritanceService inheritanceService;
+
+  @Autowired
+  MapInversionService mapInversionService;
 
   @Operation(description = "Searches the target code set of a map from SNOMED CT by code or display text, or "
       + "returns the code with exactly the given value.")
@@ -149,6 +154,18 @@ public class TargetCodeRestController {
       throw new NotAuthorisedProblem("Not authorised to view this map");
     }
     return inheritanceService.computeForMap(mapId);
+  }
+
+  @Operation(description = "Creates a map from SNOMED CT, in a new project, from a single author map to SNOMED CT: "
+      + "its source is the SNOMED CT concepts the map targets, each mapped back to the codes that targeted it with "
+      + "the relationship inverted (refined targets from their focus concept). Its rows are DRAFT. Project owners only.")
+  @PostMapping(path = "/map/{mapId}/invert", consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public InvertMapDto.Result invertMap(@PathVariable("mapId") Long mapId, @RequestBody InvertMapDto.Request request) {
+    if (!webSecurity.isValidUser()) {
+      throw new NoSuchUserProblem();
+    }
+    return mapInversionService.invert(mapId, request);
   }
 
   @Operation(description = "Accepts the inheritance of rows without targets of their own (inheriting, blocked or "

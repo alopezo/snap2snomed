@@ -477,6 +477,23 @@
     "flagged=true": "Flaggad: Ja",
     "topLevel=true": "Endast översta nivån"
   },
+  "INVERT_MAP": {
+      "TITLE": "Skapa en mappning från SNOMED CT",
+      "ACTION_TOOLTIP": "Skapa en mappning från SNOMED CT utifrån denna mappning (omvänd, i ett nytt projekt)",
+      "EXPLANATION": "Ett nytt projekt skapas med en mappning från SNOMED CT: källan är de SNOMED CT-begrepp som denna mappning har som mål, vart och ett mappat tillbaka till de lokala koder som hade det som mål, med omvänd relation. Förfinade mål mappas från sitt fokusbegrepp. Raderna börjar som DRAFT för granskning; denna mappning ändras inte.",
+      "PROJECT_TITLE": "Titel på nytt projekt",
+      "DESCRIPTION": "Beskrivning",
+      "CREATE": "SKAPA",
+      "OPEN": "ÖPPNA NY MAPPNING",
+      "CLOSE": "STÄNG",
+      "ERROR": "Mappningen kunde inte skapas.",
+      "RESULT_CONCEPTS": "{{count}} SNOMED CT-begrepp i den nya källan",
+      "RESULT_TARGETS": "{{count}} mappningar tillbaka till lokala koder",
+      "RESULT_REFINED": "{{count}} av dem från förfinade mål (mappade från fokusbegreppet)",
+      "RESULT_INACTIVE": "{{count}} begrepp utelämnade: inte aktiva i SNOMED CT-versionen",
+      "RESULT_NO_MAP": "{{count}} rader utan mappning utelämnade",
+      "RESULT_HINT": "Den nya mappningen är en vanlig mappning från SNOMED CT: granska raderna och arvet där."
+  },
   "DIALOG": {
     "OK": "OK",
     "TITLE_CONFIRM": "Varning",

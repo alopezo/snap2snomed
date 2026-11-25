@@ -1,0 +1,44 @@
+mat-dialog-content {
+  max-width: 560px;
+}
+
+.field-full-width {
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.hint {
+  display: block;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.9em;
+}
+
+.inheritance-mode {
+  display: flex;
+  flex-direction: column;
+  margin: 4px 0 4px 24px;
+}
+
+.counts {
+  padding-left: 18px;
+  margin: 4px 0 10px;
+}
+
+.counts li {
+  margin: 3px 0;
+}
+
+.warning {
+  color: #b26a00;
+  font-weight: 500;
+}
+
+.error {
+  color: #b00020;
+}
+
+.inline-spinner {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 6px;
+}
