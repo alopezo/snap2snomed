@@ -35,6 +35,12 @@
             }
           </div>
         }
+        @if (inheritanceAvailable && mode !== 'FORM.VIEW') {
+          <div class="inheritance-option">
+            <mat-checkbox id="inheritance" formControlName="inheritance">{{'MAP.INHERITANCE' | translate}}</mat-checkbox>
+            <p class="direction-hint">{{'MAP.INHERITANCE_HINT' | translate}}</p>
+          </div>
+        }
         <mat-form-field class="field-full-width" hintLabel="{{'FORM.MAX_CHARS' | translate}} {{MAX_TITLE}}">
           <mat-label>{{ 'MAP.TITLE' | translate }}</mat-label>
           <input matInput
@@ -239,6 +245,10 @@
                       <tr>
                         <th><b>{{ 'MAP.TARGET' | translate }}:</b></th>
                         <td>{{mappingModel.targetCodeSet?.name}}: {{mappingModel.targetCodeSet?.version}}</td>
+                      </tr>
+                      <tr>
+                        <th><b>{{ 'MAP.INHERITANCE_LABEL' | translate }}:</b></th>
+                        <td>{{ (mappingModel.inheritance ? 'MAP.INHERITANCE_ON' : 'MAP.INHERITANCE_OFF') | translate }}</td>
                       </tr>
                     </table>
                   } @else {

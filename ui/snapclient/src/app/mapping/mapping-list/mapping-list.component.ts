@@ -242,6 +242,7 @@ export class MappingListComponent implements OnInit, AfterViewInit, OnDestroy {
           // A map from SNOMED CT keeps its direction, target code set, ECL and display language
           this.newMapping.direction = (res as any).direction ?? 'TO_SNOMED';
           this.newMapping.targetCodeSet = (res as any).targetCodeSet ?? null;
+          this.newMapping.inheritance = !!(res as any).inheritance;
           this.newMapping.project = project;
           this.mode = 'FORM.COPY';
           this.opened = true;

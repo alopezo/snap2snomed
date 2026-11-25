@@ -39,6 +39,7 @@ export class Mapping {
     this.blindMapFlag = false;
     this.direction = 'TO_SNOMED';
     this.targetCodeSet = null;
+    this.inheritance = false;
   }
 
   id: string | null;
@@ -63,6 +64,8 @@ export class Mapping {
   direction: MapDirection;
   /** FROM_SNOMED maps: the imported code set the targets are chosen from. */
   targetCodeSet: Source | null;
+  /** FROM_SNOMED single author maps: unmapped concepts take the targets of their nearest mapped ancestor. */
+  inheritance: boolean;
 
   static replacer(key: string, value: any): any {
     if (value !== null && key === 'project') {
@@ -75,6 +78,10 @@ export class Mapping {
 
   static isFromSnomed(mapping: Mapping | null | undefined): boolean {
     return mapping?.direction === 'FROM_SNOMED';
+  }
+
+  static hasInheritance(mapping: Mapping | null | undefined): boolean {
+    return Mapping.isFromSnomed(mapping) && !!mapping?.inheritance && !mapping?.project?.dualMapMode;
   }
 
   /** The code system of the map's targets: SNOMED CT, or the target code set of a map from SNOMED CT. */

@@ -301,6 +301,7 @@ function toMapping(mapDto: any, project?: Project): Mapping {
   mapping.displayLanguage = mapDto.displayLanguage ?? null;
   mapping.direction = mapDto.direction ?? 'TO_SNOMED';
   mapping.targetCodeSet = (mapDto.targetCodeSet as Source) ?? null;
+  mapping.inheritance = !!mapDto.inheritance;
 
   if (project) {
     mapping.project = project;

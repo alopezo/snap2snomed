@@ -94,7 +94,8 @@ export class MappingAddComponent implements OnInit {
     toScope: new UntypedFormControl('', [Validators.minLength(1)]),
     displayLanguage: new UntypedFormControl(''),
     dualMapMode: new UntypedFormControl(''),
-    direction: new UntypedFormControl('TO_SNOMED')
+    direction: new UntypedFormControl('TO_SNOMED'),
+    inheritance: new UntypedFormControl(false)
   });
 
   readonly MAX_FROM_SNOMED_CONCEPTS = MAX_FROM_SNOMED_CONCEPTS;
@@ -194,6 +195,8 @@ export class MappingAddComponent implements OnInit {
     self.loadLanguageContexts(this.mappingModel.toVersion);
     self.formGroup.controls.dualMapMode.setValue(this.mappingModel.project.dualMapMode);
     self.formGroup.controls.direction.setValue(this.mappingModel.direction);
+    self.formGroup.controls.inheritance.setValue(!!this.mappingModel.inheritance);
+    self.formGroup.controls.inheritance.valueChanges.subscribe((value) => self.mappingModel.inheritance = !!value);
     if (this.fromSnomed && this.mappingModel.targetCodeSet) {
       self.formGroup.controls.sourceId.setValue(this.mappingModel.targetCodeSet.id);
     }
@@ -310,6 +313,11 @@ export class MappingAddComponent implements OnInit {
       this.mappingModel.targetCodeSet = null;
       this.mappingModel.source.id = id;
     }
+  }
+
+  /** Inheritance is offered for single author maps from SNOMED CT; it can be changed when editing. */
+  get inheritanceAvailable(): boolean {
+    return this.fromSnomed && !this.formGroup.controls.dualMapMode.value;
   }
 
   /** Counts the active concepts the ECL returns, so the user sees whether it fits a map from SNOMED CT. */
