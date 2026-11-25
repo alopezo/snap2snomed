@@ -255,7 +255,7 @@
     "DIRECTION": "Riktning",
     "DIRECTION_TO_SNOMED": "Till SNOMED CT",
     "DIRECTION_FROM_SNOMED": "Från SNOMED CT",
-    "DIRECTION_FROM_SNOMED_HINT": "Källan är de aktiva begreppen i ett ECL-uttryck (högst {{max}}), låsta när mappningen skapas; målen väljs från en importerad koduppsättning.",
+    "DIRECTION_FROM_SNOMED_HINT": "Källan är de aktiva begreppen i ett ECL-uttryck (högst {{max}}), som expanderas när mappningen skapas och igen för varje ny version; målen väljs från en importerad koduppsättning.",
     "TARGET_CODE_SET": "Målkoduppsättning",
     "TARGET_CODE_SET_REQUIRED": "En målkoduppsättning krävs",
     "SOURCE_EDITION": "Käll-SNOMED CT-utgåva",
@@ -269,7 +269,8 @@
     "CONCEPT_COUNT_TOO_LARGE": "(fler än tillåtna {{max}})",
     "FROM_SNOMED_SOURCE_ERROR": "Källbegreppen kunde inte skapas från ECL-uttrycket",
     "SOURCE_DISPLAY_LANGUAGE": "Visningsspråk för källan",
-    "SOURCE_DISPLAY_LANGUAGE_HINT": "Språk för källbegreppens termer, låsta när mappningen skapas"
+    "SOURCE_DISPLAY_LANGUAGE_HINT": "Språk för källbegreppens termer, låsta när mappningen skapas",
+    "FROM_SNOMED_NEW_VERSION_HINT": "Den här nya versionen expanderar samma ECL-uttryck och visningsspråk igen i den SNOMED CT-version du väljer. Begrepp som fortfarande finns i resultatet behåller sina rader; målen finns kvar i {{codeSet}}."
   },
   "TABLE": {
     "SOURCE_CODE": "Källkod",
@@ -724,5 +725,13 @@
     "DISPLAY": "Visning",
     "NOT_FOUND": "Koden finns inte i målkoduppsättningen",
     "SELECT_CODE": "Välj en målkod för att se detaljerna"
+  },
+  "SOURCE_CHANGES": {
+    "TITLE": "Källbegrepp i den nya versionen",
+    "KEPT": "{{count}} begrepp behöll sina rader och mål",
+    "ADDED": "{{count}} nya begrepp lades till, utan mappning",
+    "REMOVED": "{{count}} begrepp finns inte längre i ECL-resultatet och utelämnades",
+    "REMOVED_HINT": "De är inaktiva i den nya SNOMED CT-versionen eller matchar inte längre ECL-uttrycket. Deras mappningar finns kvar i den föregående versionen.",
+    "COPY_REMOVED": "Kopiera listan"
   }
 }

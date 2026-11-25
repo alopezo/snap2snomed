@@ -1,0 +1,32 @@
+<h2 mat-dialog-title>{{'SOURCE_CHANGES.TITLE' | translate}}</h2>
+<mat-dialog-content>
+  <ul class="counts">
+    <li id="keptCount">{{'SOURCE_CHANGES.KEPT' | translate: {count: data.keptCount} }}</li>
+    <li id="addedCount">{{'SOURCE_CHANGES.ADDED' | translate: {count: data.addedCount} }}</li>
+    <li id="removedCount" [class.warning]="data.removed.length > 0">
+      {{'SOURCE_CHANGES.REMOVED' | translate: {count: data.removed.length} }}
+    </li>
+  </ul>
+  @if (data.removed.length) {
+    <p class="hint">{{'SOURCE_CHANGES.REMOVED_HINT' | translate}}</p>
+    <div class="removed">
+      <table>
+        @for (concept of data.removed; track concept.code) {
+          <tr>
+            <td class="code">{{concept.code}}</td>
+            <td>{{concept.display}}</td>
+          </tr>
+        }
+      </table>
+    </div>
+  }
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  @if (data.removed.length) {
+    <button mat-button type="button" [cdkCopyToClipboard]="removedText" (cdkCopyToClipboardCopied)="copied = $event">
+      <mat-icon>{{copied ? 'check' : 'content_copy'}}</mat-icon>
+      {{'SOURCE_CHANGES.COPY_REMOVED' | translate}}
+    </button>
+  }
+  <button mat-flat-button color="primary" mat-dialog-close>{{'DIALOG.OK' | translate}}</button>
+</mat-dialog-actions>

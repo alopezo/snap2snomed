@@ -255,7 +255,7 @@
     "DIRECTION": "Dirección",
     "DIRECTION_TO_SNOMED": "Hacia SNOMED CT",
     "DIRECTION_FROM_SNOMED": "Desde SNOMED CT",
-    "DIRECTION_FROM_SNOMED_HINT": "El origen son los conceptos activos de una expresión ECL (como máximo {{max}}), fijados al crear el mapa; los destinos se eligen de un conjunto de códigos importado.",
+    "DIRECTION_FROM_SNOMED_HINT": "El origen son los conceptos activos de una expresión ECL (como máximo {{max}}), que se expande al crear el mapa y de nuevo en cada nueva versión; los destinos se eligen de un conjunto de códigos importado.",
     "TARGET_CODE_SET": "Conjunto de códigos destino",
     "TARGET_CODE_SET_REQUIRED": "Se requiere un conjunto de códigos destino",
     "SOURCE_EDITION": "Edición de SNOMED CT de origen",
@@ -269,7 +269,8 @@
     "CONCEPT_COUNT_TOO_LARGE": "(más de los {{max}} permitidos)",
     "FROM_SNOMED_SOURCE_ERROR": "No se pudieron crear los conceptos de origen a partir de la expresión ECL",
     "SOURCE_DISPLAY_LANGUAGE": "Idioma de visualización del origen",
-    "SOURCE_DISPLAY_LANGUAGE_HINT": "Idioma de los términos de los conceptos de origen, fijados al crear el mapa"
+    "SOURCE_DISPLAY_LANGUAGE_HINT": "Idioma de los términos de los conceptos de origen, fijados al crear el mapa",
+    "FROM_SNOMED_NEW_VERSION_HINT": "Esta nueva versión vuelve a expandir la misma ECL e idioma de visualización en la versión de SNOMED CT que elija. Los conceptos que siguen en el resultado conservan sus filas; los destinos siguen en {{codeSet}}."
   },
   "TABLE": {
     "SOURCE_CODE": "Código de origen",
@@ -724,5 +725,13 @@
     "DISPLAY": "Término",
     "NOT_FOUND": "El código no está en el conjunto de códigos destino",
     "SELECT_CODE": "Seleccione un código destino para ver sus detalles"
+  },
+  "SOURCE_CHANGES": {
+    "TITLE": "Conceptos de origen de la nueva versión",
+    "KEPT": "{{count}} conceptos conservaron sus filas y destinos",
+    "ADDED": "Se agregaron {{count}} conceptos nuevos, sin mapear",
+    "REMOVED": "{{count}} conceptos ya no están en el resultado de la ECL y quedaron afuera",
+    "REMOVED_HINT": "Están inactivos en la nueva versión de SNOMED CT o ya no cumplen la ECL. Sus mapeos siguen en la versión anterior.",
+    "COPY_REMOVED": "Copiar la lista"
   }
 }

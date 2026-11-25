@@ -258,17 +258,32 @@ export class MappingAddComponent implements OnInit {
     });
 
     this.applyModeToDualMapMode();
+    this.applyModeToFromSnomedCopy();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.mode) {
       this.applyModeToDualMapMode();
+      this.applyModeToFromSnomedCopy();
     }
     // clear all errors when drawer is closed
     if (changes.drawerOpen && changes.drawerOpen.currentValue === false && changes.drawerOpen.previousValue === true) {
       this.warnDelete = false;
       this.error = {};
       this.store.dispatch(new ClearErrors());
+    }
+  }
+
+  /** A new version of a map from SNOMED CT keeps its ECL and display language; only the version changes. */
+  private applyModeToFromSnomedCopy(): void {
+    const locked = this.mode === 'FORM.COPY' && this.fromSnomed;
+    for (const control of [this.formGroup.controls.toScopeSelect, this.formGroup.controls.toScope,
+      this.formGroup.controls.displayLanguage]) {
+      if (locked) {
+        control.disable({emitEvent: false});
+      } else if (control.disabled) {
+        control.enable({emitEvent: false});
+      }
     }
   }
 
@@ -284,7 +299,8 @@ export class MappingAddComponent implements OnInit {
   }
 
   private applyCodeSet(id: string | null): void {
-    if (this.mode !== 'FORM.CREATE' && this.mode !== 'FORM.COPY') {
+    // The target code set of a map from SNOMED CT is fixed once created, so only creation picks it
+    if (this.mode !== 'FORM.CREATE' && (this.mode !== 'FORM.COPY' || this.fromSnomed)) {
       return;
     }
     if (this.fromSnomed) {
@@ -397,7 +413,11 @@ export class MappingAddComponent implements OnInit {
           } else if (this.mode === 'FORM.COPY') {
             if (this.existingMapVersions) {
               if (this.existingMapVersions.indexOf(this.mappingModel.mapVersion) < 0) {
-                this.store.dispatch(new CopyMapping(this.mappingModel));
+                if (this.fromSnomed) {
+                  this.copyFromSnomed();
+                } else {
+                  this.store.dispatch(new CopyMapping(this.mappingModel));
+                }
               } else {
                 this.translate.get('ERROR.EXISTING_VERSION').subscribe((res) => {
                   this.error.message = `${res}: ${this.existingMapVersions?.join(',')}`;
@@ -440,6 +460,30 @@ export class MappingAddComponent implements OnInit {
           importFile: undefined,
           dualMapMode: this.mappingModel.project.dualMapMode
         }));
+      },
+      error: err => {
+        this.loading = false;
+        this.translate.get('MAP.FROM_SNOMED_SOURCE_ERROR').subscribe(res => {
+          this.error.message = res;
+          this.error.detail = err?.error;
+        });
+      }
+    });
+  }
+
+  /**
+   * New version of a map from SNOMED CT: the same ECL and display language are expanded again in the
+   * chosen SNOMED CT version into a new source code set; the copy keeps the rows of the concepts still in it.
+   */
+  private copyFromSnomed(): void {
+    const name = `${this.mappingModel.project.title} (SNOMED CT)`.substring(0, 100);
+    this.loading = true;
+    this.mapService.createSourceFromEcl(name, this.mappingModel.toVersion ?? '', this.mappingModel.toScope,
+      this.mappingModel.displayLanguage).subscribe({
+      next: source => {
+        this.loading = false;
+        this.mappingModel.source = source;
+        this.store.dispatch(new CopyMapping(this.mappingModel));
       },
       error: err => {
         this.loading = false;

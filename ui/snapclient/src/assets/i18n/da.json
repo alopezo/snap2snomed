@@ -255,7 +255,7 @@
     "DIRECTION": "Retning",
     "DIRECTION_TO_SNOMED": "Til SNOMED CT",
     "DIRECTION_FROM_SNOMED": "Fra SNOMED CT",
-    "DIRECTION_FROM_SNOMED_HINT": "Kilden er de aktive begreber i et ECL-udtryk (højst {{max}}), fastlåst når mappingen oprettes; målene vælges fra et importeret kodesæt.",
+    "DIRECTION_FROM_SNOMED_HINT": "Kilden er de aktive begreber i et ECL-udtryk (højst {{max}}), som udfoldes når mappingen oprettes og igen for hver ny version; målene vælges fra et importeret kodesæt.",
     "TARGET_CODE_SET": "Målkodesæt",
     "TARGET_CODE_SET_REQUIRED": "Et målkodesæt er påkrævet",
     "SOURCE_EDITION": "Kilde-SNOMED CT-udgave",
@@ -269,7 +269,8 @@
     "CONCEPT_COUNT_TOO_LARGE": "(flere end de tilladte {{max}})",
     "FROM_SNOMED_SOURCE_ERROR": "Kildebegreberne kunne ikke oprettes ud fra ECL-udtrykket",
     "SOURCE_DISPLAY_LANGUAGE": "Visningssprog for kilden",
-    "SOURCE_DISPLAY_LANGUAGE_HINT": "Sprog for kildebegrebernes termer, fastlåst når mappingen oprettes"
+    "SOURCE_DISPLAY_LANGUAGE_HINT": "Sprog for kildebegrebernes termer, fastlåst når mappingen oprettes",
+    "FROM_SNOMED_NEW_VERSION_HINT": "Denne nye version udfolder det samme ECL-udtryk og visningssprog igen i den SNOMED CT-version, du vælger. Begreber, der stadig er i resultatet, beholder deres rækker; målene forbliver i {{codeSet}}."
   },
   "TABLE": {
     "SOURCE_CODE": "Kildekode",
@@ -724,5 +725,13 @@
     "DISPLAY": "Visning",
     "NOT_FOUND": "Koden findes ikke i målkodesættet",
     "SELECT_CODE": "Vælg en målkode for at se detaljerne"
+  },
+  "SOURCE_CHANGES": {
+    "TITLE": "Kildebegreber i den nye version",
+    "KEPT": "{{count}} begreber beholdt deres rækker og mål",
+    "ADDED": "{{count}} nye begreber blev tilføjet, uden mapping",
+    "REMOVED": "{{count}} begreber er ikke længere i ECL-resultatet og blev udeladt",
+    "REMOVED_HINT": "De er inaktive i den nye SNOMED CT-version eller matcher ikke længere ECL-udtrykket. Deres mappinger forbliver i den forrige version.",
+    "COPY_REMOVED": "Kopiér listen"
   }
 }

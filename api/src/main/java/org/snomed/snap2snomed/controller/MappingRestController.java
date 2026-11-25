@@ -167,7 +167,6 @@ public class MappingRestController {
     if (!webSecurity.isAdminUser() && !webSecurity.isProjectOwnerForMapId(mapId)) {
       throw new NotAuthorisedProblem("Not authorised to import mapping if the user is not admin or member of an associated project!");
     }
-    mappingService.requireToSnomed(mapId, "A new map version");
     return mappingService.newMappingVersion(mapId, mapDetails.getSourceId(), mapDetails.getMapVersion(),
         mapDetails.getToVersion(), mapDetails.getToScope(), mapDetails.getDisplayLanguage());
   }

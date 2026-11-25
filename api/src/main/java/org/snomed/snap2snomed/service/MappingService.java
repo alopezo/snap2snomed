@@ -658,6 +658,18 @@ public class MappingService {
 
     final long originalSourceId = originalMap.getSource().getId();
 
+    if (originalMap.isFromSnomed()) {
+      // The ECL and the display language stay; only the SNOMED CT version can change. The new source is
+      // the ECL expanded again (see EclCodeSetService), so it must be a different code set
+      if (!Objects.equals(originalMap.getToScope(), targetScope)
+          || !Objects.equals(LanguageDialects.normalize(originalMap.getDisplayLanguage()), LanguageDialects.normalize(displayLanguage))) {
+        throw new BadRequestDataProblem("A new version of a map from SNOMED CT keeps its ECL and display language");
+      }
+      if (newSourceId == originalSourceId) {
+        throw new BadRequestDataProblem("A new version of a map from SNOMED CT needs the ECL expanded again");
+      }
+    }
+
     Map newMap = Map.builder()
         .project(originalMap.getProject())
         .mapVersion(mapVersion)
@@ -665,6 +677,8 @@ public class MappingService {
         .toScope(targetScope)
         .displayLanguage(displayLanguage)
         .source(newSource)
+        .direction(originalMap.getDirection())
+        .targetCodeSet(originalMap.getTargetCodeSet())
         .build();
 
     final Map mapCreated = mapRepository.save(newMap);
@@ -709,6 +723,11 @@ public class MappingService {
       // Any rows in draft state will be cleared and reblinded
       mapRowRepository.resetMapRowResetRowsForNewMap(createdId);
 
+    }
+
+    if (mapCreated.isFromSnomed()) {
+      // Targets come from the target code set: no SNOMED CT term resolution or validation
+      return createdId;
     }
 
     // Copied targets keep the original display; re-resolve them if the terms can differ

@@ -255,7 +255,7 @@
     "DIRECTION": "Sens",
     "DIRECTION_TO_SNOMED": "Vers SNOMED CT",
     "DIRECTION_FROM_SNOMED": "Depuis SNOMED CT",
-    "DIRECTION_FROM_SNOMED_HINT": "La source est constituée des concepts actifs d'une expression ECL (au plus {{max}}), figés à la création de la correspondance ; les cibles sont choisies dans un ensemble de codes importé.",
+    "DIRECTION_FROM_SNOMED_HINT": "La source est constituée des concepts actifs d'une expression ECL (au plus {{max}}), développée à la création de la correspondance puis à chaque nouvelle version ; les cibles sont choisies dans un ensemble de codes importé.",
     "TARGET_CODE_SET": "Ensemble de codes cible",
     "TARGET_CODE_SET_REQUIRED": "Un ensemble de codes cible est requis",
     "SOURCE_EDITION": "Édition SNOMED CT source",
@@ -269,7 +269,8 @@
     "CONCEPT_COUNT_TOO_LARGE": "(plus que les {{max}} autorisés)",
     "FROM_SNOMED_SOURCE_ERROR": "Les concepts source n'ont pas pu être créés à partir de l'expression ECL",
     "SOURCE_DISPLAY_LANGUAGE": "Langue d'affichage de la source",
-    "SOURCE_DISPLAY_LANGUAGE_HINT": "Langue des libellés des concepts source, figés à la création de la correspondance"
+    "SOURCE_DISPLAY_LANGUAGE_HINT": "Langue des libellés des concepts source, figés à la création de la correspondance",
+    "FROM_SNOMED_NEW_VERSION_HINT": "Cette nouvelle version développe à nouveau la même ECL et la même langue d'affichage dans la version SNOMED CT choisie. Les concepts toujours présents conservent leurs lignes ; les cibles restent dans {{codeSet}}."
   },
   "TABLE": {
     "SOURCE_CODE": "Code source",
@@ -724,5 +725,13 @@
     "DISPLAY": "Libellé",
     "NOT_FOUND": "Le code ne figure pas dans l'ensemble de codes cible",
     "SELECT_CODE": "Sélectionnez un code cible pour voir ses détails"
+  },
+  "SOURCE_CHANGES": {
+    "TITLE": "Concepts source de la nouvelle version",
+    "KEPT": "{{count}} concepts ont conservé leurs lignes et cibles",
+    "ADDED": "{{count}} nouveaux concepts ont été ajoutés, sans correspondance",
+    "REMOVED": "{{count}} concepts ne figurent plus dans le résultat de l'ECL et ont été exclus",
+    "REMOVED_HINT": "Ils sont inactifs dans la nouvelle version SNOMED CT ou ne correspondent plus à l'ECL. Leurs correspondances restent dans la version précédente.",
+    "COPY_REMOVED": "Copier la liste"
   }
 }

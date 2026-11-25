@@ -25,15 +25,19 @@ Maps from SNOMED CT (branch `from-snomed`).
 
 - Map direction, chosen when a map is created: "To SNOMED CT" (as before) or "From SNOMED CT". A map
   from SNOMED CT takes as its source the active concepts of an ECL expression in a SNOMED CT version
-  (at most 10,000; the form can count them first), with terms in the chosen display language, frozen
+  (at most 10,000; the form can count them first), with terms in the chosen display language, expanded
   into a code set when the map is created. Its targets are chosen from an imported code set.
+- A new version of a map from SNOMED CT expands the same ECL and display language again in the chosen
+  SNOMED CT version. Concepts still in the result keep their rows and targets, new ones are added
+  unmapped, and a dialog then shows how many were kept and added and lists the concepts that are gone
+  (with a button to copy the list).
 - In the mapping screens of a map from SNOMED CT, a search over the target code set (by code or text)
   and the selected code's details with its additional columns replace the SNOMED CT search,
   hierarchy, properties and refinement panels. Codes are dragged onto a relationship as usual.
 - The FHIR ConceptMap export of a map from SNOMED CT has SNOMED CT as the source and the target code
   set's system and version as the target. CSV, TSV and Excel exports are unchanged.
-- API: `POST /importedCodeSets/fromEcl`, `GET /map/{mapId}/targetCodes` (authorised through the map's
-  project roles) and the map fields `direction` and `targetCodeSet` (migration V23).
+- API: `POST /importedCodeSets/fromEcl`, `GET /map/{mapId}/targetCodes` and
+  `GET /map/{mapId}/sourceChanges` (both authorised through the map's project roles) and the map fields `direction` and `targetCodeSet` (migration V23).
 
 #### Changed
 
@@ -42,8 +46,9 @@ Maps from SNOMED CT (branch `from-snomed`).
 
 #### Not available for maps from SNOMED CT
 
-- Automap, mapping file import, target validation, target term refresh, new map versions, target
-  refinement and setting targets in bulk change (relationship and status can still be changed).
+- Automap, mapping file import, target validation, target term refresh, target refinement, changing
+  the ECL or display language in a new version, and setting targets in bulk change (relationship and
+  status can still be changed).
 
 ## [1.3.0] - 2026-11-25
 

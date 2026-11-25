@@ -39,6 +39,8 @@ import {
   UpdateMappingSuccess
 } from './mapping.actions';
 import {Router} from '@angular/router';
+import {MatDialog} from '@angular/material/dialog';
+import {SourceChangesDialogComponent} from '../../mapping/source-changes-dialog/source-changes-dialog.component';
 import {of} from 'rxjs/internal/observable/of';
 import {MapService, MapViewResults} from '../../_services/map.service';
 import {Mapping} from '../../_models/mapping';
@@ -127,6 +129,7 @@ export class MappingEffects {
     ofType(MappingActionTypes.COPY_MAPPING),
     map(action => action.payload),
     switchMap((payload) => this.mapService.copyMapping(payload).pipe(
+      switchMap((mapping_id: number) => this.showSourceChanges(payload, mapping_id).pipe(map(() => mapping_id))),
       switchMap((mapping_id: number) => this.mapService.getMapForId(mapping_id.toString()).pipe(
           map((mapDto: any) => toMapping(mapDto)),
           switchMap((mapping: Mapping) => of(new CopyMappingSuccess(mapping))),
@@ -264,7 +267,23 @@ export class MappingEffects {
     private mapService: MapService,
     private sourceService: SourceService,
     private userService: UserService,
-    private router: Router) {
+    private router: Router,
+    private dialog: MatDialog) {
+  }
+
+  /**
+   * After a new version of a map from SNOMED CT (its ECL expanded again), shows which source concepts kept
+   * their rows, which are new and which are gone; completes when the dialog is closed. A failure to compare
+   * does not stop the new version.
+   */
+  private showSourceChanges(previous: Mapping, newMapId: number): Observable<unknown> {
+    if (!Mapping.isFromSnomed(previous) || !previous.id) {
+      return of(null);
+    }
+    return this.mapService.getSourceChanges(String(newMapId), previous.id).pipe(
+      switchMap(changes => this.dialog.open(SourceChangesDialogComponent, {width: '640px', data: changes}).afterClosed()),
+      catchError(() => of(null))
+    );
   }
 
 }

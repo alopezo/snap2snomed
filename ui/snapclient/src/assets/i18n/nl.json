@@ -255,7 +255,7 @@
     "DIRECTION": "Richting",
     "DIRECTION_TO_SNOMED": "Naar SNOMED CT",
     "DIRECTION_FROM_SNOMED": "Vanuit SNOMED CT",
-    "DIRECTION_FROM_SNOMED_HINT": "De bron bestaat uit de actieve concepten van een ECL-expressie (maximaal {{max}}), vastgelegd bij het aanmaken van de mapping; doelen worden gekozen uit een geïmporteerde codeset.",
+    "DIRECTION_FROM_SNOMED_HINT": "De bron bestaat uit de actieve concepten van een ECL-expressie (maximaal {{max}}), geëxpandeerd bij het aanmaken van de mapping en opnieuw bij elke nieuwe versie; doelen worden gekozen uit een geïmporteerde codeset.",
     "TARGET_CODE_SET": "Doelcodeset",
     "TARGET_CODE_SET_REQUIRED": "Een doelcodeset is verplicht",
     "SOURCE_EDITION": "Bron-SNOMED CT-editie",
@@ -269,7 +269,8 @@
     "CONCEPT_COUNT_TOO_LARGE": "(meer dan de toegestane {{max}})",
     "FROM_SNOMED_SOURCE_ERROR": "De bronconcepten konden niet worden aangemaakt uit de ECL-expressie",
     "SOURCE_DISPLAY_LANGUAGE": "Weergavetaal van de bron",
-    "SOURCE_DISPLAY_LANGUAGE_HINT": "Taal van de termen van de bronconcepten, vastgelegd bij het aanmaken van de mapping"
+    "SOURCE_DISPLAY_LANGUAGE_HINT": "Taal van de termen van de bronconcepten, vastgelegd bij het aanmaken van de mapping",
+    "FROM_SNOMED_NEW_VERSION_HINT": "Deze nieuwe versie expandeert dezelfde ECL en weergavetaal opnieuw in de SNOMED CT-versie die u kiest. Concepten die nog in het resultaat staan behouden hun rijen; de doelen blijven in {{codeSet}}."
   },
   "TABLE": {
     "SOURCE_CODE": "Broncode",
@@ -724,5 +725,13 @@
     "DISPLAY": "Weergave",
     "NOT_FOUND": "De code staat niet in de doelcodeset",
     "SELECT_CODE": "Selecteer een doelcode om de details te zien"
+  },
+  "SOURCE_CHANGES": {
+    "TITLE": "Bronconcepten van de nieuwe versie",
+    "KEPT": "{{count}} concepten behielden hun rijen en doelen",
+    "ADDED": "{{count}} nieuwe concepten zijn toegevoegd, zonder mapping",
+    "REMOVED": "{{count}} concepten staan niet meer in het ECL-resultaat en zijn weggelaten",
+    "REMOVED_HINT": "Ze zijn inactief in de nieuwe SNOMED CT-versie of voldoen niet meer aan de ECL. Hun mappings blijven in de vorige versie.",
+    "COPY_REMOVED": "Lijst kopiëren"
   }
 }

@@ -20,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.snomed.snap2snomed.controller.dto.SourceChangesDto;
 import org.snomed.snap2snomed.controller.dto.TargetCodeDto;
 import org.snomed.snap2snomed.model.AdditionalCodeColumn;
 import org.snomed.snap2snomed.model.AdditionalCodeValue;
@@ -43,5 +44,19 @@ class TargetCodeRestControllerTest {
   void codeWithoutAdditionalColumns() {
     final ImportedCode code = new ImportedCode(1L, "J45", null, 1L, "Asthma", null);
     assertThat(TargetCodeRestController.toDto(code, null).getAdditionalColumns()).isEmpty();
+  }
+
+  private static ImportedCode code(String code, String display) {
+    return new ImportedCode(null, code, null, 1L, display, null);
+  }
+
+  @Test
+  void comparesTheSourceCodesOfTwoVersions() {
+    final SourceChangesDto changes = TargetCodeRestController.compare(
+        List.of(code("1", "Kept"), code("2", "Gone"), code("3", "Kept too")),
+        List.of(code("3", "Kept too"), code("1", "Kept"), code("4", "New"), code("5", "New too")));
+    assertThat(changes.getKeptCount()).isEqualTo(2);
+    assertThat(changes.getAddedCount()).isEqualTo(2);
+    assertThat(changes.getRemoved()).containsExactly(new SourceChangesDto.Code("2", "Gone"));
   }
 }

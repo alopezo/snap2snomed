@@ -19,6 +19,10 @@ package org.snomed.snap2snomed.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+import org.snomed.snap2snomed.controller.dto.SourceChangesDto;
 import org.snomed.snap2snomed.controller.dto.TargetCodeDto;
 import org.snomed.snap2snomed.model.AdditionalCodeColumn;
 import org.snomed.snap2snomed.model.ImportedCode;
@@ -42,8 +46,9 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 
 /**
- * Searches the target code set of a map from SNOMED CT. Access is granted through the map (any role in
- * its project), so the generic code set permissions are left unchanged.
+ * Code set queries made through a map: searching the target code set of a map from SNOMED CT, and
+ * comparing the source codes of two versions. Access is granted through the map (any role in its
+ * project), so the generic code set permissions are left unchanged.
  */
 @RestController
 public class TargetCodeRestController {
@@ -92,6 +97,38 @@ public class TargetCodeRestController {
       codes = result.getContent();
     }
     return codes.stream().map(c -> toDto(c, columns)).toList();
+  }
+
+  @Operation(description = "Compares the source codes of a map with those of a previous version of it in the same "
+      + "project: how many are in both, how many are new, and which are gone.")
+  @GetMapping(path = "/map/{mapId}/sourceChanges", produces = MediaType.APPLICATION_JSON_VALUE)
+  public SourceChangesDto getSourceChanges(@PathVariable("mapId") Long mapId, @RequestParam Long previousMapId) {
+    if (!webSecurity.isValidUser()) {
+      throw new NoSuchUserProblem();
+    }
+    if (!webSecurity.isAdminUser() && !webSecurity.hasAnyProjectRoleForMapId(mapId)) {
+      throw new NotAuthorisedProblem("Not authorised to view this map");
+    }
+    final Map map = mapRepository.findById(mapId)
+        .orElseThrow(() -> Snap2SnomedProblem.of(HttpStatus.NOT_FOUND, "No Map found with id " + mapId));
+    final Map previous = mapRepository.findById(previousMapId)
+        .orElseThrow(() -> Snap2SnomedProblem.of(HttpStatus.NOT_FOUND, "No Map found with id " + previousMapId));
+    if (!Objects.equals(map.getProject().getId(), previous.getProject().getId())) {
+      throw new BadRequestDataProblem("Both maps must be versions in the same project");
+    }
+    return compare(importedCodeRepository.findAllInCodeSet(previous.getSource().getId()),
+        importedCodeRepository.findAllInCodeSet(map.getSource().getId()));
+  }
+
+  static SourceChangesDto compare(List<ImportedCode> previousCodes, List<ImportedCode> currentCodes) {
+    final Set<String> current = currentCodes.stream().map(ImportedCode::getCode).collect(Collectors.toSet());
+    final Set<String> before = previousCodes.stream().map(ImportedCode::getCode).collect(Collectors.toSet());
+    final List<SourceChangesDto.Code> removed = previousCodes.stream()
+        .filter(code -> !current.contains(code.getCode()))
+        .map(code -> new SourceChangesDto.Code(code.getCode(), code.getDisplay()))
+        .toList();
+    final int kept = (int) currentCodes.stream().filter(code -> before.contains(code.getCode())).count();
+    return new SourceChangesDto(kept, currentCodes.size() - kept, removed);
   }
 
   static TargetCodeDto toDto(ImportedCode code, List<AdditionalCodeColumn> columns) {

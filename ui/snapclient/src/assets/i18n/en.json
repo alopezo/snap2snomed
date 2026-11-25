@@ -255,7 +255,7 @@
     "DIRECTION": "Direction",
     "DIRECTION_TO_SNOMED": "To SNOMED CT",
     "DIRECTION_FROM_SNOMED": "From SNOMED CT",
-    "DIRECTION_FROM_SNOMED_HINT": "The source is the active concepts of an ECL expression (at most {{max}}), frozen when the map is created; targets are chosen from an imported code set.",
+    "DIRECTION_FROM_SNOMED_HINT": "The source is the active concepts of an ECL expression (at most {{max}}), expanded when the map is created and again for each new version; targets are chosen from an imported code set.",
     "TARGET_CODE_SET": "Target code set",
     "TARGET_CODE_SET_REQUIRED": "A target code set is required",
     "SOURCE_EDITION": "Source SNOMED CT edition",
@@ -269,7 +269,8 @@
     "CONCEPT_COUNT_TOO_LARGE": "(more than the {{max}} allowed)",
     "FROM_SNOMED_SOURCE_ERROR": "The source concepts could not be created from the ECL expression",
     "SOURCE_DISPLAY_LANGUAGE": "Source display language",
-    "SOURCE_DISPLAY_LANGUAGE_HINT": "Language of the source concept terms, frozen when the map is created"
+    "SOURCE_DISPLAY_LANGUAGE_HINT": "Language of the source concept terms, frozen when the map is created",
+    "FROM_SNOMED_NEW_VERSION_HINT": "This new version expands the same ECL and display language again in the SNOMED CT version you choose. Concepts still in the result keep their rows; the targets stay in {{codeSet}}."
   },
   "TABLE": {
     "SOURCE_CODE": "Source code",
@@ -724,5 +725,13 @@
     "DISPLAY": "Display",
     "NOT_FOUND": "The code is not in the target code set",
     "SELECT_CODE": "Select a target code to see its details"
+  },
+  "SOURCE_CHANGES": {
+    "TITLE": "Source concepts of the new version",
+    "KEPT": "{{count}} concepts kept their rows and targets",
+    "ADDED": "{{count}} new concepts were added, unmapped",
+    "REMOVED": "{{count}} concepts are no longer in the ECL result and were left out",
+    "REMOVED_HINT": "They are inactive in the new SNOMED CT version or no longer match the ECL. Their mappings stay in the previous version.",
+    "COPY_REMOVED": "Copy the list"
   }
 }

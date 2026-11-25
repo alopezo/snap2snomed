@@ -133,6 +133,13 @@ export interface CreateMappingParams {
 /** Most SNOMED CT concepts a map from SNOMED CT accepts as its source (see EclCodeSetService in the API). */
 export const MAX_FROM_SNOMED_CONCEPTS = 10000;
 
+/** Source codes in both versions of a map, only in the new one, and gone (see GET /map/{id}/sourceChanges). */
+export interface SourceChanges {
+  keptCount: number;
+  addedCount: number;
+  removed: {code: string, display: string}[];
+}
+
 /** A code of the target code set of a map from SNOMED CT. */
 export interface TargetCode {
   code: string;
@@ -194,6 +201,13 @@ export class MapService {
       params = params.set('text', query.text ?? '');
     }
     return this.http.get<TargetCode[]>(url, {...options, params});
+  }
+
+  /** How the source codes of a map differ from those of a previous version in the same project. */
+  getSourceChanges(mapId: string, previousMapId: string): Observable<SourceChanges> {
+    const url = `${this.config.apiBaseUrl}/map/${mapId}/sourceChanges`;
+    const options = ServiceUtils.getHTTPHeaders();
+    return this.http.get<SourceChanges>(url, {...options, params: new HttpParams().set('previousMapId', previousMapId)});
   }
 
   copyMapping(mapping: Mapping): Observable<any> {

@@ -72,6 +72,11 @@
             </mat-form-field>
             @if (mode === 'FORM.CREATE' || mode === 'FORM.COPY') {
               <div>
+                @if (mode === 'FORM.COPY' && fromSnomed) {
+                  <p class="direction-hint" id="fromSnomedCopyHint">
+                    {{ 'MAP.FROM_SNOMED_NEW_VERSION_HINT' | translate: {codeSet: (mappingModel.targetCodeSet?.name ?? '') + ': ' + (mappingModel.targetCodeSet?.version ?? '')} }}
+                  </p>
+                } @else {
                 <div class="source-field">
                   <mat-form-field class="field-withbutton-width">
                     <mat-label>{{ (fromSnomed ? 'MAP.TARGET_CODE_SET' : 'MAP.SOURCE') | translate }}</mat-label>
@@ -92,6 +97,7 @@
                     <mat-icon>add</mat-icon>
                   </button>
                 </div>
+                }
                 <div class="source-field">
                   <mat-form-field class="field-withbutton-width multi-field-row-field">
                     <mat-label>{{ (fromSnomed ? 'MAP.SOURCE_EDITION' : 'MAP.TARGET_EDITION') | translate }}</mat-label>

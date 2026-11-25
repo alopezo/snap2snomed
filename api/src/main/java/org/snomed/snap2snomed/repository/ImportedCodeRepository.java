@@ -184,4 +184,9 @@ public interface ImportedCodeRepository extends JpaRepository<ImportedCode, Long
   @RestResource(exported = false)
   @Query("select ic from ImportedCode ic where ic.importedCodeSet.id = :codeSetId and ic.code = :code")
   List<ImportedCode> findInCodeSetByCode(Long codeSetId, String code);
+
+  /** Every code of a code set, in file order; not exported, callers authorise through a map. */
+  @RestResource(exported = false)
+  @Query("select ic from ImportedCode ic where ic.importedCodeSet.id = :codeSetId order by ic.index")
+  List<ImportedCode> findAllInCodeSet(Long codeSetId);
 }

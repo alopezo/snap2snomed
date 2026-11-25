@@ -223,11 +223,6 @@ export class MappingListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.opened = false;
   }
 
-  /** Maps from SNOMED CT have no new versions (their source is frozen when they are created). */
-  isFromSnomed(project: Project): boolean {
-    return Mapping.isFromSnomed(this.selectedMapping[project.id]);
-  }
-
   newVersion(project: Project): void {
     if (project.mapcount === 0) {
       this.translate.get('MAP.NO_MAPS_FOUND').subscribe((res) => this.error.message = `${project.title}: ${res}`);
@@ -244,6 +239,9 @@ export class MappingListComponent implements OnInit, AfterViewInit, OnDestroy {
           this.newMapping.toVersion = res.toVersion;
           this.newMapping.toScope = res.toScope;
           this.newMapping.displayLanguage = res.displayLanguage ?? null;
+          // A map from SNOMED CT keeps its direction, target code set, ECL and display language
+          this.newMapping.direction = (res as any).direction ?? 'TO_SNOMED';
+          this.newMapping.targetCodeSet = (res as any).targetCodeSet ?? null;
           this.newMapping.project = project;
           this.mode = 'FORM.COPY';
           this.opened = true;

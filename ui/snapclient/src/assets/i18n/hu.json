@@ -255,7 +255,7 @@
     "DIRECTION": "Irány",
     "DIRECTION_TO_SNOMED": "SNOMED CT felé",
     "DIRECTION_FROM_SNOMED": "SNOMED CT-ből",
-    "DIRECTION_FROM_SNOMED_HINT": "A forrás egy ECL-kifejezés aktív fogalmai (legfeljebb {{max}}), a megfeleltetés létrehozásakor rögzítve; a célok egy importált kódkészletből választhatók.",
+    "DIRECTION_FROM_SNOMED_HINT": "A forrás egy ECL-kifejezés aktív fogalmai (legfeljebb {{max}}), amelyet a megfeleltetés létrehozásakor és minden új verziónál újra kibontunk; a célok egy importált kódkészletből választhatók.",
     "TARGET_CODE_SET": "Cél kódkészlet",
     "TARGET_CODE_SET_REQUIRED": "Cél kódkészlet megadása kötelező",
     "SOURCE_EDITION": "Forrás SNOMED CT kiadás",
@@ -269,7 +269,8 @@
     "CONCEPT_COUNT_TOO_LARGE": "(több, mint a megengedett {{max}})",
     "FROM_SNOMED_SOURCE_ERROR": "A forrásfogalmakat nem sikerült létrehozni az ECL-kifejezésből",
     "SOURCE_DISPLAY_LANGUAGE": "A forrás megjelenítési nyelve",
-    "SOURCE_DISPLAY_LANGUAGE_HINT": "A forrásfogalmak kifejezéseinek nyelve, a megfeleltetés létrehozásakor rögzítve"
+    "SOURCE_DISPLAY_LANGUAGE_HINT": "A forrásfogalmak kifejezéseinek nyelve, a megfeleltetés létrehozásakor rögzítve",
+    "FROM_SNOMED_NEW_VERSION_HINT": "Ez az új verzió ugyanazt az ECL-t és megjelenítési nyelvet bontja ki újra a választott SNOMED CT verzióban. Az eredményben maradó fogalmak megtartják soraikat; a célok a(z) {{codeSet}} készletben maradnak."
   },
   "TABLE": {
     "SOURCE_CODE": "Forráskód",
@@ -724,5 +725,13 @@
     "DISPLAY": "Megjelenítés",
     "NOT_FOUND": "A kód nincs a cél kódkészletben",
     "SELECT_CODE": "Válasszon egy célkódot a részletek megtekintéséhez"
+  },
+  "SOURCE_CHANGES": {
+    "TITLE": "Az új verzió forrásfogalmai",
+    "KEPT": "{{count}} fogalom megtartotta sorait és céljait",
+    "ADDED": "{{count}} új fogalom került hozzáadásra, megfeleltetés nélkül",
+    "REMOVED": "{{count}} fogalom már nincs az ECL eredményében, ezért kimaradt",
+    "REMOVED_HINT": "Inaktívak az új SNOMED CT verzióban, vagy már nem felelnek meg az ECL-nek. Megfeleltetéseik az előző verzióban maradnak.",
+    "COPY_REMOVED": "Lista másolása"
   }
 }
