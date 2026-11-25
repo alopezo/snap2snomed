@@ -40,6 +40,7 @@ export class Mapping {
     this.direction = 'TO_SNOMED';
     this.targetCodeSet = null;
     this.inheritance = false;
+    this.sourceEcl = null;
   }
 
   id: string | null;
@@ -66,6 +67,11 @@ export class Mapping {
   targetCodeSet: Source | null;
   /** FROM_SNOMED single author maps: unmapped concepts take the targets of their nearest mapped ancestor. */
   inheritance: boolean;
+  /**
+   * FROM_SNOMED maps: the ECL expanded into the source, or null when the source is an imported list of
+   * SNOMED CT codes; toScope is then the scope inheritance can expand into.
+   */
+  sourceEcl: string | null;
 
   static replacer(key: string, value: any): any {
     if (value !== null && key === 'project') {

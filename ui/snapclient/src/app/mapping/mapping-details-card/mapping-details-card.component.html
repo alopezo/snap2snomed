@@ -22,9 +22,19 @@
       <li class="one-line-ellipse" [title]="mapping.displayLanguage ?? ''"><b>{{(fromSnomed ? 'MAP.SOURCE_DISPLAY_LANGUAGE' : 'MAP.DISPLAY_LANGUAGE') | translate}}:</b>&nbsp;
       {{displayLanguageName ?? ('MAP.DISPLAY_LANGUAGE_ENGLISH_FSN' | translate)}}
     </li>
-      <li class="one-line-ellipse"><b>{{(fromSnomed ? 'MAP.SOURCE_SCOPE_LABEL' : 'MAP.SCOPE') | translate}}:</b>&nbsp;
+      @if (fromSnomed) {
+        <li class="one-line-ellipse" [title]="mapping.sourceEcl ?? mapping.source.name">
+          <b>{{(mapping.sourceEcl ? 'MAP.SOURCE_SCOPE_LABEL' : 'MAP.SOURCE_CODES') | translate}}:</b>&nbsp;
+          {{mapping.sourceEcl ?? (mapping.source.name + ', ' + mapping.source.version)}}
+        </li>
+        @if (hasInheritance) {
+          <li class="one-line-ellipse" [title]="mapping.toScope"><b>{{'MAP.INHERITANCE_SCOPE' | translate}}:</b>&nbsp;{{mapping.toScope}}</li>
+        }
+      } @else {
+      <li class="one-line-ellipse"><b>{{'MAP.SCOPE' | translate}}:</b>&nbsp;
       {{mapping.toScope}}
     </li>
+      }
   </ul>
   @if (hasInheritance) {
     <app-inheritance-summary [mapping]="mapping"></app-inheritance-summary>

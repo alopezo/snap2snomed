@@ -32,6 +32,11 @@
             </mat-button-toggle-group>
             @if (fromSnomed) {
               <p class="direction-hint">{{'MAP.DIRECTION_FROM_SNOMED_HINT' | translate: {max: MAX_FROM_SNOMED_CONCEPTS | number} }}</p>
+              <mat-button-toggle-group class="author-mode-toggle-group" id="sourceKind" name="sourceKind"
+                formControlName="sourceKind" ngDefaultControl [attr.aria-label]="'MAP.SOURCE_KIND' | translate">
+                <mat-button-toggle value="ECL">{{'MAP.SOURCE_KIND_ECL' | translate}}</mat-button-toggle>
+                <mat-button-toggle value="CODES">{{'MAP.SOURCE_KIND_CODES' | translate}}</mat-button-toggle>
+              </mat-button-toggle-group>
             }
           </div>
         }
@@ -39,6 +44,15 @@
           <div class="inheritance-option">
             <mat-checkbox id="inheritance" formControlName="inheritance">{{'MAP.INHERITANCE' | translate}}</mat-checkbox>
             <p class="direction-hint">{{'MAP.INHERITANCE_HINT' | translate}}</p>
+            @if (formGroup.controls.inheritance.value && (mode === 'FORM.CREATE' || mode === 'FORM.EDIT')) {
+              <mat-form-field class="field-full-width" subscriptSizing="dynamic">
+                <mat-label>{{ 'MAP.INHERITANCE_SCOPE' | translate }}</mat-label>
+                <textarea id="inheritanceScope" class="ecl" matInput cdkTextareaAutosize cdkAutosizeMinRows="1"
+                  formControlName="inheritanceScope" [maxLength]="MAX_TARGETSCOPE"
+                  [placeholder]="fromSnomedCodes ? '*' : ('MAP.INHERITANCE_SCOPE_SAME_AS_SOURCE' | translate)"></textarea>
+                <mat-hint>{{ (fromSnomedCodes ? 'MAP.INHERITANCE_SCOPE_HINT_CODES' : 'MAP.INHERITANCE_SCOPE_HINT_ECL') | translate }}</mat-hint>
+              </mat-form-field>
+            }
           </div>
         }
         <mat-form-field class="field-full-width" hintLabel="{{'FORM.MAX_CHARS' | translate}} {{MAX_TITLE}}">
@@ -103,6 +117,24 @@
                     <mat-icon>add</mat-icon>
                   </button>
                 </div>
+                @if (mode === 'FORM.CREATE' && fromSnomedCodes) {
+                  <div class="source-field">
+                    <mat-form-field class="field-withbutton-width">
+                      <mat-label>{{ 'MAP.SOURCE_CODES' | translate }}</mat-label>
+                      <mat-select id="sourceCodeSetId" formControlName="sourceCodeSetId">
+                        <mat-option disabled value=""><i>{{ 'MAP.SOURCE_SELECT' | translate }}</i></mat-option>
+                        @for (src of sources; track src) {
+                          <mat-option [value]="src.id">{{src.name}}: {{src.version}}</mat-option>
+                        }
+                      </mat-select>
+                      <mat-hint>{{ 'MAP.SOURCE_CODES_HINT' | translate: {max: MAX_FROM_SNOMED_CONCEPTS | number} }}</mat-hint>
+                    </mat-form-field>
+                    <button mat-mini-fab class="btn-accent" type="button" title="{{ 'MAP.SOURCE_IMPORT' | translate }}"
+                      (click)="addSource($event, 'sourceCodeSetId')">
+                      <mat-icon>add</mat-icon>
+                    </button>
+                  </div>
+                }
                 }
                 <div class="source-field">
                   <mat-form-field class="field-withbutton-width multi-field-row-field">
@@ -149,6 +181,21 @@
                     [hint]="(fromSnomed ? 'MAP.SOURCE_DISPLAY_LANGUAGE_HINT' : 'MAP.DISPLAY_LANGUAGE_HINT') | translate">
                   </app-display-language-picker>
                 </div>
+                @if (mode === 'FORM.COPY' && fromSnomed) {
+                  <table class="table details-table" id="fromSnomedCopySource">
+                    <tr>
+                      <th><b>{{ 'MAP.SOURCE_LABEL' | translate }}:</b></th>
+                      <td>{{ mappingModel.sourceEcl ? ('MAP.SOURCE_KIND_ECL' | translate) + ': ' + mappingModel.sourceEcl : ('MAP.SOURCE_KIND_CODES' | translate) + ': ' + mappingModel.source.name }}</td>
+                    </tr>
+                    @if (mappingModel.inheritance) {
+                      <tr>
+                        <th><b>{{ 'MAP.INHERITANCE_SCOPE' | translate }}:</b></th>
+                        <td>{{ mappingModel.toScope }}</td>
+                      </tr>
+                    }
+                  </table>
+                }
+                @if (!fromSnomed || (mode === 'FORM.CREATE' && !fromSnomedCodes)) {
                 <mat-form-field class="field-full-width" hintLabel="{{'FORM.MAX_CHARS' | translate}} {{MAX_TARGETSCOPE}}">
                   <mat-label for="toScopeSelect">{{ (fromSnomed ? 'MAP.SOURCE_SCOPE_COMMON' : 'MAP.TARGET_SCOPE_COMMON') | translate }}</mat-label>
                   <mat-select id="toScopeSelect" formControlName="toScopeSelect">
@@ -178,7 +225,8 @@
                     {{mappingModel.toScope.length || 0}}/{{MAX_TARGETSCOPE}}
                   </mat-hint>
                 </mat-form-field>
-                @if (fromSnomed) {
+                }
+                @if (fromSnomed && mode === 'FORM.CREATE' && !fromSnomedCodes) {
                   <div class="ecl-count">
                     <button mat-stroked-button type="button" id="countConcepts" (click)="countConcepts()"
                       [disabled]="eclCounting || !mappingModel.toVersion || !mappingModel.toScope">
@@ -235,9 +283,15 @@
                         </td>
                       </tr>
                       <tr>
-                        <th><b>{{ 'MAP.SOURCE_SCOPE_LABEL' | translate }}:</b></th>
-                        <td>{{mappingModel.toScope}}</td>
+                        <th><b>{{ (mappingModel.sourceEcl ? 'MAP.SOURCE_SCOPE_LABEL' : 'MAP.SOURCE_CODES') | translate }}:</b></th>
+                        <td>{{ mappingModel.sourceEcl ?? (mappingModel.source.name + ': ' + mappingModel.source.version) }}</td>
                       </tr>
+                      @if (mappingModel.inheritance && mode === 'FORM.VIEW') {
+                        <tr>
+                          <th><b>{{ 'MAP.INHERITANCE_SCOPE' | translate }}:</b></th>
+                          <td>{{mappingModel.toScope}}</td>
+                        </tr>
+                      }
                       <tr>
                         <th><b>{{ 'MAP.SOURCE_DISPLAY_LANGUAGE' | translate }}:</b></th>
                         <td [title]="mappingModel.displayLanguage ?? ''">{{ displayLanguageLabel ?? ('MAP.DISPLAY_LANGUAGE_ENGLISH_FSN' | translate) }}</td>

@@ -277,7 +277,8 @@ export class MappingEffects {
    * does not stop the new version.
    */
   private showSourceChanges(previous: Mapping, newMapId: number): Observable<unknown> {
-    if (!Mapping.isFromSnomed(previous) || !previous.id) {
+    // Only a source from an ECL is expanded again; an imported list of codes is kept as is
+    if (!Mapping.isFromSnomed(previous) || !previous.id || !previous.sourceEcl) {
       return of(null);
     }
     return this.mapService.getSourceChanges(String(newMapId), previous.id).pipe(
@@ -302,6 +303,7 @@ function toMapping(mapDto: any, project?: Project): Mapping {
   mapping.direction = mapDto.direction ?? 'TO_SNOMED';
   mapping.targetCodeSet = (mapDto.targetCodeSet as Source) ?? null;
   mapping.inheritance = !!mapDto.inheritance;
+  mapping.sourceEcl = mapDto.sourceEcl ?? null;
 
   if (project) {
     mapping.project = project;
