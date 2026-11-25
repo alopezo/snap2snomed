@@ -29,7 +29,8 @@ import {SourceRow} from '../mapping-detail/mapping-detail.component';
 import {WriteDisableUtils} from "../../_utils/write_disable_utils";
 import {FhirService} from "../../_services/fhir.service";
 import { SourceNavSet } from 'src/app/_services/source-navigation.service';
-import { Subscription } from 'rxjs';
+import { Subscription, of } from 'rxjs';
+import { Mapping } from '../../_models/mapping';
 import { Store } from '@ngrx/store';
 import { IAppState } from 'src/app/store/app.state';
 import { IParameters } from '@ahryman40k/ts-fhir-types/lib/R4';
@@ -113,9 +114,11 @@ export class TargetRelationshipComponent implements OnInit, OnChanges {
 
   click(row: MapView): void {
     // A refined target shows its focus concept
+    const fromSnomed = Mapping.isFromSnomed(this.task?.mapping);
     this.selectionService.select({
-      code: focusOf(row.targetCode),
-      system: this.task?.mapping.toSystem ?? 'http://snomed.info/sct',
+      code: fromSnomed ? row.targetCode : focusOf(row.targetCode),
+      display: fromSnomed ? row.targetDisplay : undefined,
+      system: Mapping.targetSystem(this.task?.mapping),
       version: this.task?.mapping.toVersion,
     });
   }
@@ -164,8 +167,10 @@ export class TargetRelationshipComponent implements OnInit, OnChanges {
     const self = this;
     self.addingTargetRelationship = relationship;
 
-    self.fhirService.getTargetDisplay(code, system, self.task?.mapping?.toVersion || '', self.task?.mapping?.displayLanguage)
-      .subscribe(targetDisplay => {
+    // The codes of a target code set (maps from SNOMED CT) already come with their display
+    const targetDisplay$ = Mapping.isFromSnomed(self.task?.mapping) ? of('')
+      : self.fhirService.getTargetDisplay(code, system, self.task?.mapping?.toVersion || '', self.task?.mapping?.displayLanguage);
+    targetDisplay$.subscribe(targetDisplay => {
       let displayTerm = display;
       if (targetDisplay !== '') {
         displayTerm = targetDisplay;

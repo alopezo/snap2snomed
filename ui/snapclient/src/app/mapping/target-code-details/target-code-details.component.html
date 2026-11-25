@@ -1,0 +1,35 @@
+<mat-card appearance="outlined" class="details-card">
+  <mat-card-header>
+    <mat-card-title>{{'TARGET_CODES.DETAILS_TITLE' | translate}}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    @if (loading) {
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    }
+    @if (code) {
+      <table class="details">
+        <tr>
+          <th>{{'PROPERTIES.CODE' | translate}}</th>
+          <td>
+            <span class="code">{{code.code}}</span>
+            <mat-icon class="grip" [appDraggable]="{data: {code: code.code, display: code.display, system: system}, zones: dragZones}">drag_indicator</mat-icon>
+          </td>
+        </tr>
+        <tr>
+          <th>{{'TARGET_CODES.DISPLAY' | translate}}</th>
+          <td>{{code.display}}</td>
+        </tr>
+        @for (column of code.additionalColumns; track $index) {
+          <tr>
+            <th>{{column.name}}</th>
+            <td>{{column.value}}</td>
+          </tr>
+        }
+      </table>
+    } @else if (notFound) {
+      <p class="hint">{{'TARGET_CODES.NOT_FOUND' | translate}}</p>
+    } @else if (!loading) {
+      <p class="hint">{{'TARGET_CODES.SELECT_CODE' | translate}}</p>
+    }
+  </mat-card-content>
+</mat-card>

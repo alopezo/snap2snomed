@@ -90,6 +90,8 @@ import {DroppableDirective} from './_directives/droppable.directive';
 import {ConceptPropertiesComponent} from './concept-properties/concept-properties.component';
 import {TargetRefinementComponent} from './mapping/target-refinement/target-refinement.component';
 import {ExportDialogComponent} from './mapping/export-dialog/export-dialog.component';
+import {TargetCodeSearchComponent} from './mapping/target-code-search/target-code-search.component';
+import {TargetCodeDetailsComponent} from './mapping/target-code-details/target-code-details.component';
 import {TaskCardComponent} from './task/task-card/task-card.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatRadioModule} from '@angular/material/radio';
@@ -171,6 +173,8 @@ export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
         ConceptPropertiesComponent,
         TargetRefinementComponent,
         ExportDialogComponent,
+        TargetCodeSearchComponent,
+        TargetCodeDetailsComponent,
         TaskCardComponent,
         TargetVersionComponent,
         TaskAddComponent,

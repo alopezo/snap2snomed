@@ -1,0 +1,54 @@
+.code-set-name {
+  display: block;
+  font-size: 0.75em;
+  font-weight: normal;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.results {
+  max-height: 300px;
+  overflow: auto;
+}
+
+.result {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 4px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.result:nth-child(even) {
+  background-color: #00000010;
+}
+
+.result.selected {
+  background-color: #2196f326;
+}
+
+.grip {
+  cursor: grab;
+  flex-shrink: 0;
+}
+
+.result-code {
+  font-family: monospace;
+  font-size: 0.85em;
+  min-width: 5em;
+  flex-shrink: 0;
+}
+
+.result-display {
+  min-width: 0;
+}
+
+.hint {
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.85em;
+}
+
+.footer {
+  text-align: right;
+  margin-top: 4px;
+}

@@ -52,42 +52,51 @@
             </mat-card>
           </div>
           <div class="search-container" layout="row">
-            <div class="search-view card-col">
-              <app-concept-search [active]="!opened"
-                [scope]="mapping.toScope || ''"
-                [version]="mapping.toVersion || ''"
-                [displayLanguage]="mapping.displayLanguage"
-                [initial]="targetConceptSearchText">
-                <span class="search-title">{{'MAP.SEARCH_TARGET' | translate}}</span>
-              </app-concept-search>
-            </div>
-            <div class="tree-view card-col">
-              <button class="view-toggle" mat-icon-button (click)="toggleHierarchy()"
-                #tooltip="matTooltip"
-                matTooltip="{{'MAP.SWITCH_VIEW' | translate}}">
-                <mat-icon [class.accent-icon]="hierarchyView === 'tree'">account_tree</mat-icon>
-              </button>
-              @if (hierarchyView === 'tree') {
-                <div>
-                  <app-tree-view [task]="task" [active]="!opened"></app-tree-view>
-                </div>
-              }
-              @if (hierarchyView !== 'tree') {
-                <div class="hierarchy-view">
-                  @if (loadingHierarchy) {
-                    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-                  } @else {
-                    @defer {
-                      <lib-shrimp-hierarchy [rows]="nodes" (selected)="onSelected($event)"></lib-shrimp-hierarchy>
+            @if (fromSnomed) {
+              <div class="search-view card-col">
+                <app-target-code-search [mapping]="mapping" [active]="!opened"></app-target-code-search>
+              </div>
+              <div class="properties-view card-col">
+                <app-target-code-details [mapping]="mapping" [active]="!opened"></app-target-code-details>
+              </div>
+            } @else {
+              <div class="search-view card-col">
+                <app-concept-search [active]="!opened"
+                  [scope]="mapping.toScope || ''"
+                  [version]="mapping.toVersion || ''"
+                  [displayLanguage]="mapping.displayLanguage"
+                  [initial]="targetConceptSearchText">
+                  <span class="search-title">{{'MAP.SEARCH_TARGET' | translate}}</span>
+                </app-concept-search>
+              </div>
+              <div class="tree-view card-col">
+                <button class="view-toggle" mat-icon-button (click)="toggleHierarchy()"
+                  #tooltip="matTooltip"
+                  matTooltip="{{'MAP.SWITCH_VIEW' | translate}}">
+                  <mat-icon [class.accent-icon]="hierarchyView === 'tree'">account_tree</mat-icon>
+                </button>
+                @if (hierarchyView === 'tree') {
+                  <div>
+                    <app-tree-view [task]="task" [active]="!opened"></app-tree-view>
+                  </div>
+                }
+                @if (hierarchyView !== 'tree') {
+                  <div class="hierarchy-view">
+                    @if (loadingHierarchy) {
+                      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                    } @else {
+                      @defer {
+                        <lib-shrimp-hierarchy [rows]="nodes" (selected)="onSelected($event)"></lib-shrimp-hierarchy>
+                      }
                     }
-                  }
-                </div>
-              }
-            </div>
-            <div class="properties-view card-col">
-              <app-concept-properties [active]="!opened" [version]="mapping.toVersion || ''" [displayLanguage]="mapping.displayLanguage">
-              </app-concept-properties>
-            </div>
+                  </div>
+                }
+              </div>
+              <div class="properties-view card-col">
+                <app-concept-properties [active]="!opened" [version]="mapping.toVersion || ''" [displayLanguage]="mapping.displayLanguage">
+                </app-concept-properties>
+              </div>
+            }
           </div>
           <div id="container-table-work">
             <div class="table-actions">

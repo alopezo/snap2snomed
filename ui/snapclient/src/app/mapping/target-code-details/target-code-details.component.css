@@ -1,0 +1,35 @@
+.details {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.details th {
+  text-align: left;
+  vertical-align: top;
+  padding: 3px 8px 3px 0;
+  min-width: 7em;
+  font-weight: bold;
+}
+
+.details td {
+  padding: 3px 0;
+}
+
+.details tr:nth-child(even) {
+  background-color: #00000010;
+}
+
+.code {
+  font-family: monospace;
+}
+
+.grip {
+  cursor: grab;
+  vertical-align: middle;
+  margin-left: 6px;
+}
+
+.hint {
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.9em;
+}

@@ -50,6 +50,7 @@ import {WriteDisableUtils} from "../../_utils/write_disable_utils";
 import {debounceTime} from "rxjs/operators";
 import {User} from "../../_models/user";
 import { TargetChangedService } from 'src/app/_services/target-changed.service';
+import {Mapping} from '../../_models/mapping';
 
 export type SourceRow = {
   id: string;
@@ -96,6 +97,11 @@ export class MappingDetailComponent implements OnInit, OnDestroy {
 
   @Input() currentUser: User | null = null;
   @Input() task: Task | undefined;
+
+  /** A map from SNOMED CT: targets come from its target code set, not from SNOMED CT. */
+  get fromSnomed(): boolean {
+    return Mapping.isFromSnomed(this.task?.mapping);
+  }
   @Input() paging!: TableParams;
   @Input() filterEntity!: MapViewFilter;
   @Input() additionalDisplayedColumns: TableColumn[] | undefined;
@@ -166,6 +172,10 @@ export class MappingDetailComponent implements OnInit, OnDestroy {
   private handleSelection(): void {
     const self = this;
     const selection = self.currentSelection;
+
+    if (self.fromSnomed) {
+      return; // no SNOMED CT hierarchy for the codes of a target code set
+    }
 
     if (self.selectedRowset?.current && selection?.code) {
       self.setLoading();

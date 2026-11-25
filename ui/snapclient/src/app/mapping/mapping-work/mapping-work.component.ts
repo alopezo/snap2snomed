@@ -80,6 +80,11 @@ export class MappingWorkComponent implements OnInit, OnDestroy {
   mapping: Mapping | null = null;
   myTasks: Task[] = [];
   task: Task | null = null;
+
+  /** A map from SNOMED CT: targets come from its target code set, not from SNOMED CT. */
+  get fromSnomed(): boolean {
+    return Mapping.isFromSnomed(this.mapping);
+  }
   currentUser: User | null = null;
 
   nodes: ConceptNode<Coding>[] = [];
@@ -291,6 +296,10 @@ export class MappingWorkComponent implements OnInit, OnDestroy {
   private handleSelection(): void {
     const self = this;
     const selection = self.currentSelection;
+
+    if (self.fromSnomed) {
+      return; // no SNOMED CT hierarchy for the codes of a target code set
+    }
 
     if (!self.opened && selection?.code) {
       self.setLoading();

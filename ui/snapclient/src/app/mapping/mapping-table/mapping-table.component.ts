@@ -30,7 +30,7 @@ import {
 } from '../../_models/map_row';
 import {MatPaginator, PageEvent} from '@angular/material/paginator';
 import {MatSort, Sort, SortDirection} from '@angular/material/sort';
-import {Subscription} from 'rxjs';
+import {Subscription, of} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {IAppState} from '../../store/app.state';
 import {Task, TaskType} from '../../_models/task';
@@ -274,9 +274,9 @@ export class MappingTableComponent implements OnInit, AfterViewInit, OnDestroy {
       const m = this.getMapping();
       // A refined target shows its focus concept
       this.selectionService.select({
-        code: focusOf(row.targetCode),
+        code: Mapping.isFromSnomed(m) ? row.targetCode : focusOf(row.targetCode),
         display: row.targetDisplay,
-        system: m?.toSystem ?? 'http://snomed.info/sct',
+        system: Mapping.targetSystem(m),
         version: m?.toVersion,
       });
       this.clickedRow = idx;
@@ -424,8 +424,11 @@ export class MappingTableComponent implements OnInit, AfterViewInit, OnDestroy {
             (!this.task?.mapping.project.dualMapMode && matchingTargetCodes.length > 0)) {
           self.dialog.open(ConfirmDialogComponent, {data: self.getDuplicateTargetDialogData()});
         } else {
-          self.fhirService.getTargetDisplay(event.data?.code, event.data?.system, self.task?.mapping?.toVersion || '',
-            self.task?.mapping?.displayLanguage).subscribe(targetDisplay => {
+          // The codes of a target code set (maps from SNOMED CT) already come with their display
+          const targetDisplay$ = Mapping.isFromSnomed(self.task?.mapping) ? of('')
+            : self.fhirService.getTargetDisplay(event.data?.code, event.data?.system, self.task?.mapping?.toVersion || '',
+              self.task?.mapping?.displayLanguage);
+          targetDisplay$.subscribe(targetDisplay => {
             let displayTerm = event.data?.display;
             if (targetDisplay !== '') {
               displayTerm = targetDisplay;

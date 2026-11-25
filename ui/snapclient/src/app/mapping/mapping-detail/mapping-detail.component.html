@@ -84,34 +84,40 @@
 @if (task && source) {
   <div class="container-panels">
     <div class="container-row">
-      <div class="search-view card-col">
-        <app-concept-search [scope]="task.mapping.toScope" [version]="task.mapping.toVersion || ''" [displayLanguage]="task.mapping.displayLanguage"
-          [initial]="source.display" [autosuggest]="source.display">
-          <span class="search-title">{{'MAP.SEARCH_TARGET' | translate}}</span>
-        </app-concept-search>
-      </div>
-      <div class="tree-view card-col">
-        <button class="view-toggle" mat-icon-button (click)="toggleHierarchy()" #tooltip="matTooltip"
-          matTooltip="{{'MAP.SWITCH_VIEW' | translate}}">
-          <mat-icon [class.accent-icon]="hierarchyView === 'tree'">account_tree</mat-icon>
-        </button>
-        @if (hierarchyView === 'tree') {
-          <div>
-            <app-tree-view [task]="task"></app-tree-view>
-          </div>
-        }
-        @if (hierarchyView !== 'tree') {
-          <div class="hierarchy-view">
-            @if (loadingHierarchy) {
-              <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-            } @else {
-              @defer {
-                <lib-shrimp-hierarchy [rows]="nodes" (selected)="onSelected($event)"></lib-shrimp-hierarchy>
+      @if (fromSnomed) {
+        <div class="search-view card-col">
+          <app-target-code-search [mapping]="task.mapping"></app-target-code-search>
+        </div>
+      } @else {
+        <div class="search-view card-col">
+          <app-concept-search [scope]="task.mapping.toScope" [version]="task.mapping.toVersion || ''" [displayLanguage]="task.mapping.displayLanguage"
+            [initial]="source.display" [autosuggest]="source.display">
+            <span class="search-title">{{'MAP.SEARCH_TARGET' | translate}}</span>
+          </app-concept-search>
+        </div>
+        <div class="tree-view card-col">
+          <button class="view-toggle" mat-icon-button (click)="toggleHierarchy()" #tooltip="matTooltip"
+            matTooltip="{{'MAP.SWITCH_VIEW' | translate}}">
+            <mat-icon [class.accent-icon]="hierarchyView === 'tree'">account_tree</mat-icon>
+          </button>
+          @if (hierarchyView === 'tree') {
+            <div>
+              <app-tree-view [task]="task"></app-tree-view>
+            </div>
+          }
+          @if (hierarchyView !== 'tree') {
+            <div class="hierarchy-view">
+              @if (loadingHierarchy) {
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+              } @else {
+                @defer {
+                  <lib-shrimp-hierarchy [rows]="nodes" (selected)="onSelected($event)"></lib-shrimp-hierarchy>
+                }
               }
-            }
-          </div>
-        }
-      </div>
+            </div>
+          }
+        </div>
+      }
       <div class="relationship-view card-col">
         <mat-card appearance="outlined">
           <mat-card-header>
@@ -160,11 +166,15 @@
           </mat-card>
         </div>
         <div class="tab-view target-info-col">
-          <app-concept-properties [version]="task.mapping.toVersion || ''" [displayLanguage]="task.mapping.displayLanguage">
-          </app-concept-properties>
-          <app-target-refinement [version]="task.mapping.toVersion || ''" [displayLanguage]="task.mapping.displayLanguage"
-            [disabled]="isEditDisabled()">
-          </app-target-refinement>
+          @if (fromSnomed) {
+            <app-target-code-details [mapping]="task.mapping"></app-target-code-details>
+          } @else {
+            <app-concept-properties [version]="task.mapping.toVersion || ''" [displayLanguage]="task.mapping.displayLanguage">
+            </app-concept-properties>
+            <app-target-refinement [version]="task.mapping.toVersion || ''" [displayLanguage]="task.mapping.displayLanguage"
+              [disabled]="isEditDisabled()">
+            </app-target-refinement>
+          }
         </div>
       </div>
       <div class="container-row">

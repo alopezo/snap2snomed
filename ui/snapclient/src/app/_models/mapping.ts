@@ -77,6 +77,15 @@ export class Mapping {
     return mapping?.direction === 'FROM_SNOMED';
   }
 
+  /** The code system of the map's targets: SNOMED CT, or the target code set of a map from SNOMED CT. */
+  static targetSystem(mapping: Mapping | null | undefined): string {
+    if (Mapping.isFromSnomed(mapping)) {
+      const codeSet: any = mapping?.targetCodeSet;
+      return codeSet?.systemUri || codeSet?.codesystemUri || `urn:snap2snomed:code-set:${codeSet?.id ?? ''}`;
+    }
+    return mapping?.toSystem ?? 'http://snomed.info/sct';
+  }
+
   static getStatus(mapping: Mapping): string {
     // TODO - Calculate rows mapped
     return 'MAP.STATUS_NOT_STARTED';

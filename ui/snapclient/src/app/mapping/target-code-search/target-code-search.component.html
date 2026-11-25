@@ -1,0 +1,50 @@
+<mat-card appearance="outlined" class="search-control">
+  <mat-card-header>
+    <mat-card-title>
+      {{'TARGET_CODES.SEARCH_TITLE' | translate}}
+      @if (mapping?.targetCodeSet; as codeSet) {
+        <span class="code-set-name">{{codeSet.name}}: {{codeSet.version}}</span>
+      }
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form (keydown.enter)="$event.preventDefault()">
+      <mat-form-field class="search-field field-full-width-no-margin" appearance="outline"
+        [appDroppable]="{zone: 'searchZone'}" (onDroppableComplete)="onDrop($event)">
+        <mat-label>{{'TARGET_CODES.SEARCH_LABEL' | translate}}</mat-label>
+        <input id="targetCodeSearch" type="search" matInput [formControl]="searchControl"
+          autocomplete="off" spellcheck="false">
+        @if (searchControl.value?.trim()) {
+          <button matSuffix mat-icon-button type="button" [attr.aria-label]="'FORM.CLEAR' | translate"
+            (click)="searchControl.setValue('')">
+            <mat-icon>cancel</mat-icon>
+          </button>
+        }
+      </mat-form-field>
+    </form>
+    @if (loading) {
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    }
+    @if (failed) {
+      <p class="hint">{{'TARGET_CODES.SEARCH_FAILED' | translate}}</p>
+    }
+    <div class="results" id="targetCodeResults">
+      @for (code of results; track code.code) {
+        <div class="result" [class.selected]="code.code === selectedCode" (click)="select(code)">
+          <mat-icon class="grip" [appDraggable]="{data: dragData(code), zones: dragZones}">drag_indicator</mat-icon>
+          <span class="result-code">{{code.code}}</span>
+          <span class="result-display">{{code.display}}</span>
+        </div>
+      }
+    </div>
+    <div class="hint footer">
+      @if (!loading && !failed && !results.length) {
+        {{'TARGET_CODES.NO_MATCHES' | translate}}
+      } @else if (results.length >= pageSize) {
+        {{'TARGET_CODES.FIRST_RESULTS' | translate: {count: pageSize} }}
+      } @else if (results.length) {
+        {{'TARGET_CODES.RESULTS' | translate: {count: results.length} }}
+      }
+    </div>
+  </mat-card-content>
+</mat-card>
