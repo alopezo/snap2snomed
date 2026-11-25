@@ -58,6 +58,7 @@ Maps from SNOMED CT (branch `from-snomed`).
   changes later the row is flagged ("inheritance changed since accepted") and can be accepted again.
   The coverage shows accepted rows, rows pending acceptance and changed ones (migration V26,
   `POST /map/{mapId}/inheritance/accept`).
+- The mapping detail header is more compact: previous and next sit on either side of the status switch.
 - The map list has a "Type" column showing each map's direction and whether it uses inheritance.
 - An "Inheritance" column in the mapping tables summarises each row (mapped and how many inherit it,
   inherits from, stopped, in conflict, uncovered) and opens a popover with the details.
