@@ -22,6 +22,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.snomed.snap2snomed.controller.dto.InheritanceDto;
 import org.snomed.snap2snomed.controller.dto.SourceChangesDto;
 import org.snomed.snap2snomed.controller.dto.TargetCodeDto;
 import org.snomed.snap2snomed.model.AdditionalCodeColumn;
@@ -34,6 +35,7 @@ import org.snomed.snap2snomed.problem.auth.NotAuthorisedProblem;
 import org.snomed.snap2snomed.repository.ImportedCodeRepository;
 import org.snomed.snap2snomed.repository.MapRepository;
 import org.snomed.snap2snomed.security.WebSecurity;
+import org.snomed.snap2snomed.service.InheritanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -63,6 +65,9 @@ public class TargetCodeRestController {
 
   @Autowired
   ImportedCodeRepository importedCodeRepository;
+
+  @Autowired
+  InheritanceService inheritanceService;
 
   @Operation(description = "Searches the target code set of a map from SNOMED CT by code or display text, or "
       + "returns the code with exactly the given value.")
@@ -129,6 +134,19 @@ public class TargetCodeRestController {
         .toList();
     final int kept = (int) currentCodes.stream().filter(code -> before.contains(code.getCode())).count();
     return new SourceChangesDto(kept, currentCodes.size() - kept, removed);
+  }
+
+  @Operation(description = "Inheritance in a map from SNOMED CT that has it switched on: a count per state and, for "
+      + "every row, whether it is mapped, inherits (and from which ancestor), is stopped, in conflict or uncovered.")
+  @GetMapping(path = "/map/{mapId}/inheritance", produces = MediaType.APPLICATION_JSON_VALUE)
+  public InheritanceDto getInheritance(@PathVariable("mapId") Long mapId) {
+    if (!webSecurity.isValidUser()) {
+      throw new NoSuchUserProblem();
+    }
+    if (!webSecurity.isAdminUser() && !webSecurity.hasAnyProjectRoleForMapId(mapId)) {
+      throw new NotAuthorisedProblem("Not authorised to view this map");
+    }
+    return inheritanceService.computeForMap(mapId);
   }
 
   static TargetCodeDto toDto(ImportedCode code, List<AdditionalCodeColumn> columns) {

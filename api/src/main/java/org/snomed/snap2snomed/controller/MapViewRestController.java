@@ -56,6 +56,8 @@ import org.snomed.snap2snomed.repository.MapRepository;
 import org.snomed.snap2snomed.repository.MapRowTargetRepository;
 import org.snomed.snap2snomed.security.WebSecurity;
 import org.snomed.snap2snomed.service.FhirService;
+import org.snomed.snap2snomed.service.InheritanceService;
+import org.snomed.snap2snomed.util.InheritanceExport;
 import org.snomed.snap2snomed.util.LanguageDialects;
 import org.snomed.snap2snomed.util.TargetExportForm;
 import org.snomed.snap2snomed.service.MapViewService;
@@ -275,11 +277,14 @@ public class MapViewRestController {
       description = "Additional columns to include. Options are ( notes | lastAuthor | lastReviewer | assignedAuthor | assignedReviewer ).")
   @Parameter(name="targetForm", in = ParameterIn.QUERY, required = false, allowEmptyValue = false,
       description = "How refined targets (expressions) are written: expression (default) | focus | both.")
+  @Parameter(name="inherited", in = ParameterIn.QUERY, required = false, allowEmptyValue = false,
+      description = "Maps from SNOMED CT with inheritance: include inherited targets and the mapping origin columns (default true).")
   @GetMapping(path = "/{mapId}", produces = {TEXT_CSV, TEXT_TSV})
   public void getMapViewCsv(HttpServletResponse response, @RequestHeader(name = "Accept", required = false) String contentType,
       @PathVariable("mapId") Long mapId,
       @RequestParam(required = false) List<String> extraColumns,
-      @RequestParam(required = false) String targetForm) {
+      @RequestParam(required = false) String targetForm,
+      @RequestParam(required = false, defaultValue = "true") boolean inherited) {
     final TargetExportForm form = TargetExportForm.of(targetForm);
 
     if (!webSecurity.isValidUser()) {
@@ -315,9 +320,10 @@ public class MapViewRestController {
         new OutputStreamWriter(response.getOutputStream()));
 
         CSVPrinter csvPrinter = new CSVPrinter(writer,
-            format.builder().setHeader(mapViewService.getExportHeader(mapId, extraColumns, form)).build());) {
+            format.builder().setHeader(mapViewService.getExportHeader(mapId, extraColumns, form, withInheritance(mapId, inherited))).build());) {
       
-      for (final MapView mapView : form.apply(mapViewService.getAllMapViewForMap(mapId))) {
+      for (final InheritanceExport.Line line : exportLines(mapId, form, inherited)) {
+        final MapView mapView = line.view();
 
         ArrayList<Object> printRow = new ArrayList<Object>(Arrays.asList(mapView.getSourceCode(), mapView.getSourceDisplay()));
 
@@ -340,6 +346,9 @@ public class MapViewRestController {
             mapView.getRelationship(), mapView.getRelationship() == null ? "" : mapView.getRelationship().getLabel(),
             mapView.getNoMap() == null ? "" : mapView.getNoMap(),
             mapView.getStatus()));
+        if (line.origin() != null) {
+          printRow.addAll(Arrays.asList(line.origin(), line.inheritedFrom() == null ? "" : line.inheritedFrom()));
+        }
 
         if (extraColumns != null && extraColumns.size() > 0) {
             for (String extraColumn : extraColumns) {
@@ -385,11 +394,14 @@ public class MapViewRestController {
       description = "Additional columns to include. Options are ( notes | lastAuthor | lastReviewer | assignedAuthor | assignedReviewer ).")
   @Parameter(name="targetForm", in = ParameterIn.QUERY, required = false, allowEmptyValue = false,
       description = "How refined targets (expressions) are written: expression (default) | focus | both.")
+  @Parameter(name="inherited", in = ParameterIn.QUERY, required = false, allowEmptyValue = false,
+      description = "Maps from SNOMED CT with inheritance: include inherited targets and the mapping origin columns (default true).")
   @GetMapping(path = "/{mapId}", produces = APPLICATION_XSLX)
   public void getMapViewExcel(HttpServletResponse response, 
         @PathVariable("mapId") Long mapId,
         @RequestParam(required = false) List<String> extraColumns,
-        @RequestParam(required = false) String targetForm) throws IOException {
+        @RequestParam(required = false) String targetForm,
+        @RequestParam(required = false, defaultValue = "true") boolean inherited) throws IOException {
     final TargetExportForm form = TargetExportForm.of(targetForm);
     if (!webSecurity.isValidUser()) {
       throw new NoSuchUserProblem();
@@ -402,22 +414,23 @@ public class MapViewRestController {
     response.setHeader("Content-Disposition",
         "attachment; filename=\"" + mapViewService.getFileNameForMapExport(mapId, APPLICATION_XSLX) + "\"");
 
-    final List<MapView> mapViewResult = form.apply(mapViewService.getAllMapViewForMap(mapId));
+    final List<InheritanceExport.Line> lines = exportLines(mapId, form, inherited);
 
     try (SXSSFWorkbook wb = new SXSSFWorkbook(10000)) {
 
       final SXSSFSheet sh = wb.createSheet();
       final SXSSFRow header = sh.createRow(0);
 
-      final String[] exportHeader = mapViewService.getExportHeader(mapId, extraColumns, form);
+      final String[] exportHeader = mapViewService.getExportHeader(mapId, extraColumns, form, withInheritance(mapId, inherited));
 
       for (int cellNum = 0; cellNum < exportHeader.length; cellNum++) {
         final SXSSFCell cell = header.createCell(cellNum);
         cell.setCellValue(exportHeader[cellNum]);
       }
 
-      for (int rownum = 1; rownum <= mapViewResult.size(); rownum++) {
-        final MapView mapView = mapViewResult.get(rownum - 1);
+      for (int rownum = 1; rownum <= lines.size(); rownum++) {
+        final InheritanceExport.Line line = lines.get(rownum - 1);
+        final MapView mapView = line.view();
 
         final SXSSFRow row = sh.createRow(rownum);
 
@@ -474,6 +487,15 @@ public class MapViewRestController {
         cell.setCellValue(mapView.getStatus() == null ? "" : mapView.getStatus().toString());
         cellCount++;
 
+        if (line.origin() != null) {
+          cell = row.createCell(cellCount);
+          cell.setCellValue(line.origin());
+          cellCount++;
+          cell = row.createCell(cellCount);
+          cell.setCellValue(line.inheritedFrom() == null ? "" : line.inheritedFrom());
+          cellCount++;
+        }
+
         if (extraColumns != null && extraColumns.size() > 0) {
             for (String extraColumn : extraColumns) {
                 cell = row.createCell(cellCount);
@@ -520,7 +542,8 @@ public class MapViewRestController {
   @GetMapping(path = "/{mapId}", produces = {FHIR_JSON})
   public void getMapViewConceptMapJson(HttpServletResponse response, @RequestHeader(name = "Accept", required = false) String contentType,
           @PathVariable("mapId") Long mapId,
-          @RequestParam(required = false) String targetForm) {
+          @RequestParam(required = false) String targetForm,
+          @RequestParam(required = false, defaultValue = "true") boolean inherited) {
 
       if (!webSecurity.isValidUser()) {
           throw new NoSuchUserProblem();
@@ -535,7 +558,7 @@ public class MapViewRestController {
               + "\"");
 
 
-      final ConceptMap cm = convertToConceptMap(mapId, TargetExportForm.of(targetForm));
+      final ConceptMap cm = convertToConceptMap(mapId, TargetExportForm.of(targetForm), inherited);
 
       try (final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(response.getOutputStream()))) {
           final IParser parser = terminology.getFhirContext().newJsonParser();
@@ -549,7 +572,22 @@ public class MapViewRestController {
   @Autowired
   private MapRepository mapRepo;
 
-  private ConceptMap convertToConceptMap(Long mapId, TargetExportForm targetForm) {
+  @Autowired
+  private InheritanceService inheritanceService;
+
+  /** True when the export of this map includes inherited targets and the mapping origin columns. */
+  private boolean withInheritance(Long mapId, boolean inherited) {
+    return inherited && mapRepo.findById(mapId).map(m -> m.isFromSnomed() && m.isInheritance()).orElse(false);
+  }
+
+  private List<InheritanceExport.Line> exportLines(Long mapId, TargetExportForm form, boolean inherited) {
+    final List<MapView> views = form.apply(mapViewService.getAllMapViewForMap(mapId));
+    return withInheritance(mapId, inherited)
+        ? InheritanceExport.apply(views, inheritanceService.computeForMap(mapId))
+        : InheritanceExport.plain(views);
+  }
+
+  private ConceptMap convertToConceptMap(Long mapId, TargetExportForm targetForm, boolean inherited) {
       final Map<Long, SourceElementComponent> mapEntry = new HashMap<>();
       final ConceptMap cm = new ConceptMap();
       final ConceptMapGroupComponent group = cm.addGroup();
@@ -604,7 +642,8 @@ public class MapViewRestController {
       });
 
 
-      for (final MapView mapView : targetForm.apply(mapViewService.getAllMapViewForMap(mapId))) {
+      for (final InheritanceExport.Line line : exportLines(mapId, targetForm, inherited)) {
+          final MapView mapView = line.view();
           final Long key = mapView.getSourceIndex();
           final SourceElementComponent src;
           if (!mapEntry.containsKey(key)) {
@@ -618,6 +657,10 @@ public class MapViewRestController {
           }
 
           final TargetElementComponent tgt = src.addTarget();
+          if (line.origin() != null && !"ASSERTED".equals(line.origin())) {
+              // where the mapping of a map with inheritance comes from (inherited, conflict, uncovered...)
+              tgt.setComment(line.inheritedFrom() == null ? line.origin() : line.origin() + " " + line.inheritedFrom());
+          }
           if (null != mapView.getNoMap() && mapView.getNoMap()) {
               tgt.setEquivalence(ConceptMapEquivalence.UNMATCHED);
           } else {

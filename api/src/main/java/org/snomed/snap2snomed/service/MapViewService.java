@@ -477,7 +477,7 @@ public class MapViewService {
     return mapRepository.findSourceByMapId(mapId).get().getAdditionalColumnsMetadata();
   }
 
-  public String[] getExportHeader(Long mapId, List<String> extraColumns, TargetExportForm targetForm) {
+  public String[] getExportHeader(Long mapId, List<String> extraColumns, TargetExportForm targetForm, boolean inheritance) {
     
     ArrayList<String> exportHeader = new ArrayList<String>(Arrays.asList("\ufeff" + "Source code", "Source display"));
 
@@ -492,6 +492,9 @@ public class MapViewService {
       exportHeader.addAll(Arrays.asList("Focus concept code", "Focus concept display"));
     }
     exportHeader.addAll(Arrays.asList("Relationship type code", "Relationship type display", "No map flag", "Status"));
+    if (inheritance) {
+      exportHeader.addAll(Arrays.asList("Mapping origin", "Inherited from"));
+    }
 
     if (extraColumns != null) {
       for (String extraColumn : extraColumns) {

@@ -309,6 +309,9 @@ public class MapRowEventHandler {
         if (mapRowFromDatabase.isNoMap() != mapRow.isNoMap()) {
           throw new UnauthorisedMappingProblem("Reviewer cannot change no map status");
         }
+        if (mapRowFromDatabase.isStopInheritance() != mapRow.isStopInheritance()) {
+          throw new UnauthorisedMappingProblem("Reviewer cannot change where inheritance stops");
+        }
       }
     } else {
       throw new UnauthorisedMappingProblem("User is not author / reviewer / reconciler for the requested update");
