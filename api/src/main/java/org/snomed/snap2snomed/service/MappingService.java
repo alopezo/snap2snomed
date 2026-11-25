@@ -65,6 +65,7 @@ public class MappingService {
   @Autowired private AuthenticationFacade authenticationFacade;
   @Autowired private FhirService fhirService;
   @Autowired private TargetDisplayResolver targetDisplayResolver;
+  @Autowired private InheritanceDescendantsRepository inheritanceDescendantsRepository;
   @Autowired private ImportedCodeSetRepository importedCodeSetRepository;
   @Autowired private MapRepository mapRepository;
   @Autowired private MapRowEventHandler mapRowEventHandler;
@@ -119,9 +120,16 @@ public class MappingService {
       map.setDirection(e.getDirection());
       map.setTargetCodeSet(e.getTargetCodeSet());
       if (e.isFromSnomed()) {
+        // The version, the source and the display language are fixed; the inheritance scope (toScope)
+        // can change, and then the cached descendants (computed within it) are dropped
         map.setToVersion(e.getToVersion());
-        map.setToScope(e.getToScope());
         map.setDisplayLanguage(e.getDisplayLanguage());
+        map.setSourceEcl(e.getSourceEcl());
+        if (map.getToScope() == null || map.getToScope().isBlank()) {
+          map.setToScope(e.getToScope());
+        } else if (!Objects.equals(map.getToScope(), e.getToScope())) {
+          inheritanceDescendantsRepository.deleteByMapId(e.getId());
+        }
       }
       // Inheritance can be switched on and off, for single author maps from SNOMED CT only
       if (!e.isFromSnomed() || e.getProject().getDualMapMode()) {
@@ -665,12 +673,12 @@ public class MappingService {
     if (originalMap.isFromSnomed()) {
       // The ECL and the display language stay; only the SNOMED CT version can change. The new source is
       // the ECL expanded again (see EclCodeSetService), so it must be a different code set
-      if (!Objects.equals(originalMap.getToScope(), targetScope)
-          || !Objects.equals(LanguageDialects.normalize(originalMap.getDisplayLanguage()), LanguageDialects.normalize(displayLanguage))) {
-        throw new BadRequestDataProblem("A new version of a map from SNOMED CT keeps its ECL and display language");
+      if (!Objects.equals(LanguageDialects.normalize(originalMap.getDisplayLanguage()), LanguageDialects.normalize(displayLanguage))) {
+        throw new BadRequestDataProblem("A new version of a map from SNOMED CT keeps its display language");
       }
-      if (newSourceId == originalSourceId) {
-        throw new BadRequestDataProblem("A new version of a map from SNOMED CT needs the ECL expanded again");
+      // A source from an ECL is expanded again (a new code set); an imported list of codes is kept
+      if (originalMap.getSourceEcl() != null && newSourceId == originalSourceId) {
+        throw new BadRequestDataProblem("A new version of a map from SNOMED CT needs its source ECL expanded again");
       }
     }
 
@@ -684,6 +692,7 @@ public class MappingService {
         .direction(originalMap.getDirection())
         .targetCodeSet(originalMap.getTargetCodeSet())
         .inheritance(originalMap.isInheritance())
+        .sourceEcl(originalMap.getSourceEcl())
         .build();
 
     final Map mapCreated = mapRepository.save(newMap);

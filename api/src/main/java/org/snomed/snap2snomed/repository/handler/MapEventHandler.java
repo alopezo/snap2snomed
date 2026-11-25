@@ -16,17 +16,27 @@
 
 package org.snomed.snap2snomed.repository.handler;
 
+import java.io.IOException;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import org.snomed.snap2snomed.controller.dto.ValidationResult;
+import org.snomed.snap2snomed.model.ImportedCode;
 import org.snomed.snap2snomed.model.Map;
 import org.snomed.snap2snomed.model.enumeration.MapDirection;
 import org.snomed.snap2snomed.problem.BadRequestDataProblem;
 import org.snomed.snap2snomed.problem.auth.NotAuthorisedProblem;
+import org.snomed.snap2snomed.repository.ImportedCodeRepository;
 import org.snomed.snap2snomed.repository.ImportedCodeSetRepository;
 import org.snomed.snap2snomed.repository.MapRowRepository;
 import org.snomed.snap2snomed.repository.ProjectRepository;
 import org.snomed.snap2snomed.security.AuthenticationFacade;
 import org.snomed.snap2snomed.security.WebSecurity;
+import org.snomed.snap2snomed.service.EclCodeSetService;
+import org.snomed.snap2snomed.service.FhirService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleAfterCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
@@ -41,6 +51,12 @@ public class MapEventHandler {
 
   @Autowired
   MapRowRepository mapRowRepository;
+
+  @Autowired
+  ImportedCodeRepository importedCodeRepository;
+
+  @Autowired
+  FhirService fhirService;
 
   @Autowired
   ImportedCodeSetRepository importedCodeSetRepository;
@@ -87,10 +103,41 @@ public class MapEventHandler {
     } else if (map.getTargetCodeSet() != null) {
       throw new BadRequestDataProblem("A target code set can only be specified for a map from SNOMED CT");
     }
+    if (map.isFromSnomed() && map.getSourceEcl() == null) {
+      validateSnomedSourceCodes(map);
+    }
     if (map.isInheritance() && (!map.isFromSnomed() || map.getProject().getDualMapMode())) {
       throw new BadRequestDataProblem("Inheritance is only available for single author maps from SNOMED CT");
     }
 
+  }
+
+  /**
+   * A map from SNOMED CT whose source is an imported list of codes: every code must be an active concept in
+   * the map's SNOMED CT version, and the list at most {@link EclCodeSetService#MAX_CONCEPTS} long.
+   */
+  private void validateSnomedSourceCodes(Map map) {
+    final List<ImportedCode> codes = importedCodeRepository.findAllInCodeSet(map.getSource().getId());
+    if (codes.isEmpty() || codes.size() > EclCodeSetService.MAX_CONCEPTS) {
+      throw new BadRequestDataProblem("The source of a map from SNOMED CT must have between 1 and "
+          + EclCodeSetService.MAX_CONCEPTS + " codes; this one has " + codes.size());
+    }
+    final ValidationResult result;
+    try {
+      result = fhirService.validateValueSetComposition(
+          codes.stream().map(ImportedCode::getCode).collect(Collectors.toCollection(HashSet::new)), map.getToVersion(), "*");
+    } catch (final IOException e) {
+      throw new BadRequestDataProblem("The source codes could not be checked against the terminology server");
+    }
+    final List<String> problems = new ArrayList<>();
+    result.getInvalid().forEach(code -> problems.add(code + " (not a concept id)"));
+    result.getAbsent().forEach(code -> problems.add(code + " (not in this SNOMED CT version)"));
+    result.getInactive().forEach(code -> problems.add(code + " (inactive)"));
+    if (!problems.isEmpty()) {
+      throw new BadRequestDataProblem("The source must contain active SNOMED CT concepts of " + map.getToVersion()
+          + "; " + problems.size() + " codes are not: " + String.join(", ", problems.subList(0, Math.min(20, problems.size())))
+          + (problems.size() > 20 ? ", ..." : ""));
+    }
   }
 
   @HandleBeforeSave

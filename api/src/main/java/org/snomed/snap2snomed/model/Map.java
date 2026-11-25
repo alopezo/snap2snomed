@@ -119,6 +119,14 @@ public class Map implements Snap2SnomedEntity {
   private ImportedCodeSet targetCodeSet;
 
   /**
+   * Maps from SNOMED CT: the ECL expanded into the source code set, or null when the source is an imported
+   * list of SNOMED CT codes. {@link #toScope} is then the scope inheritance can expand into.
+   */
+  @ReadOnlyProperty
+  @Size(max = 1024)
+  private String sourceEcl;
+
+  /**
    * Maps from SNOMED CT only: unmapped concepts take the targets of their nearest mapped ancestor. Can be
    * switched on and off, as inherited targets are computed, not stored.
    */
@@ -153,6 +161,8 @@ public class Map implements Snap2SnomedEntity {
     ImportedCodeSet getTargetCodeSet();
 
     boolean isInheritance();
+
+    String getSourceEcl();
 
     ListView getProject();
 

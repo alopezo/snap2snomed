@@ -20,6 +20,9 @@ import java.util.Collection;
 import java.util.List;
 import org.snomed.snap2snomed.model.InheritanceDescendants;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 /** Not exported: only InheritanceService reads and fills it. */
@@ -27,4 +30,9 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 public interface InheritanceDescendantsRepository extends JpaRepository<InheritanceDescendants, Long> {
 
   List<InheritanceDescendants> findByMapIdAndConceptCodeIn(Long mapId, Collection<String> conceptCodes);
+
+  @Transactional
+  @Modifying
+  @Query("delete from InheritanceDescendants d where d.mapId = :mapId")
+  void deleteByMapId(Long mapId);
 }
