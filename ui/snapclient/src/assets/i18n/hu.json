@@ -566,7 +566,8 @@
     "AUTOMAP_COMPLETED": "Az autoleképezés befejeződött: {{total}} kifejezésből {{matches}} egyezett",
     "AUTOMAP_FAILURE": "Rendszerhiba történt a forráskifejezések lekérésekor",
     "AUTOMAP_ERRORS": "Rendszerhibák történtek ({{errorCount}}); érdemes újra futtatni",
-    "NOROWS": "Nincs autoleképezésre elérhető sor"
+    "NOROWS": "Nincs autoleképezésre elérhető sor",
+    "FROM_SNOMED_COMPLETED": "Automap kész: {{rows}} megfeleltetés nélküli fogalomból {{created}} kapott célt; {{alreadyInherited}} egyezés kihagyva, mert a fogalom már örökli azt a kódot"
   },
   "ROLE": {
     "OWNER": "Tulajdonos",

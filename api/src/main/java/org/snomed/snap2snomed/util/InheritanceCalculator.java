@@ -127,6 +127,21 @@ public final class InheritanceCalculator {
     return results;
   }
 
+  /**
+   * What each of the given concepts would inherit if it had no targets of its own (a concept is never its own
+   * descendant, so its own targets are ignored): used to tell whether a new target only repeats inheritance.
+   */
+  public static Map<String, Result> inheritedWithoutOwnTargets(List<Row> rows, Collection<String> codes,
+      Function<String, Set<String>> descendantsOf) {
+    final Map<String, Row> anchors = new LinkedHashMap<>();
+    rows.stream().filter(Row::anchor).forEach(row -> anchors.put(row.code(), row));
+    final Map<String, Set<String>> descendants = new LinkedHashMap<>();
+    anchors.keySet().forEach(code -> descendants.put(code, descendantsOf.apply(code)));
+    final Map<String, Result> results = new LinkedHashMap<>();
+    codes.forEach(code -> results.put(code, inherit(code, anchors, descendants)));
+    return results;
+  }
+
   private static Result inherit(String code, Map<String, Row> anchors, Map<String, Set<String>> descendants) {
     final List<String> candidates = descendants.entrySet().stream()
         .filter(entry -> entry.getValue().contains(code))

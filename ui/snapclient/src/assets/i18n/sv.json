@@ -566,7 +566,8 @@
     "AUTOMAP_COMPLETED": "Automappningen är klar: {{matches}} av {{total}} matchade",
     "AUTOMAP_FAILURE": "Ett systemfel inträffade när källtermerna hämtades",
     "AUTOMAP_ERRORS": "Systemfel ({{errorCount}}) inträffade; överväg att köra igen",
-    "NOROWS": "Inga rader tillgängliga för automappning"
+    "NOROWS": "Inga rader tillgängliga för automappning",
+    "FROM_SNOMED_COMPLETED": "Automap klar: {{created}} av {{rows}} begrepp utan mappning fick ett mål; {{alreadyInherited}} träffar utelämnade eftersom begreppet redan ärver den koden"
   },
   "ROLE": {
     "OWNER": "Ägare",

@@ -566,7 +566,8 @@
     "AUTOMAP_COMPLETED": "Automap terminé : {{matches}} sur {{total}} trouvés",
     "AUTOMAP_FAILURE": "Une défaillance système s'est produite lors de la récupération des termes source",
     "AUTOMAP_ERRORS": "Des défaillances système ({{errorCount}}) se sont produites ; envisagez de relancer",
-    "NOROWS": "Aucune ligne disponible pour la correspondance automatique"
+    "NOROWS": "Aucune ligne disponible pour la correspondance automatique",
+    "FROM_SNOMED_COMPLETED": "Automap terminé : {{created}} concepts sur {{rows}} sans correspondance ont reçu une cible ; {{alreadyInherited}} correspondances omises car le concept hérite déjà de ce code"
   },
   "ROLE": {
     "OWNER": "Propriétaire",

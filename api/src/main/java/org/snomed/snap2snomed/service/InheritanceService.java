@@ -318,7 +318,7 @@ public class InheritanceService {
     return concepts;
   }
 
-  private List<LoadedRow> loadRows(Long mapId) {
+  List<LoadedRow> loadRows(Long mapId) {
     final List<Object[]> rowData = entityManager.createQuery(
             "select r.id, c.code, c.display, r.noMap, r.stopInheritance, r.status, r.acceptedInheritance from MapRow r join r.sourceCode c "
                 + "where r.map.id = :mapId order by c.index", Object[].class)

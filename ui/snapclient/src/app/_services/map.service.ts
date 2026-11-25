@@ -142,6 +142,14 @@ export interface SourceChanges {
 
 export type InheritanceState = 'ASSERTED' | 'NO_MAP' | 'STOPPED' | 'INHERITED' | 'BLOCKED' | 'CONFLICT' | 'UNCOVERED';
 
+/** What automapping a task of a map from SNOMED CT did (matches already inherited are not created). */
+export interface AutomapFromSnomedResult {
+  rows: number;
+  matched: number;
+  created: number;
+  alreadyInherited: number;
+}
+
 /** The new project of an inverted map (see MapService.invertMap). */
 export interface InvertMapRequest {
   title: string;
@@ -305,6 +313,12 @@ export class MapService {
    */
   invertMap(mapId: string, request: InvertMapRequest): Observable<InvertMapResult> {
     return this.http.post<InvertMapResult>(`${this.config.apiBaseUrl}/map/${mapId}/invert`, request,
+      ServiceUtils.getHTTPHeaders());
+  }
+
+  /** Automap for an author task of a map from SNOMED CT, matched on the server against the target code set. */
+  automapFromSnomed(taskId: string): Observable<AutomapFromSnomedResult> {
+    return this.http.post<AutomapFromSnomedResult>(`${this.config.apiBaseUrl}/task/${taskId}/automapFromSnomed`, null,
       ServiceUtils.getHTTPHeaders());
   }
 

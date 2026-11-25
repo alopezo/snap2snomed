@@ -21,7 +21,7 @@
                 <div class="col-right">
                   <h2>{{'TASK.' + task.type | translate}}</h2>
                   <div class="row-actions">
-                    @if (task.type === 'AUTHOR' && !fromSnomed) {
+                    @if (task.type === 'AUTHOR') {
                       <span>
                         @if (!automapping) {
                           <span>

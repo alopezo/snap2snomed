@@ -566,7 +566,8 @@
     "AUTOMAP_COMPLETED": "Mapeo automático completado: {{matches}} de {{total}} con coincidencia",
     "AUTOMAP_FAILURE": "Se produjo un error del sistema al obtener los términos de origen",
     "AUTOMAP_ERRORS": "Se produjeron errores del sistema ({{errorCount}}); considere volver a ejecutarlo",
-    "NOROWS": "No hay filas disponibles para el mapeo automático"
+    "NOROWS": "No hay filas disponibles para el mapeo automático",
+    "FROM_SNOMED_COMPLETED": "Automap completo: {{created}} de {{rows}} conceptos sin mapear recibieron un destino; {{alreadyInherited}} coincidencias omitidas porque el concepto ya hereda ese código"
   },
   "ROLE": {
     "OWNER": "Propietario",

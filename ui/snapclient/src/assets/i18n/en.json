@@ -566,7 +566,8 @@
     "AUTOMAP_COMPLETED": "Automap complete: {{matches}} of {{total}} matched",
     "AUTOMAP_FAILURE": "System failure occurred retrieving source terms",
     "AUTOMAP_ERRORS": "System failures ({{errorCount}}) occurred; consider re-running",
-    "NOROWS": "No rows available for automapping"
+    "NOROWS": "No rows available for automapping",
+    "FROM_SNOMED_COMPLETED": "Automap complete: {{created}} of {{rows}} unmapped concepts got a target; {{alreadyInherited}} matches left out because the concept already inherits that code"
   },
   "ROLE": {
     "OWNER": "Owner",

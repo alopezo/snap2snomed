@@ -61,6 +61,13 @@ Maps from SNOMED CT (branch `from-snomed`).
   local codes that targeted it with the relationship inverted. Refined targets are mapped from their focus
   concept (the relationship adjusted first); no-map rows and concepts not active in the version are left out.
   The rows start as DRAFT, the original map does not change, and the dialog reports what was carried over.
+- Automap works for the author tasks of maps from SNOMED CT: the term of each unmapped concept is matched
+  on the server against the displays of the target code set (tokens normalised for case, accents and
+  punctuation, weighted by rarity, typos tolerated through trigrams; negations such as "without" or "sin"
+  must agree, and "nonallergic" is never a variant of "allergic"; a match needs a score of at least 0.75)
+  and becomes an INEXACT target, its row DRAFT. In a map with inheritance a match is left out when
+  the concept already inherits exactly that code, counting the other matches of the run, so automap does
+  not break inheritance; rows marked "stop inheritance" are left alone.
 - Authors accept the inheritance of rows without targets of their own (inheriting, stopped or blocked),
   from the mapping detail or in bulk (bulk change, "Accept the inheritance of the selected rows"): they
   become MAPPED and go on through the workflow. What a row inherited when accepted is recorded; if it
@@ -85,7 +92,7 @@ Maps from SNOMED CT (branch `from-snomed`).
 
 #### Not available for maps from SNOMED CT
 
-- Automap, mapping file import, target validation, target term refresh, target refinement, changing
+- Mapping file import, target validation, target term refresh, target refinement, changing
   the ECL or display language in a new version, and setting targets in bulk change (relationship and
   status can still be changed).
 

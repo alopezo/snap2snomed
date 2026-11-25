@@ -566,7 +566,8 @@
     "AUTOMAP_COMPLETED": "Automapning afsluttet: {{matches}} af {{total}} matchet",
     "AUTOMAP_FAILURE": "Der opstod en systemfejl under hentning af kildetermer",
     "AUTOMAP_ERRORS": "Der opstod systemfejl ({{errorCount}}); overvej at køre igen",
-    "NOROWS": "Ingen tilgængelige rækker til automapning"
+    "NOROWS": "Ingen tilgængelige rækker til automapning",
+    "FROM_SNOMED_COMPLETED": "Automap fuldført: {{created}} af {{rows}} begreber uden mapping fik et mål; {{alreadyInherited}} match udeladt, fordi begrebet allerede arver den kode"
   },
   "ROLE": {
     "OWNER": "Ejer",

@@ -97,6 +97,11 @@ export class AutomapComponent implements OnInit {
   automap(): void {
     const self = this;
 
+    if (Mapping.isFromSnomed(self.mapping)) {
+      self.automapFromSnomed();
+      return;
+    }
+
     if (!self.task_id || !self.mapping?.toScope || !self.mapping.toVersion) {
       return;
     }
@@ -187,6 +192,38 @@ export class AutomapComponent implements OnInit {
         });
       }
     );
+  }
+
+  /**
+   * Maps from SNOMED CT: matched on the server against the target code set, in one request (matches a concept
+   * already inherits are left out).
+   */
+  private automapFromSnomed(): void {
+    const self = this;
+    if (!self.task_id) {
+      return;
+    }
+    self.automapPercentEvent.emit(0);
+    self.mapService.automapFromSnomed(self.task_id).subscribe({
+      next: result => {
+        self.automapPercentEvent.emit(100);
+        const key = result.rows === 0 ? 'AUTOMAP.NOROWS' : 'AUTOMAP.FROM_SNOMED_COMPLETED';
+        self.translate.get(key, result).subscribe(msg => {
+          if (self.automapDialog && self.automapDialog.componentInstance) {
+            self.automapDialog.componentInstance.data = result.rows === 0
+              ? {...self.automapDialog.componentInstance.data, error: msg}
+              : {...self.automapDialog.componentInstance.data, message: msg};
+          }
+        });
+      },
+      error: () => {
+        self.translate.get('AUTOMAP.AUTOMAP_FAILURE').subscribe(msg => {
+          if (self.automapDialog && self.automapDialog.componentInstance) {
+            self.automapDialog.componentInstance.data = {...self.automapDialog.componentInstance.data, error: msg};
+          }
+        });
+      }
+    });
   }
 
   automapRows(rows: AutomapRow[], id: number, context: {

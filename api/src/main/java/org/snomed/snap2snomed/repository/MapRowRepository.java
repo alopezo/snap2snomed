@@ -216,6 +216,11 @@ public interface MapRowRepository
       + " and mr.id != :mapRowId")
   MapRow findDualMapSiblingRow(Long mapId, Long sourceCodeId, Long mapRowId);
 
+  @Query("select mr from MapRow mr join fetch mr.sourceCode where mr.authorTask.id = :taskId "
+      + "and mr.status = org.snomed.snap2snomed.model.enumeration.MapStatus.UNMAPPED")
+  @RestResource(exported = false)
+  List<MapRow> findUnmappedAuthorTaskMapRows(Long taskId);
+
   @Query("select new org.snomed.snap2snomed.controller.dto.AutomapRowDto(mr.id, mr.sourceCode.display) "
       + "from MapRow mr "
       + "where mr.authorTask.id = :taskId "

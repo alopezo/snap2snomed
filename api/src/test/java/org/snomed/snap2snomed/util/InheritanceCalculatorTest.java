@@ -143,4 +143,19 @@ class InheritanceCalculatorTest {
             org.assertj.core.groups.Tuple.tuple("D", State.BLOCKED, "C"),
             org.assertj.core.groups.Tuple.tuple("E", State.BLOCKED, "C"));
   }
+  @Test
+  void tellsWhatAMappedConceptWouldInheritWithoutItsOwnTargets() {
+    // automap: C matched X and its ancestor A maps to X, so C's own target would repeat inheritance; E's would not
+    // (E is also below F, which maps to Y), and G has no mapped ancestor
+    final List<Row> rows = List.of(mapped("A", "X", TARGET_EQUIVALENT), empty("B"), mapped("C", "X", TARGET_INEXACT),
+        empty("D"), mapped("E", "X", TARGET_INEXACT), mapped("F", "Y", TARGET_EQUIVALENT), mapped("G", "X", TARGET_INEXACT));
+
+    final Map<String, Result> inherited = InheritanceCalculator.inheritedWithoutOwnTargets(rows, List.of("C", "E", "G"),
+        DESCENDANTS::get);
+
+    assertThat(inherited.get("C").state()).isEqualTo(State.INHERITED);
+    assertThat(inherited.get("C").targets()).extracting(Target::code).containsExactly("X");
+    assertThat(inherited.get("E").state()).isEqualTo(State.CONFLICT);
+    assertThat(inherited.get("G").state()).isEqualTo(State.UNCOVERED);
+  }
 }

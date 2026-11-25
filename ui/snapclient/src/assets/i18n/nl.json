@@ -566,7 +566,8 @@
     "AUTOMAP_COMPLETED": "Automatisch mappen voltooid: {{matches}} van {{total}} gematcht",
     "AUTOMAP_FAILURE": "Systeemfout bij het ophalen van brontermen",
     "AUTOMAP_ERRORS": "Er zijn systeemfouten ({{errorCount}}) opgetreden; overweeg opnieuw uit te voeren",
-    "NOROWS": "Geen rijen beschikbaar om automatisch te mappen"
+    "NOROWS": "Geen rijen beschikbaar om automatisch te mappen",
+    "FROM_SNOMED_COMPLETED": "Automap voltooid: {{created}} van {{rows}} concepten zonder mapping kregen een doel; {{alreadyInherited}} overeenkomsten weggelaten omdat het concept die code al erft"
   },
   "ROLE": {
     "OWNER": "Eigenaar",

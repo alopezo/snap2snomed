@@ -22,6 +22,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.snomed.snap2snomed.controller.dto.AutomapResultDto;
 import org.snomed.snap2snomed.controller.dto.InheritanceDto;
 import org.snomed.snap2snomed.controller.dto.InvertMapDto;
 import org.snomed.snap2snomed.controller.dto.SourceChangesDto;
@@ -36,6 +37,7 @@ import org.snomed.snap2snomed.problem.auth.NotAuthorisedProblem;
 import org.snomed.snap2snomed.repository.ImportedCodeRepository;
 import org.snomed.snap2snomed.repository.MapRepository;
 import org.snomed.snap2snomed.security.WebSecurity;
+import org.snomed.snap2snomed.service.FromSnomedAutomapService;
 import org.snomed.snap2snomed.service.InheritanceService;
 import org.snomed.snap2snomed.service.MapInversionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,6 +77,9 @@ public class TargetCodeRestController {
 
   @Autowired
   MapInversionService mapInversionService;
+
+  @Autowired
+  FromSnomedAutomapService fromSnomedAutomapService;
 
   @Operation(description = "Searches the target code set of a map from SNOMED CT by code or display text, or "
       + "returns the code with exactly the given value.")
@@ -154,6 +159,17 @@ public class TargetCodeRestController {
       throw new NotAuthorisedProblem("Not authorised to view this map");
     }
     return inheritanceService.computeForMap(mapId);
+  }
+
+  @Operation(description = "Automap for an author task of a map from SNOMED CT: the term of each unmapped concept is "
+      + "matched against the target code set, and a good enough match becomes an INEXACT target (the row DRAFT). In a "
+      + "map with inheritance, a match the row already inherits is left out. Task assignee or admin only.")
+  @PostMapping(path = "/task/{taskId}/automapFromSnomed", produces = MediaType.APPLICATION_JSON_VALUE)
+  public AutomapResultDto automapFromSnomed(@PathVariable("taskId") Long taskId) {
+    if (!webSecurity.isValidUser()) {
+      throw new NoSuchUserProblem();
+    }
+    return fromSnomedAutomapService.automap(taskId);
   }
 
   @Operation(description = "Creates a map from SNOMED CT, in a new project, from a single author map to SNOMED CT: "
