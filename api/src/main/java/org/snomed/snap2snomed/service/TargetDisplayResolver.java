@@ -205,7 +205,7 @@ public class TargetDisplayResolver {
     return displays;
   }
 
-  private static String englishFsn(ValueSet.ValueSetExpansionContainsComponent concept) {
+  static String englishFsn(ValueSet.ValueSetExpansionContainsComponent concept) {
     return concept.getDesignation().stream()
         .filter(designation -> designation.hasUse() && FSN_TYPE.equals(designation.getUse().getCode()))
         .filter(designation -> designation.getLanguage() != null && designation.getLanguage().startsWith("en"))

@@ -16,16 +16,20 @@
 
 package org.snomed.snap2snomed.controller;
 
+import jakarta.validation.Valid;
+import org.snomed.snap2snomed.controller.dto.EclCodeSetRequest;
 import org.snomed.snap2snomed.controller.dto.ImportDetails;
 import org.snomed.snap2snomed.model.ImportedCodeSet;
 import org.snomed.snap2snomed.problem.auth.NoSuchUserProblem;
 import org.snomed.snap2snomed.security.WebSecurity;
 import org.snomed.snap2snomed.service.CodeSetImportService;
+import org.snomed.snap2snomed.service.EclCodeSetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,7 +46,21 @@ public class ImportedCodeSetRestController {
   private CodeSetImportService importService;
 
   @Autowired
-  WebSecurity webSecurity;  
+  WebSecurity webSecurity;
+
+  @Autowired
+  private EclCodeSetService eclCodeSetService;  
+
+  @Operation(description = "Creates the source code set of a map from SNOMED CT: the active concepts of an ECL "
+      + "expression (at most " + EclCodeSetService.MAX_CONCEPTS + "), with their terms in the given display language.")
+  @PostMapping(value = "/importedCodeSets/fromEcl", consumes = {MediaType.APPLICATION_JSON_VALUE},
+      produces = {MediaType.APPLICATION_JSON_VALUE})
+  ImportedCodeSet createCodeSetFromEcl(@RequestBody @Valid EclCodeSetRequest request) {
+    if (!webSecurity.isValidUser()) {
+      throw new NoSuchUserProblem();
+    }
+    return eclCodeSetService.createCodeSet(request);
+  }
 
   @Operation
   @PostMapping(value = "/importedCodeSets/import", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},

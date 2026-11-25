@@ -297,6 +297,29 @@ public class CodeSetImportService {
     }
   }
 
+  /**
+   * Saves a code set built by the application (not read from a file), e.g. the source of a map from
+   * SNOMED CT. Codes are indexed from 1 in the order given.
+   */
+  @Transactional
+  public ImportedCodeSet saveCodeSet(ImportedCodeSet codeSet, List<java.util.Map.Entry<String, String>> codesAndDisplays) {
+    final ImportedCodeSet saved = importedCodeSetRepository.save(codeSet);
+    final InsertCodeWork insertCodeWork = new InsertCodeWork(configuration.getImportBatchSize());
+    long index = 1;
+    for (final java.util.Map.Entry<String, String> codeAndDisplay : codesAndDisplays) {
+      insertCodeWork.add(new ImportedCode(null, codeAndDisplay.getKey(), saved, index++,
+          truncate(codeAndDisplay.getValue(), ImportedCode.DISPLAY_SIZE_LIMIT), new ArrayList<>()));
+    }
+    entityManager.unwrap(Session.class).doWork(insertCodeWork);
+    entityManager.flush();
+    entityManager.clear();
+    return saved;
+  }
+
+  private static String truncate(String value, int max) {
+    return value == null || value.length() <= max ? value : value.substring(0, max);
+  }
+
   @Transactional
   public ImportedCodeSet importCodeSet(
       @Validated ImportDetails importDetails,
