@@ -55,7 +55,7 @@ export class MappingListComponent implements OnInit, AfterViewInit, OnDestroy {
   error: ErrorInfo = {};
   projects: Project[] = [];
 
-  displayedColumns = ['title', 'description', 'modified', 'users', 'version', 'actions'];
+  displayedColumns = ['title', 'type', 'description', 'modified', 'users', 'version', 'actions'];
   roles = {
     name: 'roles',
     options: ['all', 'owner', 'member', 'guest'],
@@ -221,6 +221,14 @@ export class MappingListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   closeCreate(): void {
     this.opened = false;
+  }
+
+  isFromSnomed(mapping: Mapping): boolean {
+    return Mapping.isFromSnomed(mapping);
+  }
+
+  hasInheritance(mapping: Mapping): boolean {
+    return Mapping.hasInheritance(mapping);
   }
 
   newVersion(project: Project): void {

@@ -48,6 +48,25 @@
           <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="{{'MAPPING_LIST.SORT_BY_TITLE' | translate}}">{{'PROJECT_TABLE.TITLE' | translate}}</th>
           <td mat-cell *matCellDef="let project">{{project.title}}</td>
         </ng-container>
+        <!-- Map type: direction and inheritance of the selected version -->
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef>{{'PROJECT_TABLE.TYPE' | translate}}</th>
+          <td mat-cell *matCellDef="let project">
+            @if (selectedMapping[project.id]; as m) {
+              <span class="map-type">
+                <span class="direction" [class.from-snomed]="isFromSnomed(m)">
+                  <mat-icon class="type-icon">{{ isFromSnomed(m) ? 'logout' : 'login' }}</mat-icon>
+                  {{ (isFromSnomed(m) ? 'MAP.DIRECTION_FROM_SNOMED' : 'MAP.DIRECTION_TO_SNOMED') | translate }}
+                </span>
+                @if (hasInheritance(m)) {
+                  <span class="inheritance-badge" [matTooltip]="'MAP.INHERITANCE_HINT' | translate">
+                    <mat-icon class="type-icon">account_tree</mat-icon>{{ 'MAP.INHERITANCE_LABEL' | translate }}
+                  </span>
+                }
+              </span>
+            }
+          </td>
+        </ng-container>
         <ng-container matColumnDef="description">
           <th mat-header-cell *matHeaderCellDef>{{'PROJECT_TABLE.DESCRIPTION' | translate}}</th>
           <td mat-cell *matCellDef="let project">{{project.description}}</td>

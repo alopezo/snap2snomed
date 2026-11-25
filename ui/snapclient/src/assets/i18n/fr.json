@@ -571,7 +571,8 @@
     "LAST_UPDATED": "Dernière mise à jour",
     "TITLE": "Titre",
     "USERS": "Utilisateurs",
-    "VERSION": "Version"
+    "VERSION": "Version",
+    "TYPE": "Type"
   },
   "BULKCHANGEDIALOG": {
     "OWNER_WARNING": "Cette modification en masse écrasera toutes les données existantes.",

@@ -52,6 +52,7 @@ Maps from SNOMED CT (branch `from-snomed`).
   never stored; the map details offer a paged preview of them, with filters by state. Generation is
   refused when a concept, or all together, exceed 50,000 concepts
   (`snap2snomed.inheritance.max-generated`).
+- The map list has a "Type" column showing each map's direction and whether it uses inheritance.
 - An "Inheritance" column in the mapping tables summarises each row (mapped and how many inherit it,
   inherits from, stopped, in conflict, uncovered) and opens a popover with the details.
 - Inheritance is recomputed after every change; the descendants of each mapped or stopping concept

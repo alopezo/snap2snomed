@@ -571,7 +571,8 @@
     "LAST_UPDATED": "Laatst bijgewerkt",
     "TITLE": "Titel",
     "USERS": "Gebruikers",
-    "VERSION": "Versie"
+    "VERSION": "Versie",
+    "TYPE": "Type"
   },
   "BULKCHANGEDIALOG": {
     "OWNER_WARNING": "Deze bulkwijziging overschrijft alle bestaande gegevens.",

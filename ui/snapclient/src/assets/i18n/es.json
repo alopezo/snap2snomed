@@ -571,7 +571,8 @@
     "LAST_UPDATED": "Última actualización",
     "TITLE": "Título",
     "USERS": "Usuarios",
-    "VERSION": "Versión"
+    "VERSION": "Versión",
+    "TYPE": "Tipo"
   },
   "BULKCHANGEDIALOG": {
     "OWNER_WARNING": "Esta operación de cambio masivo sobrescribirá todos los datos existentes.",

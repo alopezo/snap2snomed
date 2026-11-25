@@ -571,7 +571,8 @@
     "LAST_UPDATED": "Senest opdateret",
     "TITLE": "Titel",
     "USERS": "Brugere",
-    "VERSION": "Version"
+    "VERSION": "Version",
+    "TYPE": "Type"
   },
   "BULKCHANGEDIALOG": {
     "OWNER_WARNING": "Denne masseændring overskriver alle eksisterende data.",

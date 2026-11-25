@@ -571,7 +571,8 @@
     "LAST_UPDATED": "Utoljára frissítve",
     "TITLE": "Cím",
     "USERS": "Felhasználók",
-    "VERSION": "Verzió"
+    "VERSION": "Verzió",
+    "TYPE": "Típus"
   },
   "BULKCHANGEDIALOG": {
     "OWNER_WARNING": "Ez a tömeges módosítás felülírja a meglévő adatokat.",
