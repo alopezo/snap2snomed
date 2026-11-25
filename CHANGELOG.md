@@ -36,8 +36,20 @@ Maps from SNOMED CT (branch `from-snomed`).
   hierarchy, properties and refinement panels. Codes are dragged onto a relationship as usual.
 - The FHIR ConceptMap export of a map from SNOMED CT has SNOMED CT as the source and the target code
   set's system and version as the target. CSV, TSV and Excel exports are unchanged.
-- API: `POST /importedCodeSets/fromEcl`, `GET /map/{mapId}/targetCodes` and
-  `GET /map/{mapId}/sourceChanges` (both authorised through the map's project roles) and the map fields `direction` and `targetCodeSet` (migration V23).
+- Inheritance for single author maps from SNOMED CT, chosen when the map is created and changeable when
+  editing it: unmapped concepts take the targets of their nearest mapped ancestor (following the real
+  SNOMED CT hierarchy), with the relationship adjusted (equivalent becomes broader, narrower becomes
+  inexact). A row marked "no map" or "stop inheritance" stops it for its subtree; when the nearest
+  mapped ancestors disagree the concept is a conflict and nothing is chosen. The map details show the
+  coverage (mapped, inherited, uncovered, in conflict, blocked) with lists to review, the tables show
+  what each unmapped concept inherits, and the mapping detail shows what a concept inherits or passes
+  on, with the stop switch. Exports include inherited targets with "Mapping origin" and "Inherited
+  from" columns (or a FHIR target comment), unless switched off in the export dialog.
+- Inheritance is recomputed after every change; the descendants of each mapped or stopping concept
+  within the map's ECL are expanded once and cached in the database (migration V24).
+- API: `POST /importedCodeSets/fromEcl`, `GET /map/{mapId}/targetCodes`,
+  `GET /map/{mapId}/sourceChanges` and `GET /map/{mapId}/inheritance` (authorised through the map's
+  project roles), the export parameter `inherited` and the map row field `stopInheritance` and the map fields `direction` and `targetCodeSet` (migration V23).
 
 #### Changed
 

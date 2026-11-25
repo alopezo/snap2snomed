@@ -44,6 +44,8 @@ import {merge, of, Subscription} from 'rxjs';
 import {
   EXPORT_EXTRA_COLUMNS, ExportDialogComponent, ExportDialogData, ExportOptions
 } from '../export-dialog/export-dialog.component';
+import {InheritanceStateService} from '../../_services/inheritance-state.service';
+import {InheritanceRow} from '../../_services/map.service';
 import {MatSort} from '@angular/material/sort';
 import {Task, TaskType} from '../../_models/task';
 import {LoadTasksForMap} from '../../store/task-feature/task.actions';
@@ -88,6 +90,15 @@ export class MappingViewComponent implements OnInit, AfterViewInit, OnDestroy {
   private import_dialog_width = '1000px';
 
   mapping: Mapping | null | undefined;
+
+  /** Maps with inheritance: the inheritance of an unmapped row (rendered after each recomputation). */
+  inheritedRow(row: MapView): InheritanceRow | undefined {
+    return this.inheritanceState.rowForMap(this.mapping?.id, row.sourceCode);
+  }
+
+  joinTargets(row: InheritanceRow, field: 'code' | 'display'): string {
+    return row.targets.map(t => t[field]).join(', ');
+  }
 
   /** Maps from SNOMED CT have no target validation, term refresh or mapping file import. */
   get fromSnomed(): boolean {
@@ -224,6 +235,7 @@ export class MappingViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(private router: Router,
               private dialog: MatDialog,
+              private inheritanceState: InheritanceStateService,
               // tslint:disable-next-line:variable-name
               private _bottomSheet: MatBottomSheet,
               private route: ActivatedRoute,

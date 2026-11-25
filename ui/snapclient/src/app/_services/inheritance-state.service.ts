@@ -74,4 +74,9 @@ export class InheritanceStateService {
   rowFor(code: string | null | undefined): InheritanceRow | undefined {
     return code ? this.byCode.get(code) : undefined;
   }
+
+  /** The row of the given map, if it is the one followed (screens may hold their own copy of the map). */
+  rowForMap(mapId: string | number | null | undefined, code: string | null | undefined): InheritanceRow | undefined {
+    return mapId != null && String(mapId) === this.mapId ? this.rowFor(code) : undefined;
+  }
 }

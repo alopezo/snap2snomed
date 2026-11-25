@@ -292,7 +292,7 @@ export class MappingTableComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /** Maps with inheritance: the inheritance of an unmapped row (rendered after each recomputation). */
   inheritedRow(row: MapView): InheritanceRow | undefined {
-    return Mapping.hasInheritance(this.getMapping()) ? this.inheritanceState.rowFor(row.sourceCode) : undefined;
+    return this.inheritanceState.rowForMap(this.getMapping()?.id ?? this.task?.mapping?.id, row.sourceCode);
   }
 
   joinTargets(row: InheritanceRow, field: 'code' | 'display'): string {
