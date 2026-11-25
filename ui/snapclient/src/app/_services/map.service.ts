@@ -157,6 +157,8 @@ export interface InheritanceRow {
   candidates: string[];
   /** ASSERTED: how many rows inherit its targets. */
   inheritedBy: number;
+  /** ASSERTED: how many concepts generated at export time inherit its targets. */
+  generatedBy?: number;
 }
 
 export interface InheritanceResult {

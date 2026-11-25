@@ -1,0 +1,71 @@
+.summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  border: none;
+  background: none;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font: inherit;
+  font-size: 0.85em;
+  color: rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.summary:hover {
+  background: #00000010;
+}
+
+.attention {
+  color: #b26a00;
+}
+
+.icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+.code {
+  font-family: monospace;
+  font-size: 0.95em;
+}
+
+.popover {
+  padding: 8px 14px;
+  max-width: 380px;
+  font-size: 0.9em;
+}
+
+.popover-title {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.popover-concept {
+  margin-bottom: 6px;
+}
+
+.popover p {
+  margin: 4px 0;
+}
+
+.targets {
+  border-collapse: collapse;
+  margin: 4px 0;
+}
+
+.targets td {
+  padding: 2px 6px 2px 0;
+  vertical-align: top;
+}
+
+.relationship {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.hint {
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.9em;
+}

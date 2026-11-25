@@ -31,6 +31,7 @@ import {LoadMapping, LoadMapView, LoadTaskView, ViewContext} from '../../store/m
 import {AuthService} from '../../_services/auth.service';
 import {Subscription} from 'rxjs';
 import {Mapping} from 'src/app/_models/mapping';
+import {applyInheritanceColumn} from '../../_utils/inheritance-column';
 import {Sort} from '@angular/material/sort';
 import {PageEvent} from '@angular/material/paginator';
 import {MapView, MapViewFilter, Page} from 'src/app/_models/map_row';
@@ -209,6 +210,8 @@ export class MappingWorkComponent implements OnInit, OnDestroy {
         // this.displayedColumns = this.constantColumns.concat(this.additionalDisplayedColumns);
         // this.hideShowColumns = this.constantHideShowColumns.concat(this.additionalHideShowColumns);
 
+        applyInheritanceColumn(Mapping.hasInheritance(this.mapping), this.constantColumns, this.constantFilteredColumns,
+          this.constantHideShowColumns);
         // display additional columns after source columns
         this.displayedColumns = this.constantColumns.slice(0,4).concat(this.additionalDisplayedColumns).concat(this.constantColumns.slice(4));
         this.hideShowColumns = this.constantHideShowColumns.slice(0,3).concat(this.additionalHideShowColumns).concat(this.constantHideShowColumns.slice(3));
@@ -220,6 +223,14 @@ export class MappingWorkComponent implements OnInit, OnDestroy {
       if (res) {
         self.error = {};
         self.mapping = res;
+
+        // maps with inheritance show the inheritance column (the page may have been built before the map)
+        if (applyInheritanceColumn(Mapping.hasInheritance(res), this.constantColumns, this.constantFilteredColumns,
+          this.constantHideShowColumns)) {
+          this.displayedColumns = this.constantColumns.slice(0,4).concat(this.additionalDisplayedColumns).concat(this.constantColumns.slice(4));
+          this.hideShowColumns = this.constantHideShowColumns.slice(0,3).concat(this.additionalHideShowColumns).concat(this.constantHideShowColumns.slice(3));
+          this.constantFilteredColumns = [...this.constantFilteredColumns];
+        }
 
         // add in the author column to the table if it is a dual map
         if (this.mapping?.project.dualMapMode && this.task?.type === 'RECONCILE') {

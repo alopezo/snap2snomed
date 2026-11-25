@@ -53,6 +53,7 @@ import {FhirService} from "../../_services/fhir.service";
 import { MappingNotesComponent } from '../mapping-table-notes/mapping-notes.component';
 import { TargetChangedService } from 'src/app/_services/target-changed.service';
 import {focusOf} from '../../_utils/target-expression';
+import {applyInheritanceColumn} from '../../_utils/inheritance-column';
 import {InheritanceStateService} from '../../_services/inheritance-state.service';
 import {InheritanceRow} from '../../_services/map.service';
 
@@ -223,6 +224,8 @@ export class MappingTableComponent implements OnInit, AfterViewInit, OnDestroy {
         // this.displayedColumns = this.constantColumns.concat(this.additionalDisplayedColumns);
         // this.filteredColumns = this.constantFilteredColumns.concat(this.additionalFilteredColumns);
 
+        // maps with inheritance show the inheritance column after the target display
+        applyInheritanceColumn(Mapping.hasInheritance(this.task?.mapping), this.constantColumns, this.constantFilteredColumns, []);
         // display additional columns after source columns
         this.displayedColumns = this.constantColumns.slice(0,4).concat(this.additionalDisplayedColumns).concat(this.constantColumns.slice(4));
         this.filteredColumns = this.constantFilteredColumns.slice(0,4).concat(this.additionalFilteredColumns).concat(this.constantFilteredColumns.slice(4));

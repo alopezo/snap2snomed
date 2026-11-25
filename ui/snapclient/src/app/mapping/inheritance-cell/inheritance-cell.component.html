@@ -1,0 +1,71 @@
+@if (row; as r) {
+  <button type="button" class="summary" [class.attention]="attention" [matMenuTriggerFor]="details"
+    (click)="$event.stopPropagation()">
+    @switch (r.state) {
+      @case ('ASSERTED') {
+        <mat-icon class="icon">check</mat-icon>
+        @if (passesOn > 0) {
+          <span>↓{{passesOn}}</span>
+        }
+      }
+      @case ('INHERITED') {
+        <mat-icon class="icon">subdirectory_arrow_right</mat-icon><span class="code">{{r.fromCode}}</span>
+      }
+      @case ('BLOCKED') {
+        <mat-icon class="icon">block</mat-icon><span class="code">{{r.fromCode}}</span>
+      }
+      @case ('STOPPED') {
+        <mat-icon class="icon">front_hand</mat-icon>
+      }
+      @case ('NO_MAP') {
+        <span>{{'INHERITANCE.NO_MAP' | translate}}</span>
+      }
+      @case ('CONFLICT') {
+        <mat-icon class="icon">warning</mat-icon><span>{{'INHERITANCE.CONFLICT' | translate}}</span>
+      }
+      @case ('UNCOVERED') {
+        <mat-icon class="icon">help_outline</mat-icon><span>{{'INHERITANCE.UNCOVERED' | translate}}</span>
+      }
+    }
+  </button>
+  <mat-menu #details="matMenu" class="inheritance-popover" xPosition="before">
+    <div class="popover" (click)="$event.stopPropagation()">
+      <div class="popover-title">{{'INHERITANCE.STATE_' + r.state | translate}}</div>
+      <div class="popover-concept"><span class="code">{{r.code}}</span> {{r.display}}</div>
+      @switch (r.state) {
+        @case ('ASSERTED') {
+          <p>{{'INHERITANCE.POPOVER_PASSES_ON' | translate: {rows: r.inheritedBy, generated: r.generatedBy ?? 0} }}</p>
+        }
+        @case ('INHERITED') {
+          <p>{{'INHERITANCE.POPOVER_FROM' | translate}} <span class="code">{{r.fromCode}}</span> {{r.fromDisplay}}</p>
+          <table class="targets">
+            @for (t of r.targets; track t.code) {
+              <tr>
+                <td class="code">{{t.code}}</td>
+                <td>{{t.display}}</td>
+                <td class="relationship">{{ t.relationship ? ('RELATIONSHIP.' + t.relationship | translate) : '' }}</td>
+              </tr>
+            }
+          </table>
+          <p class="hint">{{'INHERITANCE.POPOVER_RELATIONSHIP_HINT' | translate}}</p>
+        }
+        @case ('BLOCKED') {
+          <p>{{'INHERITANCE.ROW_BLOCKED' | translate: {code: r.fromCode, display: r.fromDisplay} }}</p>
+        }
+        @case ('STOPPED') {
+          <p>{{'INHERITANCE.STOP_TOOLTIP' | translate}}</p>
+        }
+        @case ('CONFLICT') {
+          <p>{{'INHERITANCE.ROW_CONFLICT' | translate: {codes: r.candidates.join(', ')} }}</p>
+          <p class="hint">{{'INHERITANCE.POPOVER_CONFLICT_HINT' | translate}}</p>
+        }
+        @case ('UNCOVERED') {
+          <p>{{'INHERITANCE.ROW_UNCOVERED' | translate}}</p>
+        }
+        @case ('NO_MAP') {
+          <p>{{'INHERITANCE.POPOVER_NO_MAP' | translate}}</p>
+        }
+      }
+    </div>
+  </mat-menu>
+}

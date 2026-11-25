@@ -45,6 +45,7 @@ import {
   EXPORT_EXTRA_COLUMNS, ExportDialogComponent, ExportDialogData, ExportOptions
 } from '../export-dialog/export-dialog.component';
 import {InheritanceStateService} from '../../_services/inheritance-state.service';
+import {applyInheritanceColumn} from '../../_utils/inheritance-column';
 import {InheritanceRow} from '../../_services/map.service';
 import {MatSort} from '@angular/material/sort';
 import {Task, TaskType} from '../../_models/task';
@@ -429,6 +430,14 @@ export class MappingViewComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.mapping_id === mapping?.id) {
           self.mapping = mapping;
 
+          // maps with inheritance show the inheritance column (the page may have been built before the map)
+          if (applyInheritanceColumn(Mapping.hasInheritance(mapping), this.constantColumns, this.constantFilteredColumns,
+            this.constantHideShowColumns)) {
+            this.displayedColumns = this.constantColumns.slice(0,4).concat(this.additionalDisplayedColumns).concat(this.constantColumns.slice(4));
+            this.filteredColumns = this.constantFilteredColumns.slice(0,4).concat(this.additionalFilteredColumns).concat(this.constantFilteredColumns.slice(4));
+            this.hideShowColumns = this.constantHideShowColumns.slice(0,3).concat(this.additionalHideShowColumns).concat(this.constantHideShowColumns.slice(3));
+          }
+
           // add in the reconciler column to the table if it is a dual map
           if (this.mapping?.project.dualMapMode) {
             this.addReconcilerTableColumn();
@@ -470,6 +479,8 @@ export class MappingViewComponent implements OnInit, AfterViewInit, OnDestroy {
           //this.filteredColumns = this.constantFilteredColumns.concat(this.additionalFilteredColumns);
           //this.hideShowColumns = this.constantHideShowColumns.concat(this.additionalHideShowColumns);
 
+          applyInheritanceColumn(Mapping.hasInheritance(this.mapping), this.constantColumns, this.constantFilteredColumns,
+            this.constantHideShowColumns);
           // display additional columns after source columns
           this.displayedColumns = this.constantColumns.slice(0,4).concat(this.additionalDisplayedColumns).concat(this.constantColumns.slice(4));
           this.filteredColumns = this.constantFilteredColumns.slice(0,4).concat(this.additionalFilteredColumns).concat(this.constantFilteredColumns.slice(4));

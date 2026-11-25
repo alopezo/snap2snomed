@@ -154,6 +154,11 @@
                   }
                 </td>
               </ng-container>
+              <!-- Inheritance Column (maps with inheritance) -->
+              <ng-container matColumnDef="inheritance">
+                <th mat-header-cell *matHeaderCellDef>{{'INHERITANCE.TITLE' | translate}}</th>
+                <td mat-cell *matCellDef="let maprow"><app-inheritance-cell [row]="inheritedRow(maprow)"></app-inheritance-cell></td>
+              </ng-container>
               <!-- No Map Column -->
               <ng-container matColumnDef="noMap">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'TABLE.NO_MAP' | translate}}</th>
@@ -385,6 +390,9 @@
                               </th>
                             </ng-container>
                             <!-- Filter Out of scope -->
+                            <ng-container matColumnDef="filter-inheritance">
+                              <th mat-header-cell *matHeaderCellDef [attr.colspan]="1"></th>
+                            </ng-container>
                             <ng-container matColumnDef="filter-targetOutOfScope">
                               <th mat-header-cell [ngClass]="{'hide-filter': !isFilterColumnVisible('filter-targetOutOfScope')}" *matHeaderCellDef [attr.colspan]="1">
                                 <mat-form-field appearance="outline">
