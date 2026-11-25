@@ -191,6 +191,8 @@ export class MapViewFilter {
   flagged?: boolean | undefined;
   targetOutOfScope?: boolean | undefined;
   notes?: boolean | undefined;
+  /** Maps from SNOMED CT: only the concepts without an ancestor in the source (a skim view). */
+  topLevel?: boolean | undefined;
   additionalColumns : string[] = [];
 
   hasFilters(): boolean {
@@ -199,7 +201,7 @@ export class MapViewFilter {
     return this.sourceCode !== '' || this.sourceDisplay !== '' || this.targetCode !== '' || this.targetDisplay !== ''
       || this.relationship !== '' || this.status !== '' || this.noMap !== undefined || this.flagged !== undefined || this.targetOutOfScope !== undefined
       || this.lastAuthorReviewer !== '' || this.assignedAuthor !== '' || this.assignedReconciler !== '' || this.assignedReviewer !== '' 
-      || this.notes !== undefined || filteredAdditionalColumns.length > 0;
+      || this.notes !== undefined || this.topLevel !== undefined || filteredAdditionalColumns.length > 0;
   }
 }
 

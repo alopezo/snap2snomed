@@ -148,6 +148,8 @@ public class MapViewRestController {
       description = "Filters the results to those that are flagged or not flagged.")
   @Parameter(name = "additionalColumns", in = ParameterIn.QUERY, required = false, allowEmptyValue = true,
       description = "Filters the results to those with an additional column matching one of the specified values.")
+  @Parameter(name = "topLevel", in = ParameterIn.QUERY, required = false, allowEmptyValue = true,
+      description = "Maps from SNOMED CT: only the rows whose concept has no ancestor in the map's source.")
   @Parameter(name = "page", in = ParameterIn.QUERY, required = false, allowEmptyValue = false,
       description = "Zero-based page index (0..N)")
   @Parameter(name = "size", in = ParameterIn.QUERY, required = false, allowEmptyValue = false,
@@ -174,6 +176,7 @@ public class MapViewRestController {
       @RequestParam(required = false) Boolean targetOutOfScope,
       @RequestParam(required = false) Boolean flagged,
       @RequestParam(required = false) List<String> additionalColumns,
+      @RequestParam(required = false) Boolean topLevel,
       @Parameter(hidden = true) Pageable pageable,
       @Parameter(hidden = true) PagedResourcesAssembler<MapView> assembler) {
 
@@ -187,6 +190,7 @@ public class MapViewRestController {
     final MapViewFilter filter = mapViewService.new MapViewFilter(sourceCode, sourceDisplay, noMap, targetCode, targetDisplay, relationship,
         status, lastAuthor, lastReviewer, lastAuthorReviewer, assignedAuthor, assignedReviewer, assignedReconciler, 
         targetOutOfScope, flagged, additionalColumns);
+    filter.setTopLevel(topLevel);
 
     return ResponseEntity.ok(mapViewService.getMapResults(mapId, pageable, assembler, filter));
   }
@@ -228,6 +232,8 @@ public class MapViewRestController {
       description = "Filters the results to those that are flagged or not flagged.")
   @Parameter(name = "additionalColumns", in = ParameterIn.QUERY, required = false, allowEmptyValue = true,
       description = "Filters the results to those with an additional column matching one of the specified values.")
+  @Parameter(name = "topLevel", in = ParameterIn.QUERY, required = false, allowEmptyValue = true,
+      description = "Maps from SNOMED CT: only the rows whose concept has no ancestor in the map's source.")
   @Parameter(name = "page", in = ParameterIn.QUERY, required = false, allowEmptyValue = false,
       description = "Zero-based page index (0..N)")
   @Parameter(name = "size", in = ParameterIn.QUERY, required = false, allowEmptyValue = false,
@@ -254,11 +260,13 @@ public class MapViewRestController {
       @RequestParam(required = false) Boolean targetOutOfScope,      
       @RequestParam(required = false) Boolean flagged,
       @RequestParam(required = false) List<String> additionalColumns,
+      @RequestParam(required = false) Boolean topLevel,
       @Parameter(hidden = true) Pageable pageable,
       @Parameter(hidden = true) PagedResourcesAssembler<MapView> assembler) {
 
     final MapViewFilter filter = mapViewService.new MapViewFilter(sourceCode, sourceDisplay, noMap, targetCode, targetDisplay, relationship,
         status, lastAuthor, lastReviewer, lastAuthorReviewer, assignedAuthor, assignedReviewer, assignedReconciler, targetOutOfScope, flagged, additionalColumns);
+    filter.setTopLevel(topLevel);
 
     if (!webSecurity.isValidUser()) {
       throw new NoSuchUserProblem();

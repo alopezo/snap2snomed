@@ -191,6 +191,9 @@ export class ServiceUtils {
     if (filterEntity.notes !== undefined) {
       params = params.append('notes', filterEntity.notes.toString());
     }
+    if (filterEntity.topLevel) {
+      params = params.append('topLevel', 'true');
+    }
     if (filterEntity.lastAuthorReviewer && filterEntity.lastAuthorReviewer.length > 0) {
       params = params.append('lastAuthorReviewer', filterEntity.lastAuthorReviewer.toString());
     }
@@ -228,6 +231,9 @@ export class ServiceUtils {
           break;
         case 'notes':
           mapViewFilter.notes = typeof v === 'string' ? v.toUpperCase() === 'TRUE' : v[0].toUpperCase() === 'TRUE';
+          break;
+        case 'topLevel':
+          mapViewFilter.topLevel = (typeof v === 'string' ? v.toUpperCase() === 'TRUE' : v[0].toUpperCase() === 'TRUE') || undefined;
           break;
         case 'relationship':
           mapViewFilter.relationship = v;

@@ -109,6 +109,11 @@ public class MapViewService {
     private final Boolean targetOutOfScope;
     private final Boolean flagged;
     private final List<String> additionalColumns;
+    /** Maps from SNOMED CT: only the concepts without an ancestor in the source (resolved by the service). */
+    @lombok.Setter
+    @lombok.Getter
+    private Boolean topLevel;
+    private java.util.Collection<String> topLevelCodes;
 
     public MapViewFilter(List<String> sourceCodes, List<String> sourceDisplays, Boolean noMap, List<String> targetCodes,
         List<String> targetDisplays, List<MappingRelationship> relationshipTypes, List<MapStatus> statuses, 
@@ -137,6 +142,10 @@ public class MapViewService {
       var _mapRow = useDualView ? QDbMapView.dbMapView.mapRow : QMapRow.mapRow;
 
       BooleanExpression expression = null;
+
+      if (topLevelCodes != null) {
+        expression = topLevelCodes.isEmpty() ? _mapRow.id.isNull() : _mapRow.sourceCode.code.in(topLevelCodes);
+      }
         
       expression = stringCollectionToOrStatements(expression, sourceCodes,
           s -> _mapRow.sourceCode.code.startsWithIgnoreCase(s),
@@ -422,6 +431,9 @@ public class MapViewService {
   @Autowired
   DbMapViewRepository mapViewRepository;
 
+  @Autowired
+  SourceRootsService sourceRootsService;
+
   private final QDbMapView mapView = QDbMapView.dbMapView;
   private final QMapRow mapRow = QMapRow.mapRow;
   private final QMapRowTarget mapTarget = QMapRowTarget.mapRowTarget;
@@ -536,6 +548,9 @@ public class MapViewService {
 
   private Snap2SnomedPagedModel<EntityModel<MapView>> getMapResults(Long mapId, Task task, Pageable pageable,
       PagedResourcesAssembler<MapView> assembler, MapViewFilter filter) {
+    if (filter != null && Boolean.TRUE.equals(filter.getTopLevel())) {
+      filter.topLevelCodes = sourceRootsService.topLevelCodes(mapId);
+    }
     final List<AdditionalCodeColumn> additionalColumns = mapRepository.findSourceByMapId(mapId).get()
         .getAdditionalColumnsMetadata();
 

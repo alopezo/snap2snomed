@@ -22,11 +22,16 @@ import org.snomed.snap2snomed.repository.InheritanceDescendantsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.support.TransactionTemplate;
 import lombok.extern.slf4j.Slf4j;
 
-/** Writes the inheritance descendants cache in its own transaction, so reads can stay read-only. */
+/**
+ * Writes the inheritance descendants cache in its own transaction, so reads can stay read-only. A row stored
+ * meanwhile by a concurrent request is ignored: the failed insert is caught outside its transaction, which
+ * is rolled back alone (caught inside, the transaction would only fail on commit).
+ */
 @Component
 @Slf4j
 public class InheritanceCacheStore {
@@ -34,11 +39,15 @@ public class InheritanceCacheStore {
   @Autowired
   InheritanceDescendantsRepository descendantsRepository;
 
-  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  @Autowired
+  PlatformTransactionManager transactionManager;
+
   public void store(Long mapId, String code, String descendants) {
+    final TransactionTemplate transaction = new TransactionTemplate(transactionManager);
+    transaction.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
     try {
-      descendantsRepository.saveAndFlush(InheritanceDescendants.builder()
-          .mapId(mapId).conceptCode(code).descendants(descendants).created(Instant.now()).build());
+      transaction.executeWithoutResult(status -> descendantsRepository.saveAndFlush(InheritanceDescendants.builder()
+          .mapId(mapId).conceptCode(code).descendants(descendants).created(Instant.now()).build()));
     } catch (final DataIntegrityViolationException e) {
       // stored meanwhile by another request: same content, nothing to do
       log.debug("Descendants of {} for map {} already cached", code, mapId);

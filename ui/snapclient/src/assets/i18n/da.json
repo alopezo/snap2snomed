@@ -466,13 +466,16 @@
   "TABLE_FILTER": {
     "TABLE_FILTER_TOGGLE_NAME": "FILTER",
     "CLEAR_FILTER_BUTTON_NAME": "NULSTIL FILTRE",
-    "SHOW_HIDE_BUTTON_NAME": "VIS / SKJUL"
+    "SHOW_HIDE_BUTTON_NAME": "VIS / SKJUL",
+    "TOP_LEVEL": "KUN ØVERSTE NIVEAU",
+    "TOP_LEVEL_HINT": "Kun begreber uden forfader i kilden (beregnes én gang pr. mappingversion)"
   },
   "FILTERCHIP": {
     "noMap=false": "Ingen mapning: Nej",
     "noMap=true": "Ingen mapning: Ja",
     "flagged=false": "Markeret: Nej",
-    "flagged=true": "Markeret: Ja"
+    "flagged=true": "Markeret: Ja",
+    "topLevel=true": "Kun øverste niveau"
   },
   "DIALOG": {
     "OK": "OK",

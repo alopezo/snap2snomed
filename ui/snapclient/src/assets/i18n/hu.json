@@ -466,13 +466,16 @@
   "TABLE_FILTER": {
     "TABLE_FILTER_TOGGLE_NAME": "SZŰRŐ",
     "CLEAR_FILTER_BUTTON_NAME": "SZŰRŐK VISSZAÁLLÍTÁSA",
-    "SHOW_HIDE_BUTTON_NAME": "MEGJELENÍTÉS / ELREJTÉS"
+    "SHOW_HIDE_BUTTON_NAME": "MEGJELENÍTÉS / ELREJTÉS",
+    "TOP_LEVEL": "CSAK FELSŐ SZINT",
+    "TOP_LEVEL_HINT": "Csak azok a fogalmak, amelyeknek nincs őse a forrásban (megfeleltetési verziónként egyszer számítjuk)"
   },
   "FILTERCHIP": {
     "noMap=false": "Nincs leképezés: Nem",
     "noMap=true": "Nincs leképezés: Igen",
     "flagged=false": "Megjelölt: Nem",
-    "flagged=true": "Megjelölt: Igen"
+    "flagged=true": "Megjelölt: Igen",
+    "topLevel=true": "Csak felső szint"
   },
   "DIALOG": {
     "OK": "OK",

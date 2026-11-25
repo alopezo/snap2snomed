@@ -466,13 +466,16 @@
   "TABLE_FILTER": {
     "TABLE_FILTER_TOGGLE_NAME": "FILTER",
     "CLEAR_FILTER_BUTTON_NAME": "FILTERS WISSEN",
-    "SHOW_HIDE_BUTTON_NAME": "TONEN / VERBERGEN"
+    "SHOW_HIDE_BUTTON_NAME": "TONEN / VERBERGEN",
+    "TOP_LEVEL": "ALLEEN BOVENSTE NIVEAU",
+    "TOP_LEVEL_HINT": "Alleen de concepten zonder voorouder in de bron (eenmaal per mapversie berekend)"
   },
   "FILTERCHIP": {
     "noMap=false": "Geen mapping: Nee",
     "noMap=true": "Geen mapping: Ja",
     "flagged=false": "Gemarkeerd: Nee",
-    "flagged=true": "Gemarkeerd: Ja"
+    "flagged=true": "Gemarkeerd: Ja",
+    "topLevel=true": "Alleen bovenste niveau"
   },
   "DIALOG": {
     "OK": "OK",

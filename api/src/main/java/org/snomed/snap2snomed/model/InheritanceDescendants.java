@@ -32,7 +32,8 @@ import lombok.NoArgsConstructor;
 /**
  * Cached descendants of a concept within a map's ECL, in the map's SNOMED CT version: a comma separated
  * list of concept ids. Filled the first time inheritance needs them; never stale, since a map's version
- * and ECL do not change. Deleted with the map (foreign key cascade).
+ * and ECL do not change. Deleted with the map (foreign key cascade). A row with a key that is not a concept
+ * id ("!TOP_LEVEL") holds the top-level concepts of the map's source instead (see SourceRootsService).
  */
 @Entity
 @Data

@@ -295,6 +295,9 @@ export class MappingDetailComponent implements OnInit, OnDestroy {
       if (self.filterEntity.flagged !== undefined) {
         self.appliedFilters.push({text: 'FILTERCHIP.flagged=' + self.filterEntity.flagged, translate: true});
       }
+      if (self.filterEntity.topLevel) {
+        self.appliedFilters.push({text: 'FILTERCHIP.topLevel=true', translate: true});
+      }
       values(self.filterEntity.relationship).forEach(r => self.appliedFilters.push({text: 'RELATIONSHIP.' + r, translate: true}));
       values(self.filterEntity.status).forEach(s => self.appliedFilters.push({text: 'STATUS.' + s, translate: true}));
 

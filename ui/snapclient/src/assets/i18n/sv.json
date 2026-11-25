@@ -466,13 +466,16 @@
   "TABLE_FILTER": {
     "TABLE_FILTER_TOGGLE_NAME": "FILTRERA",
     "CLEAR_FILTER_BUTTON_NAME": "ÅTERSTÄLL FILTER",
-    "SHOW_HIDE_BUTTON_NAME": "VISA / DÖLJ"
+    "SHOW_HIDE_BUTTON_NAME": "VISA / DÖLJ",
+    "TOP_LEVEL": "ENDAST ÖVERSTA NIVÅN",
+    "TOP_LEVEL_HINT": "Endast begrepp utan förfader i källan (beräknas en gång per mappningsversion)"
   },
   "FILTERCHIP": {
     "noMap=false": "Ingen mappning: Nej",
     "noMap=true": "Ingen mappning: Ja",
     "flagged=false": "Flaggad: Nej",
-    "flagged=true": "Flaggad: Ja"
+    "flagged=true": "Flaggad: Ja",
+    "topLevel=true": "Endast översta nivån"
   },
   "DIALOG": {
     "OK": "OK",

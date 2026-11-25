@@ -466,13 +466,16 @@
   "TABLE_FILTER": {
     "TABLE_FILTER_TOGGLE_NAME": "FILTRER",
     "CLEAR_FILTER_BUTTON_NAME": "RÉINITIALISER LES FILTRES",
-    "SHOW_HIDE_BUTTON_NAME": "AFFICHER / MASQUER"
+    "SHOW_HIDE_BUTTON_NAME": "AFFICHER / MASQUER",
+    "TOP_LEVEL": "NIVEAU SUPÉRIEUR SEUL",
+    "TOP_LEVEL_HINT": "Seulement les concepts sans ancêtre dans la source (calculé une fois par version du mapping)"
   },
   "FILTERCHIP": {
     "noMap=false": "Aucune corresp. : Non",
     "noMap=true": "Aucune corresp. : Oui",
     "flagged=false": "Signalé : Non",
-    "flagged=true": "Signalé : Oui"
+    "flagged=true": "Signalé : Oui",
+    "topLevel=true": "Niveau supérieur seul"
   },
   "DIALOG": {
     "OK": "OK",

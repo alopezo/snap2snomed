@@ -52,6 +52,10 @@ Maps from SNOMED CT (branch `from-snomed`).
   map are also generated at export time ("GENERATED" lines, or FHIR elements with a comment), never
   stored; the map details offer a paged preview of them, with filters by state. Generation is refused
   when a concept, or all together, exceed 50,000 concepts (`snap2snomed.inheritance.max-generated`).
+- Maps from SNOMED CT have a "Top level only" switch in the map view and the task view: a skim view of the
+  source list with only the concepts that have no ancestor in the source. It is computed once per map
+  version with one ECL expansion, `(S) MINUS (< (S))`, where S is the source ECL or the source codes joined
+  by OR (sent inline in a POST $expand, as it can be thousands of codes), and cached with the map.
 - Authors accept the inheritance of rows without targets of their own (inheriting, stopped or blocked),
   from the mapping detail or in bulk (bulk change, "Accept the inheritance of the selected rows"): they
   become MAPPED and go on through the workflow. What a row inherited when accepted is recorded; if it
@@ -84,6 +88,8 @@ Maps from SNOMED CT (branch `from-snomed`).
 
 - The filter chips of the mapping detail showed "[object Object]" for code or term filters (the values
   read back from the URL are lists); typed text is now shown as is instead of going through translation.
+- Two requests computing the same inheritance cache entry at once made one of them fail (its transaction
+  was left marked for rollback); the duplicate insert is now ignored.
 - The International Edition logo beside a SNOMED CT version was loaded from browser.ihtsdotools.org, which
   now denies it, so it showed as a broken image; the SNOMED International icon is now bundled with the app.
 

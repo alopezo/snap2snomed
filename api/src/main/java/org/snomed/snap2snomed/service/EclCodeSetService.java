@@ -156,6 +156,44 @@ public class EclCodeSetService {
     return codes;
   }
 
+  /**
+   * Like {@link #expandCodes}, for an ECL expression too long for a URL (e.g. thousands of codes joined by OR):
+   * a POST $expand of a value set given inline (SNOMED CT with an ECL "constraint" filter).
+   */
+  public List<String> expandCodesInline(String version, String ecl) {
+    final List<String> codes = new ArrayList<>();
+    int total = Integer.MAX_VALUE;
+    for (int offset = 0; offset < total; offset += PAGE_SIZE) {
+      final ValueSet valueSet = new ValueSet();
+      valueSet.getCompose().addInclude().setSystem(SNOMED_SYSTEM).setVersion(version).addFilter()
+          .setProperty("constraint").setOp(ValueSet.FilterOperator.EQUAL).setValue(ecl.trim());
+      final Parameters parameters = new Parameters();
+      parameters.addParameter().setName("valueSet").setResource(valueSet);
+      parameters.addParameter("offset", new IntegerType(offset));
+      parameters.addParameter("count", new IntegerType(PAGE_SIZE));
+      parameters.addParameter("activeOnly", new BooleanType(true));
+      final ValueSet page;
+      try {
+        page = terminologyProvider.getGenericClient().operation()
+            .onType(ValueSet.class)
+            .named("$expand")
+            .withParameters(parameters)
+            .returnResourceType(ValueSet.class)
+            .execute();
+      } catch (final BaseServerResponseException e) {
+        log.warn("Inline ECL expansion failed ({} characters): {}", ecl.length(), e.getMessage());
+        throw new CodeSetImportProblem("ecl-expansion-failed", "The terminology server could not expand the ECL expression",
+            e.getMessage());
+      }
+      total = page.getExpansion().getTotal();
+      page.getExpansion().getContains().forEach(concept -> codes.add(concept.getCode()));
+      if (page.getExpansion().getContains().isEmpty()) {
+        break;
+      }
+    }
+    return codes;
+  }
+
   private ValueSet expand(String valueSetUrl, int offset, int count, boolean includeDesignations, String acceptLanguage) {
     final Parameters parameters = new Parameters();
     parameters.addParameter("url", new UriType(valueSetUrl));
