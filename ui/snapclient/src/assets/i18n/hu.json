@@ -753,7 +753,6 @@
     "TITLE": "Megfeleltetés exportálása",
     "FORMAT": "Formátum",
     "EXTENDED": "Jegyzetek, szerzők és ellenőrök hozzáadása",
-    "EXTENDED_TABULAR_ONLY": "Csak vesszővel, tabulátorral tagolt és Excel fájlokhoz.",
     "REFINED_TARGETS": "Pontosított célok",
     "REFINED_TARGETS_COUNT": "Ebben a megfeleltetésben {{count}} cél van oldalisággal vagy súlyossággal pontosítva.",
     "TARGET_FORM_EXPRESSION": "Kifejezés (felhasználóközeli forma)",

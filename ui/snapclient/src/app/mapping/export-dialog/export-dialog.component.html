@@ -7,12 +7,9 @@
     }
   </mat-radio-group>
 
-  <mat-checkbox [(ngModel)]="options.extended" [disabled]="!tabular">{{'EXPORT.EXTENDED' | translate}}</mat-checkbox>
-  @if (!tabular) {
-    <p class="hint">{{'EXPORT.EXTENDED_TABULAR_ONLY' | translate}}</p>
-  }
-
-  @if (!tabular) {
+  @if (tabular) {
+    <mat-checkbox id="exportExtended" [(ngModel)]="options.extended">{{'EXPORT.EXTENDED' | translate}}</mat-checkbox>
+  } @else {
     <mat-checkbox id="exportInverse" [(ngModel)]="options.inverse" (ngModelChange)="refreshCounts()">{{'EXPORT.INVERSE' | translate}}</mat-checkbox>
     <p class="hint">{{'EXPORT.INVERSE_HINT' | translate}}</p>
     @if (options.inverse && counts) {

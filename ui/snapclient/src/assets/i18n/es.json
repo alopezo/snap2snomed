@@ -753,7 +753,6 @@
     "TITLE": "Exportar mapa",
     "FORMAT": "Formato",
     "EXTENDED": "Incluir notas, autores y revisores",
-    "EXTENDED_TABULAR_ONLY": "Solo para archivos separados por comas, por tabulaciones y Excel.",
     "REFINED_TARGETS": "Destinos refinados",
     "REFINED_TARGETS_COUNT": "Este mapa tiene {{count}} destino(s) refinado(s) con lateralidad o gravedad.",
     "TARGET_FORM_EXPRESSION": "Expresión (forma cercana al usuario)",

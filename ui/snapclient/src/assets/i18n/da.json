@@ -753,7 +753,6 @@
     "TITLE": "Eksportér mapping",
     "FORMAT": "Format",
     "EXTENDED": "Medtag noter, forfattere og reviewere",
-    "EXTENDED_TABULAR_ONLY": "Kun for kommaseparerede, tabulatorseparerede og Excel-filer.",
     "REFINED_TARGETS": "Præciserede mål",
     "REFINED_TARGETS_COUNT": "Denne mapping har {{count}} mål præciseret med lateralitet eller sværhedsgrad.",
     "TARGET_FORM_EXPRESSION": "Udtryk (brugernær form)",

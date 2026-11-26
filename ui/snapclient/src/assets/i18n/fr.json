@@ -753,7 +753,6 @@
     "TITLE": "Exporter la correspondance",
     "FORMAT": "Format",
     "EXTENDED": "Inclure les notes, auteurs et réviseurs",
-    "EXTENDED_TABULAR_ONLY": "Uniquement pour les fichiers séparés par des virgules, par des tabulations et Excel.",
     "REFINED_TARGETS": "Cibles affinées",
     "REFINED_TARGETS_COUNT": "Cette correspondance contient {{count}} cible(s) affinée(s) avec la latéralité ou la sévérité.",
     "TARGET_FORM_EXPRESSION": "Expression (forme proche de l'utilisateur)",

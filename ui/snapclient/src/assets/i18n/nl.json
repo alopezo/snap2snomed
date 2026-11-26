@@ -753,7 +753,6 @@
     "TITLE": "Mapping exporteren",
     "FORMAT": "Formaat",
     "EXTENDED": "Notities, auteurs en reviewers opnemen",
-    "EXTENDED_TABULAR_ONLY": "Alleen voor kommagescheiden, tabgescheiden en Excel-bestanden.",
     "REFINED_TARGETS": "Verfijnde doelen",
     "REFINED_TARGETS_COUNT": "Deze mapping heeft {{count}} doel(en) verfijnd met lateraliteit of ernst.",
     "TARGET_FORM_EXPRESSION": "Expressie (gebruikersnabije vorm)",

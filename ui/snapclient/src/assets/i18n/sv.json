@@ -753,7 +753,6 @@
     "TITLE": "Exportera mappning",
     "FORMAT": "Format",
     "EXTENDED": "Inkludera anteckningar, författare och granskare",
-    "EXTENDED_TABULAR_ONLY": "Endast för kommaseparerade, tabbseparerade och Excel-filer.",
     "REFINED_TARGETS": "Förfinade mål",
     "REFINED_TARGETS_COUNT": "Denna mappning har {{count}} mål förfinade med lateralitet eller svårighetsgrad.",
     "TARGET_FORM_EXPRESSION": "Uttryck (användarnära form)",

@@ -753,7 +753,6 @@
     "TITLE": "Export map",
     "FORMAT": "Format",
     "EXTENDED": "Include notes, authors and reviewers",
-    "EXTENDED_TABULAR_ONLY": "Only for comma separated, tab separated and Excel files.",
     "REFINED_TARGETS": "Refined targets",
     "REFINED_TARGETS_COUNT": "This map has {{count}} target(s) refined with laterality or severity.",
     "TARGET_FORM_EXPRESSION": "Expression (close-to-user form)",
