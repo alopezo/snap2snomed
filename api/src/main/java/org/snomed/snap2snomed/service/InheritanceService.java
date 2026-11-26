@@ -24,6 +24,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.snomed.snap2snomed.controller.dto.InheritanceDto;
@@ -198,6 +199,54 @@ public class InheritanceService {
       accepted++;
     }
     return new InheritanceDto.AcceptResult(accepted, skipped);
+  }
+
+  /**
+   * The descendants of one row's concept and, supposing it is mapped (as it is, or with a placeholder target),
+   * how many of them would inherit its mapping: rows, and concepts generated beyond the source. Its descendants
+   * come from (and go to) the same cache as the anchors'.
+   */
+  @Transactional(readOnly = true)
+  public InheritanceDto.DescendantsInfo descendantsInfo(Long mapId, String code) {
+    final org.snomed.snap2snomed.model.Map map = mapRepository.findById(mapId)
+        .orElseThrow(() -> Snap2SnomedProblem.of(HttpStatus.NOT_FOUND, "No Map found with id " + mapId));
+    if (!map.isFromSnomed() || !map.isInheritance()) {
+      throw new BadRequestDataProblem("Inheritance is only computed for maps from SNOMED CT that have it switched on");
+    }
+    final List<Row> loaded = loadRows(mapId).stream().map(LoadedRow::row).toList();
+    if (loaded.stream().noneMatch(r -> r.code().equals(code))) {
+      throw new BadRequestDataProblem("The concept " + code + " is not a row of the map");
+    }
+    // the rows as they would be with this concept mapped
+    final List<Row> rows = loaded.stream()
+        .map(r -> !r.code().equals(code) || !r.targets().isEmpty() ? r
+            : new Row(r.code(), false, false, List.of(new InheritanceCalculator.Target("", null, null))))
+        .toList();
+    final Set<String> anchors = InheritanceCalculator.anchorCodes(rows);
+    final Descendants descendants = descendants(map, anchors);
+    if (descendants.tooLarge().containsKey(code)) {
+      return new InheritanceDto.DescendantsInfo(code, true, descendants.tooLarge().get(code), 0, 0, 0, 0);
+    }
+    final Set<String> rowCodes = rows.stream().map(Row::code).collect(Collectors.toSet());
+    final boolean withinSource = map.getInheritanceMode() != InheritanceMode.BEYOND_SOURCE;
+    final java.util.function.Function<String, Set<String>> descendantsOf = anchor ->
+        Optional.ofNullable(descendants.byAnchor().get(anchor))
+            .map(concepts -> withinSource
+                ? concepts.keySet().stream().filter(rowCodes::contains).collect(Collectors.toSet())
+                : concepts.keySet())
+            .orElse(Set.of());
+    final Set<String> all = descendants.byAnchor().get(code).keySet();
+    final int inSource = (int) all.stream().filter(rowCodes::contains).count();
+    final int beyondSource = withinSource ? 0 : all.size() - inSource;
+    final int wouldInherit = (int) InheritanceCalculator.compute(rows, descendantsOf).stream()
+        .filter(r -> r.state() == State.INHERITED && code.equals(r.from()))
+        .count();
+    final int wouldGenerate = withinSource ? 0 : (int) InheritanceCalculator.inheritedWithoutOwnTargets(rows,
+            all.stream().filter(c -> !rowCodes.contains(c)).toList(), descendantsOf).values().stream()
+        .filter(r -> r.state() == State.INHERITED && code.equals(r.from()))
+        .count();
+    return new InheritanceDto.DescendantsInfo(code, false, withinSource ? inSource : all.size(), inSource, beyondSource,
+        wouldInherit, wouldGenerate);
   }
 
   @Transactional(readOnly = true)

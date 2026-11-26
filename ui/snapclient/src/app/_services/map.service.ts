@@ -142,6 +142,20 @@ export interface SourceChanges {
 
 export type InheritanceState = 'ASSERTED' | 'NO_MAP' | 'STOPPED' | 'INHERITED' | 'BLOCKED' | 'CONFLICT' | 'UNCOVERED';
 
+/**
+ * The descendants of a concept in a map with inheritance (descendants counts the source's only, unless the
+ * inheritance reaches beyond it), and how many would inherit its mapping if it were mapped (or do, if it is).
+ */
+export interface DescendantsInfo {
+  code: string;
+  tooLarge: boolean;
+  descendants: number;
+  inSource: number;
+  beyondSource: number;
+  wouldInherit: number;
+  wouldGenerate: number;
+}
+
 /** What automapping a task of a map from SNOMED CT did (matches already inherited are not created). */
 export interface AutomapFromSnomedResult {
   rows: number;
@@ -282,6 +296,13 @@ export class MapService {
       params = params.set('text', query.text ?? '');
     }
     return this.http.get<TargetCode[]>(url, {...options, params});
+  }
+
+  /** The descendants of a row's concept, and how many would inherit its mapping (see InheritanceService). */
+  getDescendantsInfo(mapId: string, code: string): Observable<DescendantsInfo> {
+    const options = ServiceUtils.getHTTPHeaders();
+    return this.http.get<DescendantsInfo>(`${this.config.apiBaseUrl}/map/${mapId}/inheritance/descendants`,
+      {...options, params: new HttpParams().set('code', code)});
   }
 
   getInheritance(mapId: string): Observable<InheritanceResult> {

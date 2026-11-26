@@ -82,3 +82,9 @@
 .popover .attention {
   color: #b26a00;
 }
+
+.descendants {
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  margin-top: 6px;
+  padding-top: 2px;
+}

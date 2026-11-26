@@ -161,6 +161,19 @@ public class TargetCodeRestController {
     return inheritanceService.computeForMap(mapId);
   }
 
+  @Operation(description = "In a map with inheritance: the descendants of a row's concept, in the source and beyond "
+      + "it, and how many of them would inherit its mapping if it were mapped (or do, if it is).")
+  @GetMapping(path = "/map/{mapId}/inheritance/descendants", produces = MediaType.APPLICATION_JSON_VALUE)
+  public InheritanceDto.DescendantsInfo getDescendantsInfo(@PathVariable("mapId") Long mapId, @RequestParam String code) {
+    if (!webSecurity.isValidUser()) {
+      throw new NoSuchUserProblem();
+    }
+    if (!webSecurity.isAdminUser() && !webSecurity.hasAnyProjectRoleForMapId(mapId)) {
+      throw new NotAuthorisedProblem("Not authorised to view this map");
+    }
+    return inheritanceService.descendantsInfo(mapId, code.trim());
+  }
+
   @Operation(description = "Automap for an author task of a map from SNOMED CT: the term of each unmapped concept is "
       + "matched against the target code set, and a good enough match becomes an INEXACT target (the row DRAFT). In a "
       + "map with inheritance, a match the row already inherits is left out. Task assignee or admin only.")

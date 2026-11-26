@@ -24,7 +24,7 @@
         <tr>
           <td class="code">{{row.code}}</td>
           <td>{{row.display}}</td>
-          <td><app-inheritance-cell [row]="row"></app-inheritance-cell></td>
+          <td><app-inheritance-cell [row]="row" [countDescendants]="false"></app-inheritance-cell></td>
           <td>{{targets(row)}}</td>
         </tr>
       }

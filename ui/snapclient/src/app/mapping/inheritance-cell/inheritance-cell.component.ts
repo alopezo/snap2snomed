@@ -15,7 +15,8 @@
  */
 
 import {Component, Input} from '@angular/core';
-import {ACCEPTABLE_INHERITANCE, InheritanceRow} from '../../_services/map.service';
+import {ACCEPTABLE_INHERITANCE, DescendantsInfo, InheritanceRow} from '../../_services/map.service';
+import {InheritanceStateService} from '../../_services/inheritance-state.service';
 
 /**
  * The inheritance column of the mapping tables: a short summary of a row's inheritance that opens a popover
@@ -29,6 +30,34 @@ import {ACCEPTABLE_INHERITANCE, InheritanceRow} from '../../_services/map.servic
 })
 export class InheritanceCellComponent {
   @Input() row: InheritanceRow | undefined;
+  /** Rows of the map count their descendants when the popover opens; generated concepts (not rows) do not. */
+  @Input() countDescendants = true;
+
+  descendants: DescendantsInfo | null = null;
+  descendantsLoading = false;
+  descendantsFailed = false;
+
+  constructor(private inheritanceState: InheritanceStateService) {
+  }
+
+  /** Counts the descendants of the row's concept the first time the popover opens (cached until a refresh). */
+  loadDescendants(): void {
+    if (!this.countDescendants || !this.row || this.descendantsLoading) {
+      return;
+    }
+    this.descendantsLoading = true;
+    this.descendantsFailed = false;
+    this.inheritanceState.descendantsInfo(this.row.code).subscribe({
+      next: info => {
+        this.descendants = info;
+        this.descendantsLoading = false;
+      },
+      error: () => {
+        this.descendantsFailed = true;
+        this.descendantsLoading = false;
+      }
+    });
+  }
 
   get attention(): boolean {
     return this.row?.state === 'CONFLICT' || this.row?.state === 'UNCOVERED' || !!this.row?.inheritanceChanged;

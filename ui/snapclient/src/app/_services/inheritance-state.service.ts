@@ -15,10 +15,10 @@
  */
 
 import {Injectable} from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
-import {debounceTime, skip} from 'rxjs/operators';
+import {BehaviorSubject, Observable, of} from 'rxjs';
+import {debounceTime, shareReplay, skip} from 'rxjs/operators';
 import {Mapping} from '../_models/mapping';
-import {InheritanceResult, InheritanceRow, MapService} from './map.service';
+import {DescendantsInfo, InheritanceResult, InheritanceRow, MapService} from './map.service';
 import {TargetChangedService} from './target-changed.service';
 
 /**
@@ -35,6 +35,8 @@ export class InheritanceStateService {
   private readonly subject = new BehaviorSubject<InheritanceResult | null>(null);
   readonly state$ = this.subject.asObservable();
   private byCode = new Map<string, InheritanceRow>();
+  /** Descendant counts asked for, per concept; they depend on the other mappings, so a refresh drops them. */
+  private descendants = new Map<string, Observable<DescendantsInfo>>();
   loading = false;
 
   constructor(private mapService: MapService, targetChangedService: TargetChangedService) {
@@ -61,6 +63,7 @@ export class InheritanceStateService {
       return;
     }
     this.loading = true;
+    this.descendants = new Map();
     this.mapService.getInheritance(mapId).subscribe({
       next: result => {
         if (mapId === this.mapId) {
@@ -73,6 +76,19 @@ export class InheritanceStateService {
         this.loading = false;
       }
     });
+  }
+
+  /** The descendants of a row's concept in the followed map, fetched once until the next refresh. */
+  descendantsInfo(code: string): Observable<DescendantsInfo | null> {
+    if (!this.mapId) {
+      return of(null);
+    }
+    let info = this.descendants.get(code);
+    if (!info) {
+      info = this.mapService.getDescendantsInfo(this.mapId, code).pipe(shareReplay(1));
+      this.descendants.set(code, info);
+    }
+    return info;
   }
 
   rowFor(code: string | null | undefined): InheritanceRow | undefined {

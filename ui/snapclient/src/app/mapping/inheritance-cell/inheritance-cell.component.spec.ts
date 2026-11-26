@@ -18,15 +18,20 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatIconModule} from '@angular/material/icon';
 import {TranslateModule} from '@ngx-translate/core';
+import {of} from 'rxjs';
 import {InheritanceCellComponent} from './inheritance-cell.component';
+import {InheritanceStateService} from '../../_services/inheritance-state.service';
 
 describe('InheritanceCellComponent', () => {
   let fixture: ComponentFixture<InheritanceCellComponent>;
+  const descendantsInfo = vi.fn();
 
   beforeEach(async () => {
+    descendantsInfo.mockReset();
     await TestBed.configureTestingModule({
       declarations: [InheritanceCellComponent],
-      imports: [MatMenuModule, MatIconModule, TranslateModule.forRoot()]
+      imports: [MatMenuModule, MatIconModule, TranslateModule.forRoot()],
+      providers: [{provide: InheritanceStateService, useValue: {descendantsInfo}}]
     }).compileComponents();
     fixture = TestBed.createComponent(InheritanceCellComponent);
   });
@@ -64,5 +69,21 @@ describe('InheritanceCellComponent', () => {
     expect(fixture.componentInstance.attention).toBe(false);
     fixture.componentInstance.row = {...base, accepted: true, inheritanceChanged: true};
     expect(fixture.componentInstance.attention).toBe(true);
+  });
+  it('counts the descendants of a row when asked, once, and not for generated concepts', () => {
+    const info = {code: 'A', tooLarge: false, descendants: 12, inSource: 12, beyondSource: 0, wouldInherit: 9,
+      wouldGenerate: 0};
+    descendantsInfo.mockReturnValue(of(info));
+    const cell = fixture.componentInstance;
+    cell.row = {rowId: 1, code: 'A', display: 'A', state: 'UNCOVERED', stopInheritance: false, fromCode: null,
+      fromDisplay: null, candidates: [], inheritedBy: 0, targets: []};
+    cell.loadDescendants();
+    expect(descendantsInfo).toHaveBeenCalledWith('A');
+    expect(cell.descendants).toEqual(info);
+
+    descendantsInfo.mockClear();
+    cell.countDescendants = false;
+    cell.loadDescendants();
+    expect(descendantsInfo).not.toHaveBeenCalled();
   });
 });

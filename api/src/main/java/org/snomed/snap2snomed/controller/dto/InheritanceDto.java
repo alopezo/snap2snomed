@@ -103,6 +103,25 @@ public class InheritanceDto {
     private int descendants;
   }
 
+  /**
+   * The descendants of a concept in a map with inheritance: how many there are (rows of the map, and beyond the
+   * source when inheritance reaches there), and how many would take its mapping if it were mapped (or do, when
+   * it is): those whose nearest mapped ancestor it would be. When it has more descendants than the limit, only
+   * {@link #tooLarge} and {@link #descendants} are set.
+   */
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  public static class DescendantsInfo {
+    private String code;
+    private boolean tooLarge;
+    private int descendants;
+    private int inSource;
+    private int beyondSource;
+    private int wouldInherit;
+    private int wouldGenerate;
+  }
+
   @Data
   @NoArgsConstructor
   @AllArgsConstructor

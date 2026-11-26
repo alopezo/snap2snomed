@@ -1,6 +1,6 @@
 @if (row; as r) {
   <button type="button" class="summary" [class.attention]="attention" [matMenuTriggerFor]="details"
-    (click)="$event.stopPropagation()">
+    (click)="$event.stopPropagation()" (menuOpened)="loadDescendants()">
     @switch (r.state) {
       @case ('ASSERTED') {
         <mat-icon class="icon">check</mat-icon>
@@ -77,6 +77,26 @@
         @case ('NO_MAP') {
           <p>{{'INHERITANCE.POPOVER_NO_MAP' | translate}}</p>
         }
+      }
+      @if (countDescendants) {
+        <div class="descendants" id="inheritanceDescendants">
+          @if (descendantsLoading) {
+            <p class="hint">{{'INHERITANCE.DESCENDANTS_LOADING' | translate}}</p>
+          } @else if (descendantsFailed) {
+            <p class="hint">{{'INHERITANCE.DESCENDANTS_FAILED' | translate}}</p>
+          } @else if (descendants; as d) {
+            @if (d.tooLarge) {
+              <p class="attention">{{'INHERITANCE.DESCENDANTS_TOO_LARGE' | translate: {count: d.descendants} }}</p>
+            } @else {
+              <p>{{(d.beyondSource ? 'INHERITANCE.DESCENDANTS_BEYOND' : 'INHERITANCE.DESCENDANTS_IN_SOURCE')
+                | translate: {count: d.inSource, beyond: d.beyondSource} }}</p>
+              @if (r.state !== 'ASSERTED' && d.descendants > 0) {
+                <p>{{(d.beyondSource ? 'INHERITANCE.WOULD_INHERIT_GENERATED' : 'INHERITANCE.WOULD_INHERIT')
+                  | translate: {rows: d.wouldInherit, generated: d.wouldGenerate} }}</p>
+              }
+            }
+          }
+        </div>
       }
     </div>
   </mat-menu>
