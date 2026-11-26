@@ -745,6 +745,11 @@
     "SEVERE": "Ernstig"
   },
   "EXPORT": {
+    "INVERSE": "Omgekeerde ConceptMap (bron en doel omwisselen)",
+    "INVERSE_HINT": "Eén element per doelcode, met de codes die ernaar mapten als doelen; wider en narrower wisselen.",
+    "INVERSE_NOT_EQUIVALENT": "{{count}} van de {{total}} mappings zijn niet equivalent. Omgekeerd wisselen broader en narrower: het resultaat is correct, maar geen exacte opzoektabel in de andere richting.",
+    "INVERSE_BREAKDOWN": "broader: {{broader}}, narrower: {{narrower}}, inexact: {{inexact}}",
+    "INVERSE_LEFT_OUT": "{{count}} rijen zonder doel (no map, zonder mapping of in conflict) worden weggelaten.",
     "TITLE": "Mapping exporteren",
     "FORMAT": "Formaat",
     "EXTENDED": "Notities, auteurs en reviewers opnemen",

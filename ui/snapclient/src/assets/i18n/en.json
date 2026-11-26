@@ -745,6 +745,11 @@
     "SEVERE": "Severe"
   },
   "EXPORT": {
+    "INVERSE": "Inverse ConceptMap (swap source and target)",
+    "INVERSE_HINT": "One element per target code, with the codes that mapped to it as its targets; wider and narrower swap.",
+    "INVERSE_NOT_EQUIVALENT": "{{count}} of {{total}} mappings are not equivalent. Inverted, broader and narrower swap: the result is correct, but it is not an exact lookup in the other direction.",
+    "INVERSE_BREAKDOWN": "broader: {{broader}}, narrower: {{narrower}}, inexact: {{inexact}}",
+    "INVERSE_LEFT_OUT": "{{count}} rows without a target (no map, unmapped or in conflict) are left out.",
     "TITLE": "Export map",
     "FORMAT": "Format",
     "EXTENDED": "Include notes, authors and reviewers",

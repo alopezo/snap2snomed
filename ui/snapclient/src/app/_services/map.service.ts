@@ -627,7 +627,7 @@ export class MapService {
   }
 
   exportMapView(mapping: string, contentType: string, extraColumns: string[], targetForm: string = 'expression',
-                inherited: boolean = true): Observable<Blob> {
+                inherited: boolean = true, inverse: boolean = false): Observable<Blob> {
     const url = `${this.config.apiBaseUrl}/mapView/${mapping}`;
     let params = new HttpParams();
     if (extraColumns.length > 0) {
@@ -639,12 +639,29 @@ export class MapService {
     if (!inherited) {
       params = params.set('inherited', 'false');
     }
+    if (inverse) {
+      params = params.set('inverse', 'true');
+    }
     return this.http.get(url,
       {
         headers: {Accept: contentType},
         params,
         responseType: 'blob'
       });
+  }
+
+  /**
+   * How many export lines have each relationship (TARGET_EQUIVALENT...), and how many have no target
+   * (WITHOUT_TARGET), with the same options as the export.
+   */
+  getRelationshipCounts(mapId: string, targetForm: string, inherited: boolean): Observable<{[key: string]: number}> {
+    const options = ServiceUtils.getHTTPHeaders();
+    let params = new HttpParams().set('targetForm', targetForm);
+    if (!inherited) {
+      params = params.set('inherited', 'false');
+    }
+    return this.http.get<{[key: string]: number}>(`${this.config.apiBaseUrl}/mapView/${mapId}/$relationshipCounts`,
+      {...options, params});
   }
 
   /** How many targets of the map are refined targets (expressions). */

@@ -56,6 +56,12 @@ Maps from SNOMED CT (branch `from-snomed`).
   source list with only the concepts that have no ancestor in the source. It is computed once per map
   version with one ECL expansion, `(S) MINUS (< (S))`, where S is the source ECL or the source codes joined
   by OR (sent inline in a POST $expand, as it can be thousands of codes), and cached with the map.
+- The FHIR export can produce the inverse ConceptMap (both directions of map): source and target value sets,
+  systems and versions swapped, one element per target code with the codes that mapped to it, and the
+  equivalence inverted (wider and narrower swap). Rows without a target (no map, unmapped, inheritance
+  conflicts) are left out; refined targets and inherited targets follow the export's other options. When
+  some mappings are not equivalent the dialog shows a discreet warning with the counts
+  (`GET /mapView/{id}/$relationshipCounts`), but still exports.
 - The inheritance popover counts the descendants of the row's concept when it opens (in the source, and
   beyond it when inheritance reaches there) and explains what happens to them: how many inherit its
   mapping (or would, for a row without a mapping of its own), have a mapping of their own, inherit from a

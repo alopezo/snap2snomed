@@ -1,7 +1,7 @@
 <h2 mat-dialog-title>{{'EXPORT.TITLE' | translate}}</h2>
 <mat-dialog-content>
   <h3>{{'EXPORT.FORMAT' | translate}}</h3>
-  <mat-radio-group class="options" [(ngModel)]="options.format" [attr.aria-label]="'EXPORT.FORMAT' | translate">
+  <mat-radio-group class="options" [(ngModel)]="options.format" (ngModelChange)="refreshCounts()" [attr.aria-label]="'EXPORT.FORMAT' | translate">
     @for (format of formats; track format.value) {
       <mat-radio-button [value]="format.value">{{format.labelKey | translate}}</mat-radio-button>
     }
@@ -12,16 +12,32 @@
     <p class="hint">{{'EXPORT.EXTENDED_TABULAR_ONLY' | translate}}</p>
   }
 
+  @if (!tabular) {
+    <mat-checkbox id="exportInverse" [(ngModel)]="options.inverse" (ngModelChange)="refreshCounts()">{{'EXPORT.INVERSE' | translate}}</mat-checkbox>
+    <p class="hint">{{'EXPORT.INVERSE_HINT' | translate}}</p>
+    @if (options.inverse && counts) {
+      @if (notEquivalent > 0) {
+        <p class="note" id="inverseWarning">
+          {{'EXPORT.INVERSE_NOT_EQUIVALENT' | translate: {count: notEquivalent, total: withTarget} }}
+          ({{'EXPORT.INVERSE_BREAKDOWN' | translate: {broader: counts['TARGET_BROADER'] ?? 0, narrower: counts['TARGET_NARROWER'] ?? 0, inexact: counts['TARGET_INEXACT'] ?? 0} }})
+        </p>
+      }
+      @if (withoutTarget > 0) {
+        <p class="hint" id="inverseLeftOut">{{'EXPORT.INVERSE_LEFT_OUT' | translate: {count: withoutTarget} }}</p>
+      }
+    }
+  }
+
   @if (data.inheritance) {
     <h3>{{'EXPORT.INHERITANCE' | translate}}</h3>
-    <mat-checkbox id="exportInherited" [(ngModel)]="options.inherited">{{'EXPORT.INCLUDE_INHERITED' | translate}}</mat-checkbox>
+    <mat-checkbox id="exportInherited" [(ngModel)]="options.inherited" (ngModelChange)="refreshCounts()">{{'EXPORT.INCLUDE_INHERITED' | translate}}</mat-checkbox>
     <p class="hint">{{'EXPORT.INCLUDE_INHERITED_HINT' | translate}}</p>
   }
 
   @if (hasRefinedTargets) {
     <h3>{{'EXPORT.REFINED_TARGETS' | translate}}</h3>
     <p class="hint">{{'EXPORT.REFINED_TARGETS_COUNT' | translate: {count: data.refinedTargetCount} }}</p>
-    <mat-radio-group class="options" [(ngModel)]="options.targetForm" [attr.aria-label]="'EXPORT.REFINED_TARGETS' | translate">
+    <mat-radio-group class="options" [(ngModel)]="options.targetForm" (ngModelChange)="refreshCounts()" [attr.aria-label]="'EXPORT.REFINED_TARGETS' | translate">
       <mat-radio-button value="expression">{{'EXPORT.TARGET_FORM_EXPRESSION' | translate}}</mat-radio-button>
       <mat-radio-button value="focus">{{'EXPORT.TARGET_FORM_FOCUS' | translate}}</mat-radio-button>
       <mat-radio-button value="both" [disabled]="!tabular">{{'EXPORT.TARGET_FORM_BOTH' | translate}}</mat-radio-button>

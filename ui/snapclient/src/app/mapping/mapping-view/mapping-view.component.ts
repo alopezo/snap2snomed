@@ -572,7 +572,8 @@ export class MappingViewComponent implements OnInit, AfterViewInit, OnDestroy {
     const refinedTargetCount$ = this.fromSnomed ? of(0) : this.mapService.getRefinedTargetCount(mapId).pipe(catchError(() => of(0)));
     refinedTargetCount$.subscribe(refinedTargetCount => {
       this.dialog.open<ExportDialogComponent, ExportDialogData, ExportOptions>(ExportDialogComponent,
-        {width: '520px', data: {refinedTargetCount, inheritance: Mapping.hasInheritance(this.mapping)}})
+        {width: '520px', data: {refinedTargetCount, inheritance: Mapping.hasInheritance(this.mapping),
+          relationshipCounts: (targetForm, inherited) => this.mapService.getRelationshipCounts(mapId, targetForm, inherited)}})
         .afterClosed().subscribe(options => {
           if (options) {
             this.exportMap(options);
@@ -610,8 +611,9 @@ export class MappingViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (this.mapping && this.mapping.id) {
       this.mapService.exportMapView(this.mapping.id, contentType, options.extended ? EXPORT_EXTRA_COLUMNS : [],
-        options.targetForm, options.inherited)
-        .subscribe(blob => saveAs(blob, this.mapping?.project.title + '_' + this.mapping?.mapVersion + extension),
+        options.targetForm, options.inherited, options.inverse)
+        .subscribe(blob => saveAs(blob, this.mapping?.project.title + '_' + this.mapping?.mapVersion
+            + (options.inverse ? '_inverse' : '') + extension),
           (error) => {
             console.log(error);
             this.translate.get('ERROR.EXPORT_FAILED').subscribe((msg) => this.error = msg);

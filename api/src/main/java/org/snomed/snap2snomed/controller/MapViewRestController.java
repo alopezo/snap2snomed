@@ -58,6 +58,7 @@ import org.snomed.snap2snomed.repository.MapRowTargetRepository;
 import org.snomed.snap2snomed.security.WebSecurity;
 import org.snomed.snap2snomed.service.FhirService;
 import org.snomed.snap2snomed.service.InheritanceService;
+import org.snomed.snap2snomed.util.ConceptMapInverter;
 import org.snomed.snap2snomed.util.InheritanceExport;
 import org.snomed.snap2snomed.util.LanguageDialects;
 import org.snomed.snap2snomed.util.TargetExportForm;
@@ -548,11 +549,14 @@ public class MapViewRestController {
       array = @ArraySchema(schema = @Schema(type = "string")))
   @Parameter(name="targetForm", in = ParameterIn.QUERY, required = false, allowEmptyValue = false,
       description = "How refined targets (expressions) are written: expression (default) | focus.")
+  @Parameter(name="inverse", in = ParameterIn.QUERY, required = false, allowEmptyValue = false,
+      description = "The inverse ConceptMap: source and target swapped, the equivalence inverted (default false).")
   @GetMapping(path = "/{mapId}", produces = {FHIR_JSON})
   public void getMapViewConceptMapJson(HttpServletResponse response, @RequestHeader(name = "Accept", required = false) String contentType,
           @PathVariable("mapId") Long mapId,
           @RequestParam(required = false) String targetForm,
-          @RequestParam(required = false, defaultValue = "true") boolean inherited) {
+          @RequestParam(required = false, defaultValue = "true") boolean inherited,
+          @RequestParam(required = false, defaultValue = "false") boolean inverse) {
 
       if (!webSecurity.isValidUser()) {
           throw new NoSuchUserProblem();
@@ -567,7 +571,8 @@ public class MapViewRestController {
               + "\"");
 
 
-      final ConceptMap cm = convertToConceptMap(mapId, TargetExportForm.of(targetForm), inherited);
+      final ConceptMap forward = convertToConceptMap(mapId, TargetExportForm.of(targetForm), inherited);
+      final ConceptMap cm = inverse ? ConceptMapInverter.invert(forward) : forward;
 
       try (final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(response.getOutputStream()))) {
           final IParser parser = terminology.getFhirContext().newJsonParser();
@@ -719,6 +724,33 @@ public class MapViewRestController {
       throw new NotAuthorisedProblem("Not authorised to view map if the user is not admin or member of an associated project!");
     }
     return ResponseEntity.ok(mapRowTargetRepository.countRefinedTargets(mapId));
+  }
+
+  @Operation(description = "How many export lines of the map have each relationship, and how many have no target "
+      + "(no map, unmapped, or inheritance conflicts), with the same options as the export: so the export can warn "
+      + "before inverting a map whose mappings are not all equivalent.")
+  @GetMapping(path = "/{mapId}/$relationshipCounts", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<java.util.Map<String, Integer>> getRelationshipCounts(@PathVariable("mapId") Long mapId,
+      @RequestParam(required = false) String targetForm,
+      @RequestParam(required = false, defaultValue = "true") boolean inherited) {
+    if (!webSecurity.isValidUser()) {
+      throw new NoSuchUserProblem();
+    }
+    if (!webSecurity.isAdminUser() && !webSecurity.hasAnyProjectRoleForMapId(mapId)) {
+      throw new NotAuthorisedProblem("Not authorised to view map if the user is not admin or member of an associated project!");
+    }
+    final java.util.Map<String, Integer> counts = new java.util.LinkedHashMap<>();
+    for (final MappingRelationship relationship : MappingRelationship.values()) {
+      counts.put(relationship.name(), 0);
+    }
+    counts.put("WITHOUT_TARGET", 0);
+    for (final InheritanceExport.Line line : exportLines(mapId, TargetExportForm.of(targetForm), inherited)) {
+      final MapView view = line.view();
+      final boolean noTarget = Boolean.TRUE.equals(view.getNoMap()) || view.getTargetCode() == null
+          || view.getTargetCode().isBlank() || view.getRelationship() == null;
+      counts.merge(noTarget ? "WITHOUT_TARGET" : view.getRelationship().name(), 1, Integer::sum);
+    }
+    return ResponseEntity.ok(counts);
   }
 
   @Operation(description = "Returns a flattened view of the MapRow and MapRowTargets for sibling of the specified mapRow.")

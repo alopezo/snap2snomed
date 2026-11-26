@@ -745,6 +745,11 @@
     "SEVERE": "Svær"
   },
   "EXPORT": {
+    "INVERSE": "Omvendt ConceptMap (byt kilde og mål)",
+    "INVERSE_HINT": "Ét element pr. målkode med de koder, der var mappet til den, som mål; wider og narrower byttes om.",
+    "INVERSE_NOT_EQUIVALENT": "{{count}} af {{total}} mappinger er ikke ækvivalente. Når de vendes, byttes broader og narrower: resultatet er korrekt, men det er ikke et præcist opslag i den anden retning.",
+    "INVERSE_BREAKDOWN": "broader: {{broader}}, narrower: {{narrower}}, inexact: {{inexact}}",
+    "INVERSE_LEFT_OUT": "{{count}} rækker uden mål (no map, uden mapping eller i konflikt) udelades.",
     "TITLE": "Eksportér mapping",
     "FORMAT": "Format",
     "EXTENDED": "Medtag noter, forfattere og reviewere",

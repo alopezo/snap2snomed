@@ -745,6 +745,11 @@
     "SEVERE": "Svår"
   },
   "EXPORT": {
+    "INVERSE": "Omvänd ConceptMap (byt källa och mål)",
+    "INVERSE_HINT": "Ett element per målkod, med de koder som mappade till den som mål; wider och narrower byter plats.",
+    "INVERSE_NOT_EQUIVALENT": "{{count}} av {{total}} mappningar är inte ekvivalenta. Omvända byter broader och narrower plats: resultatet är korrekt, men det är inte en exakt uppslagstabell i andra riktningen.",
+    "INVERSE_BREAKDOWN": "broader: {{broader}}, narrower: {{narrower}}, inexact: {{inexact}}",
+    "INVERSE_LEFT_OUT": "{{count}} rader utan mål (no map, utan mappning eller i konflikt) utelämnas.",
     "TITLE": "Exportera mappning",
     "FORMAT": "Format",
     "EXTENDED": "Inkludera anteckningar, författare och granskare",

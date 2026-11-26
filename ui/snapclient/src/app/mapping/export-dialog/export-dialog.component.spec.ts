@@ -22,6 +22,7 @@ import {MatRadioModule} from '@angular/material/radio';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatButtonModule} from '@angular/material/button';
 import {TranslateModule} from '@ngx-translate/core';
+import {of} from 'rxjs';
 import {EXPORT_OPTIONS_STORAGE_KEY, ExportDialogComponent} from './export-dialog.component';
 
 describe('ExportDialogComponent', () => {
@@ -29,12 +30,14 @@ describe('ExportDialogComponent', () => {
   let component: ExportDialogComponent;
   const close = vi.fn();
 
+  const relationshipCounts = vi.fn();
+
   async function create(refinedTargetCount: number): Promise<void> {
     await TestBed.configureTestingModule({
       declarations: [ExportDialogComponent],
       imports: [FormsModule, MatDialogModule, MatRadioModule, MatCheckboxModule, MatButtonModule, TranslateModule.forRoot()],
       providers: [
-        {provide: MAT_DIALOG_DATA, useValue: {refinedTargetCount}},
+        {provide: MAT_DIALOG_DATA, useValue: {refinedTargetCount, relationshipCounts}},
         {provide: MatDialogRef, useValue: {close}},
       ]
     }).compileComponents();
@@ -46,6 +49,9 @@ describe('ExportDialogComponent', () => {
   beforeEach(() => {
     localStorage.removeItem(EXPORT_OPTIONS_STORAGE_KEY);
     close.mockReset();
+    relationshipCounts.mockReset();
+    relationshipCounts.mockReturnValue(of({TARGET_EQUIVALENT: 28, TARGET_BROADER: 8, TARGET_NARROWER: 0,
+      TARGET_INEXACT: 4, WITHOUT_TARGET: 3}));
   });
 
   it('hides the refined target choice when the map has none', async () => {
@@ -65,23 +71,53 @@ describe('ExportDialogComponent', () => {
 
   it('drops options that do not apply to FHIR', async () => {
     await create(3);
-    component.options = {format: 'fhir-json', extended: true, targetForm: 'both', inherited: true};
-    expect(component.effectiveOptions).toEqual({format: 'fhir-json', extended: false, targetForm: 'expression', inherited: true});
-    component.options = {format: 'fhir-json', extended: false, targetForm: 'focus', inherited: true};
+    component.options = {format: 'fhir-json', extended: true, targetForm: 'both', inherited: true, inverse: false};
+    expect(component.effectiveOptions).toEqual({format: 'fhir-json', extended: false, targetForm: 'expression', inherited: true, inverse: false});
+    component.options = {format: 'fhir-json', extended: false, targetForm: 'focus', inherited: true, inverse: false};
     expect(component.effectiveOptions.targetForm).toBe('focus');
   });
 
   it('returns the options and remembers them', async () => {
     await create(1);
-    component.options = {format: 'xlsx', extended: true, targetForm: 'both', inherited: false};
+    component.options = {format: 'xlsx', extended: true, targetForm: 'both', inherited: false, inverse: false};
     component.export();
     // without inheritance on the map, inherited stays true (the option does not apply)
-    expect(close).toHaveBeenCalledWith({format: 'xlsx', extended: true, targetForm: 'both', inherited: true});
-    expect(ExportDialogComponent.readStored()).toEqual({format: 'xlsx', extended: true, targetForm: 'both', inherited: false});
+    expect(close).toHaveBeenCalledWith({format: 'xlsx', extended: true, targetForm: 'both', inherited: true, inverse: false});
+    expect(ExportDialogComponent.readStored()).toEqual({format: 'xlsx', extended: true, targetForm: 'both', inherited: false, inverse: false});
   });
 
   it('ignores an unreadable stored choice', () => {
     localStorage.setItem(EXPORT_OPTIONS_STORAGE_KEY, '{"format":"pdf"}');
-    expect(ExportDialogComponent.readStored()).toEqual({format: 'csv', extended: false, targetForm: 'expression', inherited: true});
+    expect(ExportDialogComponent.readStored()).toEqual({format: 'csv', extended: false, targetForm: 'expression', inherited: true, inverse: false});
+  });
+  it('offers the inverse ConceptMap for FHIR only, warning about the mappings that are not equivalent', async () => {
+    await create(0);
+    expect(fixture.nativeElement.querySelector('#exportInverse')).toBeNull();
+    component.options.format = 'fhir-json';
+    component.options.inverse = true;
+    component.refreshCounts();
+    fixture.detectChanges();
+    expect(relationshipCounts).toHaveBeenCalledWith('expression', true);
+    expect(component.notEquivalent).toBe(12);
+    expect(component.withTarget).toBe(40);
+    expect(fixture.nativeElement.querySelector('#inverseWarning').textContent).toContain('EXPORT.INVERSE_NOT_EQUIVALENT');
+    expect(fixture.nativeElement.querySelector('#inverseLeftOut')).toBeTruthy();
+    expect(component.effectiveOptions.inverse).toBe(true);
+    // asked once per combination of options
+    component.refreshCounts();
+    expect(relationshipCounts).toHaveBeenCalledTimes(1);
+  });
+
+  it('shows no warning when every mapping is equivalent, and never inverts a tabular export', async () => {
+    relationshipCounts.mockReturnValue(of({TARGET_EQUIVALENT: 10, TARGET_BROADER: 0, TARGET_NARROWER: 0,
+      TARGET_INEXACT: 0, WITHOUT_TARGET: 0}));
+    await create(0);
+    component.options.format = 'fhir-json';
+    component.options.inverse = true;
+    component.refreshCounts();
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('#inverseWarning')).toBeNull();
+    component.options.format = 'csv';
+    expect(component.effectiveOptions.inverse).toBe(false);
   });
 });

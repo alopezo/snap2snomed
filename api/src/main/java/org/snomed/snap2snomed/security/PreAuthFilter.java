@@ -96,6 +96,7 @@ public class PreAuthFilter extends GenericFilterBean {
             new FilterRule(HttpMethod.GET, "/mapView", groupValues -> webSecurity.isValidUser()),
             new FilterRule(HttpMethod.GET, "/mapView/([^\\/]+)", groupValues -> webSecurity.hasAnyProjectRoleForMapId(asLong(groupValues[0])) || webSecurity.isAdminUser()),
             new FilterRule(HttpMethod.GET, "/mapView/([^\\/]+)/\\$dualMapSiblingRow", groupValues -> webSecurity.hasAnyProjectRoleForMapId(asLong(groupValues[0])) || webSecurity.isAdminUser()),
+            new FilterRule(HttpMethod.GET, "/mapView/([^\\/]+)/\\$relationshipCounts", groupValues -> webSecurity.hasAnyProjectRoleForMapId(asLong(groupValues[0])) || webSecurity.isAdminUser()),
             new FilterRule(HttpMethod.GET, "/mapView/([^\\/]+)/\\$refinedTargetCount", groupValues -> webSecurity.hasAnyProjectRoleForMapId(asLong(groupValues[0])) || webSecurity.isAdminUser()),
             new FilterRule(HttpMethod.GET, "/mapView/task/([^\\/]+)", groupValues -> webSecurity.isTaskAssignee(asLong(groupValues[0])) || webSecurity.isAdminUser()),
             new FilterRule(HttpMethod.GET, "/task/([^\\/]+)/\\$countIncompleteRows", groupValues -> webSecurity.isValidUser()),

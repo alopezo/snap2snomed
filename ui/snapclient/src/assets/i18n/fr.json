@@ -745,6 +745,11 @@
     "SEVERE": "Sévère"
   },
   "EXPORT": {
+    "INVERSE": "ConceptMap inverse (échanger source et cible)",
+    "INVERSE_HINT": "Un élément par code cible, avec comme cibles les codes qui y correspondaient ; wider et narrower s'échangent.",
+    "INVERSE_NOT_EQUIVALENT": "{{count}} correspondances sur {{total}} ne sont pas équivalentes. Inversées, broader et narrower s'échangent : le résultat est correct, mais ce n'est pas une table exacte dans l'autre sens.",
+    "INVERSE_BREAKDOWN": "broader : {{broader}}, narrower : {{narrower}}, inexact : {{inexact}}",
+    "INVERSE_LEFT_OUT": "{{count}} lignes sans cible (no map, sans correspondance ou en conflit) sont omises.",
     "TITLE": "Exporter la correspondance",
     "FORMAT": "Format",
     "EXTENDED": "Inclure les notes, auteurs et réviseurs",

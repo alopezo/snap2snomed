@@ -745,6 +745,11 @@
     "SEVERE": "Súlyos"
   },
   "EXPORT": {
+    "INVERSE": "Fordított ConceptMap (forrás és cél felcserélése)",
+    "INVERSE_HINT": "Célkódonként egy elem, céljaiként a rá mutató kódokkal; a wider és a narrower felcserélődik.",
+    "INVERSE_NOT_EQUIVALENT": "{{total}} megfeleltetésből {{count}} nem ekvivalens. Megfordítva a broader és a narrower felcserélődik: az eredmény helyes, de nem pontos keresőtábla a másik irányban.",
+    "INVERSE_BREAKDOWN": "broader: {{broader}}, narrower: {{narrower}}, inexact: {{inexact}}",
+    "INVERSE_LEFT_OUT": "{{count}} cél nélküli sor (no map, megfeleltetés nélküli vagy ütköző) kimarad.",
     "TITLE": "Megfeleltetés exportálása",
     "FORMAT": "Formátum",
     "EXTENDED": "Jegyzetek, szerzők és ellenőrök hozzáadása",

@@ -745,6 +745,11 @@
     "SEVERE": "Grave"
   },
   "EXPORT": {
+    "INVERSE": "ConceptMap inverso (intercambiar origen y destino)",
+    "INVERSE_HINT": "Un elemento por código destino, con los códigos que apuntaban a él como sus destinos; wider y narrower se intercambian.",
+    "INVERSE_NOT_EQUIVALENT": "{{count}} de {{total}} mapeos no son equivalentes. Al invertirlos, broader y narrower se intercambian: el resultado es correcto, pero no es un lookup exacto en el otro sentido.",
+    "INVERSE_BREAKDOWN": "broader: {{broader}}, narrower: {{narrower}}, inexact: {{inexact}}",
+    "INVERSE_LEFT_OUT": "Se omiten {{count}} filas sin destino (no map, sin mapear o en conflicto).",
     "TITLE": "Exportar mapa",
     "FORMAT": "Formato",
     "EXTENDED": "Incluir notas, autores y revisores",
