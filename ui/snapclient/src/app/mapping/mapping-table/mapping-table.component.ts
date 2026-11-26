@@ -473,6 +473,10 @@ export class MappingTableComponent implements OnInit, AfterViewInit, OnDestroy {
     return ServiceUtils.explainRelationship(this.translate, relationship);
   }
 
+  get fromSnomed(): boolean {
+    return Mapping.isFromSnomed(this.task?.mapping);
+  }
+
   filterUpdate(): void {
     this.paging.pageIndex = 0;
     this.mappingTableSelector?.clearAllSelectedRows();

@@ -25,7 +25,8 @@ import { OnInit, Renderer2, Input, ElementRef, Component, ViewEncapsulation } fr
 
 @Component({
     selector: "[resizeColumn]",
-    template: '<div mat-sort-header>{{title}}</div>',
+    // projected content (e.g. an extra sort control) is shown after the title
+    template: '<div class="resize-column-header"><div mat-sort-header>{{title}}</div><ng-content></ng-content></div>',
     styleUrls: ['./resize-column.component.css'],
     encapsulation: ViewEncapsulation.None // Tell Angular to not scope your styles
     ,

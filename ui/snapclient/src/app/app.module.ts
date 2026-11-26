@@ -94,6 +94,7 @@ import {TargetCodeSearchComponent} from './mapping/target-code-search/target-cod
 import {TargetCodeDetailsComponent} from './mapping/target-code-details/target-code-details.component';
 import {SourceChangesDialogComponent} from './mapping/source-changes-dialog/source-changes-dialog.component';
 import {InvertMapDialogComponent} from './mapping/invert-map-dialog/invert-map-dialog.component';
+import {LengthSortComponent} from './mapping/length-sort/length-sort.component';
 import {InheritanceSummaryComponent} from './mapping/inheritance-summary/inheritance-summary.component';
 import {RowInheritanceComponent} from './mapping/row-inheritance/row-inheritance.component';
 import {InheritanceListDialogComponent} from './mapping/inheritance-list-dialog/inheritance-list-dialog.component';
@@ -184,6 +185,7 @@ export function HttpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
         TargetCodeDetailsComponent,
         SourceChangesDialogComponent,
         InvertMapDialogComponent,
+        LengthSortComponent,
         InheritanceSummaryComponent,
         RowInheritanceComponent,
         InheritanceListDialogComponent,

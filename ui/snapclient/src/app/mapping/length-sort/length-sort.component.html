@@ -1,0 +1,7 @@
+<button type="button" class="length-sort" id="lengthSort" [class.active]="direction"
+  (click)="toggle($event)" [matTooltip]="tooltip | translate" [attr.aria-label]="tooltip | translate">
+  <mat-icon class="length-icon">short_text</mat-icon>
+  @if (direction) {
+    <mat-icon class="direction-icon">{{direction === 'desc' ? 'arrow_downward' : 'arrow_upward'}}</mat-icon>
+  }
+</button>

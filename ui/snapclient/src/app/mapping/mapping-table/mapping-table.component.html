@@ -3,7 +3,7 @@
 </ng-template>
 <div>
   <table id="table-mapping" #maptable mat-table class="compact-table full-width-table show-borders"
-    [dataSource]="page.data" matSort fixedLayout="false">
+    [dataSource]="page.data" matSort #tableSort="matSort" fixedLayout="false">
 
     <!-- ID Column -->
     <app-mapping-table-selector
@@ -24,7 +24,11 @@
     </ng-container>
     <!-- Source display Column -->
     <ng-container matColumnDef="sourceDisplay">
-      <th mat-header-cell *matHeaderCellDef [resizeColumn]="true" [index]="2" [title]="'TABLE.SOURCE_DISPLAY' | translate"></th>
+      <th mat-header-cell *matHeaderCellDef [resizeColumn]="true" [index]="2" [title]="'TABLE.SOURCE_DISPLAY' | translate">
+        @if (fromSnomed) {
+          <app-length-sort [sort]="tableSort"></app-length-sort>
+        }
+      </th>
       <td mat-cell *matCellDef="let maprow"
         #tooltip="matTooltip" matTooltip="{{'MAP.SEARCH_SOURCE_DISPLAY' | translate}}"
       (click)="clickSourceDisplay(maprow)" [appDraggable]="{data: maprow.sourceDisplay, zones: ['searchZone']}">{{maprow.sourceDisplay}}</td>

@@ -56,6 +56,10 @@ Maps from SNOMED CT (branch `from-snomed`).
   source list with only the concepts that have no ancestor in the source. It is computed once per map
   version with one ECL expansion, `(S) MINUS (< (S))`, where S is the source ECL or the source codes joined
   by OR (sent inline in a POST $expand, as it can be thousands of codes), and cached with the map.
+- In maps from SNOMED CT, a small button in the "Source display" header sorts the rows by the length of the
+  source term: shortest (usually the most general concepts) first, then longest first, then unsorted.
+  Clicking the header itself still sorts alphabetically. API sort key `sourceDisplayLength` (ties in
+  alphabetical order).
 - A single author map to SNOMED CT can seed a map from SNOMED CT (a swap button in the map list, project
   owners only): a new project whose source is the SNOMED CT concepts the map targets, each mapped back to the
   local codes that targeted it with the relationship inverted. Refined targets are mapped from their focus

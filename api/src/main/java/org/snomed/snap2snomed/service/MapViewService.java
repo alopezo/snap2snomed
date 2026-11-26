@@ -733,6 +733,10 @@ public class MapViewService {
           case "sourceDisplay":
             field = Arrays.asList("importedco14_.display");
             break;
+          case "sourceDisplayLength":
+            // shortest (usually the most general) terms first; same length in alphabetical order
+            field = Arrays.asList("char_length(importedco14_.display)", "importedco14_.display");
+            break;
           case "noMap":
             field = Arrays.asList("maprow15_.no_map");
             break;
@@ -843,6 +847,10 @@ public class MapViewService {
             break;
           case "sourceDisplay":
             field = Arrays.asList(_mapRow.sourceCode.display);
+            break;
+          case "sourceDisplayLength":
+            // shortest (usually the most general) terms first; same length in alphabetical order
+            field = Arrays.asList(_mapRow.sourceCode.display.length(), _mapRow.sourceCode.display);
             break;
           case "noMap":
             field = Arrays.asList(_mapRow.noMap);
