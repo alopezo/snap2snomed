@@ -118,8 +118,15 @@ public class InheritanceDto {
     private int descendants;
     private int inSource;
     private int beyondSource;
+    /** Rows, and generated concepts, that take (or would take) its mapping. */
     private int wouldInherit;
     private int wouldGenerate;
+    /** The other descendants: with a mapping of their own, inheriting from a closer mapped concept, stopped
+     * (a stop or no-map row on the way), or in conflict (another mapped ancestor with different targets). */
+    private int ownMapping;
+    private int closerMapping;
+    private int stopped;
+    private int conflict;
   }
 
   @Data

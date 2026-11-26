@@ -57,9 +57,10 @@ Maps from SNOMED CT (branch `from-snomed`).
   version with one ECL expansion, `(S) MINUS (< (S))`, where S is the source ECL or the source codes joined
   by OR (sent inline in a POST $expand, as it can be thousands of codes), and cached with the map.
 - The inheritance popover counts the descendants of the row's concept when it opens (in the source, and
-  beyond it when inheritance reaches there) and, for a row without a mapping of its own, how many of them
-  would inherit its mapping if it were mapped: those whose nearest mapped ancestor it would be. Counted on
-  demand (`GET /map/{id}/inheritance/descendants?code=`), from the same descendants cache.
+  beyond it when inheritance reaches there) and explains what happens to them: how many inherit its
+  mapping (or would, for a row without a mapping of its own), have a mapping of their own, inherit from a
+  closer mapped concept, are stopped, or are in conflict with another mapping. Counted on demand
+  (`GET /map/{id}/inheritance/descendants?code=`), from the same descendants cache.
 - In maps from SNOMED CT, a small button in the "Source display" header sorts the rows by the length of the
   source term: shortest (usually the most general concepts) first, then longest first, then unsorted.
   Clicking the header itself still sorts alphabetically. API sort key `sourceDisplayLength` (ties in

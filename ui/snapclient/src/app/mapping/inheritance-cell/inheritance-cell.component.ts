@@ -68,6 +68,11 @@ export class InheritanceCellComponent {
     return !!this.row && ACCEPTABLE_INHERITANCE.includes(this.row.state) && !this.row.accepted;
   }
 
+  /** The row has a mapping of its own: its descendants inherit it now, not "if you map it". */
+  get mapped(): boolean {
+    return this.row?.state === 'ASSERTED';
+  }
+
   get passesOn(): number {
     return (this.row?.inheritedBy ?? 0) + (this.row?.generatedBy ?? 0);
   }

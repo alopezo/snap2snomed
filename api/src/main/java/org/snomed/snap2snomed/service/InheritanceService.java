@@ -225,7 +225,7 @@ public class InheritanceService {
     final Set<String> anchors = InheritanceCalculator.anchorCodes(rows);
     final Descendants descendants = descendants(map, anchors);
     if (descendants.tooLarge().containsKey(code)) {
-      return new InheritanceDto.DescendantsInfo(code, true, descendants.tooLarge().get(code), 0, 0, 0, 0);
+      return new InheritanceDto.DescendantsInfo(code, true, descendants.tooLarge().get(code), 0, 0, 0, 0, 0, 0, 0, 0);
     }
     final Set<String> rowCodes = rows.stream().map(Row::code).collect(Collectors.toSet());
     final boolean withinSource = map.getInheritanceMode() != InheritanceMode.BEYOND_SOURCE;
@@ -238,15 +238,45 @@ public class InheritanceService {
     final Set<String> all = descendants.byAnchor().get(code).keySet();
     final int inSource = (int) all.stream().filter(rowCodes::contains).count();
     final int beyondSource = withinSource ? 0 : all.size() - inSource;
-    final int wouldInherit = (int) InheritanceCalculator.compute(rows, descendantsOf).stream()
-        .filter(r -> r.state() == State.INHERITED && code.equals(r.from()))
-        .count();
-    final int wouldGenerate = withinSource ? 0 : (int) InheritanceCalculator.inheritedWithoutOwnTargets(rows,
-            all.stream().filter(c -> !rowCodes.contains(c)).toList(), descendantsOf).values().stream()
-        .filter(r -> r.state() == State.INHERITED && code.equals(r.from()))
-        .count();
+    // what each descendant does with the concept mapped: rows as computed, generated concepts (beyond the
+    // source) as they would inherit
+    final Map<String, Result> results = new HashMap<>();
+    InheritanceCalculator.compute(rows, descendantsOf).forEach(r -> results.put(r.code(), r));
+    if (!withinSource) {
+      results.putAll(InheritanceCalculator.inheritedWithoutOwnTargets(rows,
+          all.stream().filter(c -> !rowCodes.contains(c)).toList(), descendantsOf));
+    }
+    int wouldInherit = 0;
+    int wouldGenerate = 0;
+    int ownMapping = 0;
+    int closerMapping = 0;
+    int stopped = 0;
+    int conflict = 0;
+    for (final String descendant : all) {
+      final boolean row = rowCodes.contains(descendant);
+      final Result result = (row || !withinSource) ? results.get(descendant) : null;
+      if (result == null) {
+        continue;
+      }
+      switch (result.state()) {
+        case INHERITED -> {
+          if (!code.equals(result.from())) {
+            closerMapping++;
+          } else if (row) {
+            wouldInherit++;
+          } else {
+            wouldGenerate++;
+          }
+        }
+        case ASSERTED -> ownMapping++;
+        case NO_MAP, STOPPED, BLOCKED -> stopped++;
+        case CONFLICT -> conflict++;
+        default -> {
+        }
+      }
+    }
     return new InheritanceDto.DescendantsInfo(code, false, withinSource ? inSource : all.size(), inSource, beyondSource,
-        wouldInherit, wouldGenerate);
+        wouldInherit, wouldGenerate, ownMapping, closerMapping, stopped, conflict);
   }
 
   @Transactional(readOnly = true)

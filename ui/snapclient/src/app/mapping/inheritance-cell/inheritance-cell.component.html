@@ -46,7 +46,9 @@
       }
       @switch (r.state) {
         @case ('ASSERTED') {
-          <p>{{'INHERITANCE.POPOVER_PASSES_ON' | translate: {rows: r.inheritedBy, generated: r.generatedBy ?? 0} }}</p>
+          @if (!countDescendants || descendantsFailed) {
+            <p>{{'INHERITANCE.POPOVER_PASSES_ON' | translate: {rows: r.inheritedBy, generated: r.generatedBy ?? 0} }}</p>
+          }
         }
         @case ('INHERITED') {
           <p>{{'INHERITANCE.POPOVER_FROM' | translate}} <span class="code">{{r.fromCode}}</span> {{r.fromDisplay}}</p>
@@ -87,12 +89,42 @@
           } @else if (descendants; as d) {
             @if (d.tooLarge) {
               <p class="attention">{{'INHERITANCE.DESCENDANTS_TOO_LARGE' | translate: {count: d.descendants} }}</p>
+            } @else if (d.descendants === 0) {
+              <p>{{'INHERITANCE.DESC_NONE' | translate}}</p>
             } @else {
-              <p>{{(d.beyondSource ? 'INHERITANCE.DESCENDANTS_BEYOND' : 'INHERITANCE.DESCENDANTS_IN_SOURCE')
-                | translate: {count: d.inSource, beyond: d.beyondSource} }}</p>
-              @if (r.state !== 'ASSERTED' && d.descendants > 0) {
-                <p>{{(d.beyondSource ? 'INHERITANCE.WOULD_INHERIT_GENERATED' : 'INHERITANCE.WOULD_INHERIT')
-                  | translate: {rows: d.wouldInherit, generated: d.wouldGenerate} }}</p>
+              <div class="section-title">{{'INHERITANCE.DESC_TITLE' | translate}}</div>
+              <ul class="breakdown">
+                <li>{{'INHERITANCE.DESC_IN_SOURCE' | translate: {count: d.inSource} }}</li>
+                @if (d.beyondSource) {
+                  <li>{{'INHERITANCE.DESC_BEYOND' | translate: {count: d.beyondSource} }}</li>
+                }
+              </ul>
+              <div class="section-title">{{(mapped ? 'INHERITANCE.DESC_OF_THEM' : 'INHERITANCE.DESC_IF_MAPPED') | translate}}</div>
+              <ul class="breakdown">
+                @if (d.wouldInherit) {
+                  <li class="takes">{{(mapped ? 'INHERITANCE.DESC_INHERIT_ROWS' : 'INHERITANCE.DESC_WOULD_ROWS') | translate: {count: d.wouldInherit} }}</li>
+                }
+                @if (d.wouldGenerate) {
+                  <li class="takes">{{(mapped ? 'INHERITANCE.DESC_INHERIT_GENERATED' : 'INHERITANCE.DESC_WOULD_GENERATED') | translate: {count: d.wouldGenerate} }}</li>
+                }
+                @if (!d.wouldInherit && !d.wouldGenerate) {
+                  <li>{{(mapped ? 'INHERITANCE.DESC_NONE_INHERITS' : 'INHERITANCE.DESC_NONE_WOULD') | translate}}</li>
+                }
+                @if (d.ownMapping) {
+                  <li>{{'INHERITANCE.DESC_OWN' | translate: {count: d.ownMapping} }}</li>
+                }
+                @if (d.closerMapping) {
+                  <li>{{(mapped ? 'INHERITANCE.DESC_CLOSER' : 'INHERITANCE.DESC_CLOSER_WOULD') | translate: {count: d.closerMapping} }}</li>
+                }
+                @if (d.stopped) {
+                  <li>{{'INHERITANCE.DESC_STOPPED' | translate: {count: d.stopped} }}</li>
+                }
+                @if (d.conflict) {
+                  <li class="attention">{{'INHERITANCE.DESC_CONFLICT' | translate: {count: d.conflict} }}</li>
+                }
+              </ul>
+              @if (d.conflict) {
+                <p class="hint">{{'INHERITANCE.DESC_CONFLICT_HINT' | translate}}</p>
               }
             }
           }

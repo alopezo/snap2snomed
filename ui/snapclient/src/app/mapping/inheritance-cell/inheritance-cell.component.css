@@ -88,3 +88,21 @@
   margin-top: 6px;
   padding-top: 2px;
 }
+
+.descendants .section-title {
+  font-weight: 500;
+  margin: 6px 0 2px;
+}
+
+.descendants .breakdown {
+  margin: 0 0 4px;
+  padding-left: 18px;
+}
+
+.descendants .breakdown li {
+  margin: 1px 0;
+}
+
+.descendants .breakdown .takes {
+  font-weight: 500;
+}

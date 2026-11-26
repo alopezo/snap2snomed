@@ -154,6 +154,11 @@ export interface DescendantsInfo {
   beyondSource: number;
   wouldInherit: number;
   wouldGenerate: number;
+  /** The other descendants: own mapping, inheriting from a closer mapped concept, stopped, in conflict. */
+  ownMapping: number;
+  closerMapping: number;
+  stopped: number;
+  conflict: number;
 }
 
 /** What automapping a task of a map from SNOMED CT did (matches already inherited are not created). */

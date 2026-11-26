@@ -72,7 +72,7 @@ describe('InheritanceCellComponent', () => {
   });
   it('counts the descendants of a row when asked, once, and not for generated concepts', () => {
     const info = {code: 'A', tooLarge: false, descendants: 12, inSource: 12, beyondSource: 0, wouldInherit: 9,
-      wouldGenerate: 0};
+      wouldGenerate: 0, ownMapping: 2, closerMapping: 0, stopped: 1, conflict: 0};
     descendantsInfo.mockReturnValue(of(info));
     const cell = fixture.componentInstance;
     cell.row = {rowId: 1, code: 'A', display: 'A', state: 'UNCOVERED', stopInheritance: false, fromCode: null,
@@ -80,6 +80,7 @@ describe('InheritanceCellComponent', () => {
     cell.loadDescendants();
     expect(descendantsInfo).toHaveBeenCalledWith('A');
     expect(cell.descendants).toEqual(info);
+    expect(cell.mapped).toBe(false);
 
     descendantsInfo.mockClear();
     cell.countDescendants = false;
