@@ -759,7 +759,6 @@
     "TARGET_FORM_FOCUS": "Endast fokusbegrepp",
     "TARGET_FORM_BOTH": "Uttryck plus kolumner med fokusbegreppet",
     "TARGET_FORM_FOCUS_NOTE": "Fokusbegreppet är bredare än det förfinade målet: en ekvivalent relation exporteras som bredare, en snävare som inexakt. Förfinade mål för samma källa med samma fokusbegrepp exporteras en gång.",
-    "TARGET_FORM_BOTH_TABULAR_ONLY": "Endast för kommaseparerade, tabbseparerade och Excel-filer; FHIR exporterar uttrycket.",
     "EXPORT": "Exportera",
     "INHERITANCE": "Arv",
     "INCLUDE_INHERITED": "Inkludera ärvda mål",

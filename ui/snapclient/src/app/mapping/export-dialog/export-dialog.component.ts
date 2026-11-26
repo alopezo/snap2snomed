@@ -94,6 +94,14 @@ export class ExportDialogComponent {
     return this.counts?.['WITHOUT_TARGET'] ?? 0;
   }
 
+  /** "Expression plus focus columns" is for tabular formats only: FHIR falls back to the expression. */
+  formatChanged(): void {
+    if (!this.tabular && this.options.targetForm === 'both') {
+      this.options.targetForm = 'expression';
+    }
+    this.refreshCounts();
+  }
+
   /** Asks for the relationship counts when inverting, once per combination of options. */
   refreshCounts(): void {
     if (!this.data.relationshipCounts || this.tabular || !this.options.inverse) {

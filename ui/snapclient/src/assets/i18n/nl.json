@@ -759,7 +759,6 @@
     "TARGET_FORM_FOCUS": "Alleen focusconcept",
     "TARGET_FORM_BOTH": "Expressie plus kolommen met het focusconcept",
     "TARGET_FORM_FOCUS_NOTE": "Het focusconcept is breder dan het verfijnde doel: een equivalente relatie wordt als breder geëxporteerd, een nauwere als inexact. Verfijnde doelen van dezelfde bron met hetzelfde focusconcept worden één keer geëxporteerd.",
-    "TARGET_FORM_BOTH_TABULAR_ONLY": "Alleen voor kommagescheiden, tabgescheiden en Excel-bestanden; FHIR exporteert de expressie.",
     "EXPORT": "Exporteren",
     "INHERITANCE": "Overerving",
     "INCLUDE_INHERITED": "Overgeërfde doelen opnemen",

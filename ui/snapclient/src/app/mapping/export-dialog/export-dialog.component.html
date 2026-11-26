@@ -1,7 +1,7 @@
 <h2 mat-dialog-title>{{'EXPORT.TITLE' | translate}}</h2>
 <mat-dialog-content>
   <h3>{{'EXPORT.FORMAT' | translate}}</h3>
-  <mat-radio-group class="options" [(ngModel)]="options.format" (ngModelChange)="refreshCounts()" [attr.aria-label]="'EXPORT.FORMAT' | translate">
+  <mat-radio-group class="options" [(ngModel)]="options.format" (ngModelChange)="formatChanged()" [attr.aria-label]="'EXPORT.FORMAT' | translate">
     @for (format of formats; track format.value) {
       <mat-radio-button [value]="format.value">{{format.labelKey | translate}}</mat-radio-button>
     }
@@ -37,13 +37,12 @@
     <mat-radio-group class="options" [(ngModel)]="options.targetForm" (ngModelChange)="refreshCounts()" [attr.aria-label]="'EXPORT.REFINED_TARGETS' | translate">
       <mat-radio-button value="expression">{{'EXPORT.TARGET_FORM_EXPRESSION' | translate}}</mat-radio-button>
       <mat-radio-button value="focus">{{'EXPORT.TARGET_FORM_FOCUS' | translate}}</mat-radio-button>
-      <mat-radio-button value="both" [disabled]="!tabular">{{'EXPORT.TARGET_FORM_BOTH' | translate}}</mat-radio-button>
+      @if (tabular) {
+        <mat-radio-button value="both">{{'EXPORT.TARGET_FORM_BOTH' | translate}}</mat-radio-button>
+      }
     </mat-radio-group>
     @if (options.targetForm === 'focus') {
       <p class="note">{{'EXPORT.TARGET_FORM_FOCUS_NOTE' | translate}}</p>
-    }
-    @if (options.targetForm === 'both' && !tabular) {
-      <p class="hint">{{'EXPORT.TARGET_FORM_BOTH_TABULAR_ONLY' | translate}}</p>
     }
   }
 </mat-dialog-content>

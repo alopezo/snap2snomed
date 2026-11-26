@@ -759,7 +759,6 @@
     "TARGET_FORM_FOCUS": "Solo el concepto foco",
     "TARGET_FORM_BOTH": "Expresión más columnas con el concepto foco",
     "TARGET_FORM_FOCUS_NOTE": "El concepto foco es más amplio que el destino refinado: una relación equivalente se exporta como más amplia y una más específica como inexacta. Los destinos refinados de un mismo origen que comparten el concepto foco se exportan una sola vez.",
-    "TARGET_FORM_BOTH_TABULAR_ONLY": "Solo para archivos separados por comas, por tabulaciones y Excel; FHIR exporta la expresión.",
     "EXPORT": "Exportar",
     "INHERITANCE": "Herencia",
     "INCLUDE_INHERITED": "Incluir destinos heredados",

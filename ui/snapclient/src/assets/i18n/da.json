@@ -759,7 +759,6 @@
     "TARGET_FORM_FOCUS": "Kun fokusbegreb",
     "TARGET_FORM_BOTH": "Udtryk plus kolonner med fokusbegrebet",
     "TARGET_FORM_FOCUS_NOTE": "Fokusbegrebet er bredere end det præciserede mål: en ækvivalent relation eksporteres som bredere, en snævrere som upræcis. Præciserede mål for samme kilde med samme fokusbegreb eksporteres én gang.",
-    "TARGET_FORM_BOTH_TABULAR_ONLY": "Kun for kommaseparerede, tabulatorseparerede og Excel-filer; FHIR eksporterer udtrykket.",
     "EXPORT": "Eksportér",
     "INHERITANCE": "Nedarvning",
     "INCLUDE_INHERITED": "Medtag nedarvede mål",

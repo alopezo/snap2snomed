@@ -759,7 +759,6 @@
     "TARGET_FORM_FOCUS": "Focus concept only",
     "TARGET_FORM_BOTH": "Expression plus focus concept columns",
     "TARGET_FORM_FOCUS_NOTE": "The focus concept is broader than the refined target: an equivalent relationship is exported as broader, a narrower one as inexact. Refined targets of the same source that share the focus concept are exported once.",
-    "TARGET_FORM_BOTH_TABULAR_ONLY": "Only for comma separated, tab separated and Excel files; FHIR exports the expression.",
     "EXPORT": "Export",
     "INHERITANCE": "Inheritance",
     "INCLUDE_INHERITED": "Include inherited targets",

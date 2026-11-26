@@ -759,7 +759,6 @@
     "TARGET_FORM_FOCUS": "Concept focal uniquement",
     "TARGET_FORM_BOTH": "Expression et colonnes du concept focal",
     "TARGET_FORM_FOCUS_NOTE": "Le concept focal est plus large que la cible affinée : une relation équivalente est exportée comme plus large, une plus étroite comme inexacte. Les cibles affinées d'une même source partageant le concept focal ne sont exportées qu'une fois.",
-    "TARGET_FORM_BOTH_TABULAR_ONLY": "Uniquement pour les fichiers séparés par des virgules, par des tabulations et Excel ; FHIR exporte l'expression.",
     "EXPORT": "Exporter",
     "INHERITANCE": "Héritage",
     "INCLUDE_INHERITED": "Inclure les cibles héritées",

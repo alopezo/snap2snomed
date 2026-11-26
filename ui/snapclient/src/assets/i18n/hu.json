@@ -759,7 +759,6 @@
     "TARGET_FORM_FOCUS": "Csak a fókuszfogalom",
     "TARGET_FORM_BOTH": "Kifejezés és a fókuszfogalom oszlopai",
     "TARGET_FORM_FOCUS_NOTE": "A fókuszfogalom tágabb, mint a pontosított cél: az egyenértékű kapcsolat tágabbként, a szűkebb pontatlanként kerül exportálásra. Ugyanazon forrás azonos fókuszfogalmú pontosított céljai egyszer kerülnek exportálásra.",
-    "TARGET_FORM_BOTH_TABULAR_ONLY": "Csak vesszővel, tabulátorral tagolt és Excel fájlokhoz; a FHIR a kifejezést exportálja.",
     "EXPORT": "Exportálás",
     "INHERITANCE": "Öröklés",
     "INCLUDE_INHERITED": "Örökölt célok hozzáadása",
