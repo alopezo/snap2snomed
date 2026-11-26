@@ -1,39 +1,11 @@
 # Spike notes – local run, devauth, Snowstorm Lite (2026-11-19)
 
-Status: **spike stopped.** Changes committed on `main` in the fork `alopezo/snap2snomed` (`origin`);
-we work directly on `main`, no feature branches. `upstream` is `IHTSDO/snap2snomed` with push disabled; PRs to upstream only by explicit decision.
-The shrimp stub (`ui/snapclient/dev-stubs/`) is still uncommitted (undecided).
+Status: **done.** The spike's changes are committed in the fork `alopezo/snap2snomed`:
+- the `devauth` fake identity provider and the Snowstorm Lite fuzzy-search fallback, on `main`;
+- the stub of the private shrimp package (`ui/snapclient/dev-stubs/`), on the `from-snomed` branch.
 
-## Uncommitted changes
-
-| Change | Files | Status |
-|---|---|---|
-| `devauth` profile: fake Cognito-compatible IdP inside the API (local dev only) | `api/.../security/DevAuthConfiguration.java`, `api/.../security/DevAuthController.java`, `api/src/main/resources/application-devauth.properties`, `@Profile("!devauth")` on `JwtDecoderConfigurer.java`, README section | Working, tested with curl + browser |
-| Snowstorm Lite fuzzy fallback: if `fhirBaseUrl` contains `lite`, search exact first and retry with `~` suffix only on 0 results | `ui/snapclient/src/app/_services/fhir.service.ts` (`isLite`, `findConcepts`) | Working, tested in browser (search, automap) |
-| Stub of private `@csiro/shrimp-hierarchy-view` (hand-written Ivy defs, shows a placeholder) | `ui/snapclient/dev-stubs/shrimp-hierarchy-view/` (untracked), installed into `node_modules` only | Working. **Undecided:** commit with an install script, or `.gitignore` |
-
-Unit tests (API Testcontainers suite, UI Karma) were **not** run.
-
-## How to resume
-
-Prereqs: Docker running, JDK 21+ (built fine on 24), Node 20.19+, yarn 1 (`npx yarn@1.22.22` works without installing).
-
-```sh
-# DB (data kept in the mysql_db volume)
-cd api && docker compose up -d db
-
-# API with fake auth + Snowstorm Lite (omit the last arg to use Ontoserver)
-mvn -pl api spring-boot:run -Dspring-boot.run.profiles=local,devauth \
-  -Dspring-boot.run.arguments="--spring.datasource.url=jdbc:aws-wrapper:mysql://localhost:3306/s2s --spring.datasource.username=root --snap2snomed.defaultTerminologyServer.url=https://implementation-demo.snomedtools.org/snowstorm-lite/fhir"
-
-# UI (.env already has API_BASE_URL=http://localhost:8080). --ssl=false: the dev cert is self-signed
-cd ui/snapclient && npx yarn@1.22.22 start --ssl=false
-```
-
-If `yarn install` is ever re-run it fails on the private package (401 from the CSIRO Azure DevOps feed). Workaround used:
-temporarily point the dependency to `file:./dev-stubs/shrimp-hierarchy-view`, install, then `git checkout -- package.json yarn.lock`.
-
-Gotchas: devauth signing key is in memory → log in again after every API restart (if a page is blank, go Home and log in).
+**How to run it locally now lives in the [README](README.md), under "Running locally without AWS Cognito".**
+These notes keep only the findings.
 
 ## Findings
 
